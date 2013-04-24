@@ -1,7 +1,8 @@
 [Dolphin]
 AdditionalInfo=Details_Size,Details_Date,CustomizedDetails
 PreviewsShown=true
-Timestamp=2013,1,25,2,19,52
+Timestamp=2013,4,21,15,15,42
+Version=3
 ViewMode=1
 
 [Settings]
