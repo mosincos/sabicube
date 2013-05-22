@@ -125,7 +125,7 @@ namespace game
 	}
 	COMMAND(inventorywrite, "ii");
 
-//******************** something like this, but not this
+//******************** something like this, but obviously not this
 //	void inventoryread(int &x, int *arg)
 //	{
 //		if(player1->state!=CS_ALIVE) return;
