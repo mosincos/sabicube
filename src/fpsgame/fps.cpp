@@ -350,7 +350,6 @@ namespace game
         {
 			if(arg[0] - player1->health >= 0)
 			{
-//				player1->state = CS_DEAD;
 				suicide(player1);
 			}
 			else
