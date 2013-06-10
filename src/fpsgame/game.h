@@ -548,10 +548,13 @@ struct fpsent : dynent, fpsstate
     int lastspeedrun;
     float energy;
 	float energyregen;
+//	float carryweight;
+//	float maxcarryweight;
 	int playerexperience;
 	int playerlevel;
 	int inventory [100];
 	int scopezoom;
+	int maxcarryweight;
 ///////////////////////////////////////////////////////////////////////////
     int lastpickup, lastpickupmillis, lastbase, lastrepammo, flagpickup, tokens;
     vec lastcollect;
@@ -575,6 +578,8 @@ struct fpsent : dynent, fpsstate
 			inventory[x]=(0); // set amount of all items to 0
 		}
 		energyregen = 0.2f;
+//		carryweight = 0.0f;
+		maxcarryweight = 120;
 		respawn();
     }
     ~fpsent()

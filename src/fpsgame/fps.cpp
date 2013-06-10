@@ -112,19 +112,48 @@ namespace game
 	ICOMMAND(inventory91read, "", (), intret(player1->inventory[90])); // chaingunammo
 	ICOMMAND(inventory92read, "", (), intret(player1->inventory[91])); // rockets
 
-	void inventoryoverwrite(int &x, int *arg)
+//////////////////////////////////////////////////////////////////////////// inventory
+
+	void inventoryoverwrite(int &x, int *arg, int &y)
 	{
+		if(y!=0)
+		{
+			player1->weight = player1->weight - y;
+		}
 		player1->inventory[x] = arg[0];
 	}
-	COMMAND(inventoryoverwrite, "ii");
-//////////////////////////////////////////////////////////////////////////// inventory
-	void inventorywrite(int &x, int *arg)
+	COMMAND(inventoryoverwrite, "iii");
+
+	void inventorywrite(int &x, int *arg, int &y)
 	{
 		if(player1->state!=CS_ALIVE) return;
+		if(y!=0)
+		{
+			player1->weight = player1->weight + (y * arg[0]);
+			if(player1->weight>=player1->maxcarryweight)
+			{
+				conoutf("You are over-encumbered");
+				player1->maxspeed = player1->maxspeed / 2;
+			}
+		}
 		player1->inventory[x] = player1->inventory[x] + arg[0];
 	}
-	COMMAND(inventorywrite, "ii");
+	COMMAND(inventorywrite, "iii");
 
+    void setmaxcarryweight(int *arg)
+    {
+        if(player1->state!=CS_ALIVE) return;
+		player1->maxcarryweight = player1->maxcarryweight + arg[0];
+    }
+	COMMAND(setmaxcarryweight,  "i");
+	ICOMMAND(getmaxcarryweight, "", (), intret(player1->maxcarryweight));
+	ICOMMAND(getcarryweight, "", (), intret(player1->weight));
+	
+//	void showweight()
+//	{
+//		conoutf("You weight is %d", player1->weight);
+//	}
+//	COMMAND(showweight, "");	
 //******************** something like this, but obviously not this
 //	void inventoryread(int &x, int *arg)
 //	{
@@ -225,10 +254,25 @@ namespace game
 //	80-100 reserved for ammo/guns
 //////////////////////////////////////////////////////////////////////////// ENERGY
 
+	void setmaxspeed(int *arg)
+	{
+		if(player1->state!=CS_ALIVE) return;
+		player1->maxspeed = player1->maxspeed + arg[0];
+	}
+	COMMAND(setmaxspeed,  "i");
+	ICOMMAND(getmaxspeed, "", (), intret(player1->maxspeed));
+	
 	void speedrun()
     {
-        player1->maxspeed = 100;
-	    player1->lastspeedrun = lastmillis;
+		if(player1->weight < player1->maxcarryweight)
+		{
+			player1->maxspeed = 100;
+			player1->lastspeedrun = lastmillis;
+		}
+		else
+		{
+			player1->maxspeed = 50;
+		}
    	}
     COMMAND(speedrun, "");
     void normalrun()
