@@ -149,18 +149,14 @@ namespace game
 	ICOMMAND(getmaxcarryweight, "", (), intret(player1->maxcarryweight));
 	ICOMMAND(getcarryweight, "", (), intret(player1->weight));
 	
-//	void showweight()
-//	{
-//		conoutf("You weight is %d", player1->weight);
-//	}
-//	COMMAND(showweight, "");	
-//******************** something like this, but obviously not this
-//	void inventoryread(int &x, int *arg)
+	
+//******************** something like this?
+//	void inventoryread(int *arg)
 //	{
 //		if(player1->state!=CS_ALIVE) return;
-//		player1->inventory[x] = player1->inventory[x] + arg[0];
+//		intret(player1->inventory[arg[0]]);
 //	}
-//	COMMAND(inventoryread, "ii");
+//	COMMAND(inventoryread, "i");
 //	ICOMMAND(inventoryread, "i", (int *arg), intret(player1->inventory(*arg));
 //********************
 
@@ -312,7 +308,7 @@ namespace game
         }
     }
     COMMAND(getenergy, "i");
-    ICOMMAND(getenergyregen, "", (), intret(player1->energyregen));
+    ICOMMAND(getenergyregen, "", (), intret((player1->energyregen * 10)));
     void setenergyregen()
     {
         if(player1->state!=CS_ALIVE) return;
