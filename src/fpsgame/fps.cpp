@@ -153,11 +153,9 @@ namespace game
 //******************** something like this?
 //	void inventoryread(int *arg)
 //	{
-//		if(player1->state!=CS_ALIVE) return;
 //		intret(player1->inventory[arg[0]]);
 //	}
 //	COMMAND(inventoryread, "i");
-//	ICOMMAND(inventoryread, "i", (int *arg), intret(player1->inventory(*arg));
 //********************
 
 	ICOMMAND(inventory0read, "", (), intret(player1->inventory[0]));
