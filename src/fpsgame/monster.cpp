@@ -396,6 +396,12 @@ namespace game
                 {
                     gibeffect(max(-health, 0), vel, this);
                 }
+                if(mtype==5)
+                {
+                    conoutf("monster exploded");
+//					explode(player1);
+					game::explode(true, d, o, this, guns[GUN_BARREL].damage, GUN_BARREL);
+                }
 ///////////////////////////////////////////////////////////////////////////////
 //				gibeffect(max(-health, 0), vel, this);
 //                defformatstring(id)("monster_dead_%d", tag);
