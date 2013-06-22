@@ -398,8 +398,7 @@ namespace game
                 }
                 if(mtype==5)
                 {
-                    conoutf("monster exploded");
-//					explode(player1);
+                    gibeffect(max(-health, 0), vel, this);
 					game::explode(true, d, o, this, guns[GUN_BARREL].damage, GUN_BARREL);
                 }
 ///////////////////////////////////////////////////////////////////////////////

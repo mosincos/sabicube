@@ -505,7 +505,7 @@ namespace entities
                 if(newstate == TRIGGER_RESETTING && checktriggertype(e.attr3, TRIG_COLLIDE) && overlapsdynent(e.o, 20)) continue;
                 e.triggerstate = newstate;
                 e.lasttrigger = lastmillis;
-                if(checktriggertype(e.attr3, TRIG_RUMBLE)) playsound(S_RUMBLE, &e.o);
+//                if(checktriggertype(e.attr3, TRIG_RUMBLE)) playsound(S_RUMBLE, &e.o);
             }
         }
     }
@@ -572,7 +572,7 @@ namespace entities
                     e.triggerstate = TRIGGERING;
                     e.lasttrigger = lastmillis;
                     setuptriggerflags(e);
-                    if(checktriggertype(e.attr3, TRIG_RUMBLE)) playsound(S_RUMBLE, &e.o);
+//                    if(checktriggertype(e.attr3, TRIG_RUMBLE)) playsound(S_RUMBLE, &e.o);
                     if(checktriggertype(e.attr3, TRIG_ENDSP)) endsp(false);
                     if(e.attr4) doleveltrigger(e.attr4, 1);
                     break;
@@ -595,7 +595,7 @@ namespace entities
                     e.triggerstate = TRIGGER_RESETTING;
                     e.lasttrigger = lastmillis;
                     setuptriggerflags(e);
-                    if(checktriggertype(e.attr3, TRIG_RUMBLE)) playsound(S_RUMBLE, &e.o);
+//                    if(checktriggertype(e.attr3, TRIG_RUMBLE)) playsound(S_RUMBLE, &e.o);
                     if(checktriggertype(e.attr3, TRIG_ENDSP)) endsp(false);
                     if(e.attr4) doleveltrigger(e.attr4, 0);
                     break;
