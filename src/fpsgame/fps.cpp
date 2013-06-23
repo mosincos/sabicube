@@ -137,6 +137,7 @@ namespace game
 			}
 		}
 		player1->inventory[x] = player1->inventory[x] + arg[0];
+		playsound(S_ITEMSPAWN);
 	}
 	COMMAND(inventorywrite, "iii");
 
@@ -1083,8 +1084,8 @@ namespace game
     }
     ICOMMAND(kill, "", (), suicide(player1));
 
-    bool needminimap() { return m_ctf || m_protect || m_hold || m_capture || m_collect; }
-
+	bool needminimap() { return m_ctf || m_protect || m_hold || m_capture || m_collect; }
+    
     void drawicon(int icon, float x, float y, float sz)
     {
         settexture("packages/hud/items.png");
@@ -1398,6 +1399,7 @@ namespace game
 				if(activateitem == 1)
 				{
 					suicide((dynent *)o);
+//					playsound(S_ITEMSPAWN);
 					activateitem = 0;
 				}
 			}
