@@ -131,8 +131,8 @@ void writemapcfg(int *arg, int *loadinv, int *loadtri, char *mapname)
 //	if(loadinv[0] == 1) f->printf("exec packages/base/escape/inventory.cfg\n");
 	if(loadinv[0] == 0) f->printf("//exec packages/base/escape/inventory.cfg\n");
 	if(loadinv[0] == 1) f->printf("exec packages/base/escape/inventory.cfg\n");
-	if(loadtri[0] == 0) f->printf("//exec packages/base/test/triggers.cfg\n");
-	if(loadtri[0] == 1) f->printf("exec packages/base/test/triggers.cfg\n");
+	if(loadtri[0] == 0) f->printf("//exec packages/base/sabitest/triggers.cfg\n");
+	if(loadtri[0] == 1) f->printf("exec packages/base/sabitest/triggers.cfg\n");
 	if(loadtri[0] == 0) f->printf("//exec packages/base/gamevars.cfg\n\n");
 	if(loadtri[0] == 1) f->printf("exec packages/base/gamevars.cfg\n\n");
 	f->printf("loadsky \"skyboxes/remus/sky01\"\n\n");
