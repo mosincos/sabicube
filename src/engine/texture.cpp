@@ -1297,15 +1297,6 @@ bool settexture(const char *name, int clamp)
     return t != notexture;
 }
 
-bool settexture(Texture *&tex)
-{
-    if(!tex)
-        tex = notexture;
-
-    glBindTexture(GL_TEXTURE_2D, tex->id);
-    return tex != notexture;
-}
-
 vector<VSlot *> vslots;
 vector<Slot *> slots;
 MSlot materialslots[(MATF_VOLUME|MATF_INDEX)+1];

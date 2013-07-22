@@ -47,7 +47,6 @@ enum                            // static entity types
     PLATFORM,                   // attr1 = angle, attr2 = idx, attr3 = tag, attr4 = speed
     ELEVATOR,                   // attr1 = angle, attr2 = idx, attr3 = tag, attr4 = speed
     FLAG,                       // attr1 = angle, attr2 = team
-	CAMERA,
     MAXENTTYPES
 };
 
@@ -878,15 +877,6 @@ namespace server
     extern int msgsizelookup(int msg);
     extern bool serveroption(const char *arg);
     extern bool delayspawn(int type);
-}
-
-namespace camera
-{
-    extern bool cutscene;
-
-    extern void cleanup();
-    extern void update();
-    extern void render(int w, int h);
 }
 
 #endif

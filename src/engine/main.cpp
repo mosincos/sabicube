@@ -131,8 +131,8 @@ void writemapcfg(int *arg, int *loadinv, int *loadtri, char *mapname)
 //	if(loadinv[0] == 1) f->printf("exec packages/base/escape/inventory.cfg\n");
 	if(loadinv[0] == 0) f->printf("//exec packages/base/escape/inventory.cfg\n");
 	if(loadinv[0] == 1) f->printf("exec packages/base/escape/inventory.cfg\n");
-	if(loadtri[0] == 0) f->printf("//exec packages/base/sabitest/triggers.cfg\n");
-	if(loadtri[0] == 1) f->printf("exec packages/base/sabitest/triggers.cfg\n");
+	if(loadtri[0] == 0) f->printf("//exec packages/base/escape/triggers.cfg\n");
+	if(loadtri[0] == 1) f->printf("exec packages/base/escape/triggers.cfg\n");
 	if(loadtri[0] == 0) f->printf("//exec packages/base/gamevars.cfg\n\n");
 	if(loadtri[0] == 1) f->printf("exec packages/base/gamevars.cfg\n\n");
 	f->printf("loadsky \"skyboxes/remus/sky01\"\n\n");
@@ -140,7 +140,7 @@ void writemapcfg(int *arg, int *loadinv, int *loadtri, char *mapname)
 	f->printf("setshader stdworld // use default world shader unless specified otherwise\n");
 	f->printf("texture 0 \"textures/sky.png\" // dummy sky texture\n");
 	f->printf("texture 0 \"textures/default.png\" // default geometry texture\n");
-	if(arg[0] == 0) f->printf("// add your own textures below this line\n");
+	if(arg[0] == 0) f->printf("// uncomment to enable a texturepackage\n");
 	if(arg[0] == 1) f->printf("exec packages/textures/blazurban_2/package.cfg\n");
 	if(arg[0] == 2) f->printf("exec packages/textures/johnston/config.cfg\n");
 	if(arg[0] == 3) f->printf("exec packages/textures/e8texpack/package.cfg\n");
@@ -172,6 +172,7 @@ void writemapcfg(int *arg, int *loadinv, int *loadtri, char *mapname)
 	f->printf("// exec packages/textures/trak/trak7/package.cfg\n");
 	f->printf("// exec packages/textures/witheredwad/package.cfg\n");
 	f->printf("// end of automaticly generated cfg-file\n");
+	f->printf("// add your own textures below this line\n");
 	delete f;
 	execfile((mapcfgname));
 }
