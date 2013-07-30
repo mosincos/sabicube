@@ -137,7 +137,7 @@ namespace game
 			}
 		}
 		player1->inventory[x] = player1->inventory[x] + arg[0];
-		playsound(S_ITEMSPAWN);
+//		playsound(S_ITEMSPAWN);
 	}
 	COMMAND(inventorywrite, "iii");
 
@@ -1399,7 +1399,6 @@ namespace game
 				if(activateitem == 1)
 				{
 					suicide((dynent *)o);
-//					playsound(S_ITEMSPAWN);
 					activateitem = 0;
 				}
 			}
