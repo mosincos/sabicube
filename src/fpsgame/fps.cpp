@@ -127,7 +127,7 @@ namespace game
 	void inventorywrite(int &x, int *arg, int &y)
 	{
 		if(player1->state!=CS_ALIVE) return;
-		if(y!=0)
+		if(y>0)
 		{
 			player1->weight = player1->weight + (y * arg[0]);
 			if(player1->weight>=player1->maxcarryweight)
@@ -136,8 +136,16 @@ namespace game
 				player1->maxspeed = player1->maxspeed / 2;
 			}
 		}
+		if(y<0)
+		{
+			player1->weight = player1->weight - (y * arg[0]);
+			if(player1->weight>=player1->maxcarryweight)
+			{
+				conoutf("You are over-encumbered");
+				player1->maxspeed = player1->maxspeed / 2;
+			}
+		}
 		player1->inventory[x] = player1->inventory[x] + arg[0];
-//		playsound(S_ITEMSPAWN);
 	}
 	COMMAND(inventorywrite, "iii");
 
