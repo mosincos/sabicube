@@ -33,7 +33,7 @@ namespace game
         { GUN_BITE,      22,  50, 1, 0,   200, 400, 1, 10,  40, S_PAIND, S_DEATHD, "a rat",       "monster/animals/rat", NULL },
         { GUN_BITE,       5, 150, 1, 0,   200, 400, 1, 10,  40, NULL, NULL, "boneman",            "monster/boneman",     NULL },
         { GUN_BITE,       8, 150, 1, 0,   200, 400, 1, 10,  40, NULL, NULL, "bonesword",          "monster/bonesword",   NULL },
-        { GUN_BITE,       6, 150, 1, 0,   200, 400, 1, 10,  40, NULL, NULL, "turtle",             "monster/turtle",      NULL },
+        { NULL,           0,  10, 3, 0,   100, 400, 1,  1, 256, NULL,    S_PIGGR2,  "planks",      "monster/planks",      NULL },
         { GUN_BITE,       6, 150, 1, 0,   200, 400, 1, 10,  40, NULL, NULL, "soldier",            "monster/soldier",     NULL },
         { GUN_BITE,       6, 150, 1, 0,   200, 400, 1, 10,  40, NULL, NULL, "clippy",             "monster/clippy",      NULL },
     };
@@ -118,7 +118,7 @@ namespace game
         void monsteraction(int curtime)           // main AI thinking routine, called every frame for every monster
         {
 //////////////////////////////////////////////////////////////////////////////////// if not box
-            if(mtype!=10 && mtype!=15)
+            if(mtype!=10 && mtype!=14 && mtype!=15)
 			{
 ////////////////////////////////////////////////////////////////////////////////////
 				if(enemy->state==CS_DEAD) { enemy = player1; anger = 0; }
@@ -379,7 +379,7 @@ namespace game
 				monsterhurtpos = o;
 			}
 ///////////////////////////////////////////////////////////////////////////////
-            if(mtype!=10)
+            if(mtype!=10 && mtype!=15)
             {
                 damageeffect(damage, this);
             }
@@ -392,7 +392,7 @@ namespace game
                 playsound(monstertypes[mtype].diesound, &o);
                 monsterkilled();
 ///////////////////////////////////////////////////////////////////////////////
-                if(mtype!=10)
+                if(mtype!=10 && mtype!=15)
                 {
                     gibeffect(max(-health, 0), vel, this);
                 }
