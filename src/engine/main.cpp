@@ -144,7 +144,7 @@ void writemapcfg(int *arg, int *loadinv, int *loadtri, char *mapname)
 	if(arg[0] == 1) f->printf("exec packages/textures/blazurban_2/package.cfg\n");
 	if(arg[0] == 2) f->printf("exec packages/textures/johnston/config.cfg\n");
 	if(arg[0] == 3) f->printf("exec packages/textures/e8texpack/package.cfg\n");
-	f->printf("// exec packages/textures/blikjebier/akatori/package.cfg\n");
+	f->printf("// exec packages/textures/blikjebier/akaritori/package.cfg\n");
 	f->printf("// exec packages/textures/blikjebier/concrete/package.cfg\n");
 	f->printf("// exec packages/textures/blikjebier/ground/package.cfg\n");
 	f->printf("// exec packages/textures/blikjebier/metal/package.cfg\n");
@@ -159,7 +159,7 @@ void writemapcfg(int *arg, int *loadinv, int *loadtri, char *mapname)
 	f->printf("// exec packages/textures/makke/package.cfg\n");
 	f->printf("// exec packages/textures/mitaman/package.cfg\n");
 	f->printf("// exec packages/textures/nieb/package.cfg\n");
-	f->printf("// exec packages/textures/noctuna/package.cfg\n");
+	f->printf("// exec packages/textures/noctua/package.cfg\n");
 	f->printf("// exec packages/textures/payne/package.cfg\n");
 	f->printf("// exec packages/textures/philipk/package.cfg\n");
 	f->printf("// exec packages/textures/pk02/package.cfg\n");
