@@ -45,13 +45,13 @@ namespace game
             moveragdoll(d);
         }
     }
-// keep two playermodels for now, should become male/female model
-    static const playermodelinfo playermodels[2] =
+    static const playermodelinfo playermodels[3] =
     {
-//        { "mrfixit", "mrfixit/blue", "mrfixit/red", "mrfixit/hudguns", NULL, "mrfixit/horns", { "mrfixit/armor/blue", "mrfixit/armor/green", "mrfixit/armor/yellow" }, "mrfixit", "mrfixit_blue", "mrfixit_red", true },
-//        { "ogro2", "ogro2/blue", "ogro2/red", "mrfixit/hudguns", NULL, "ogro2/quad", { "ogro2/armor/blue", "ogro2/armor/green", "ogro2/armor/yellow" }, "ogro", "ogro_blue", "ogro_red", true },
+//		{ "ogro2", "ogro2/blue", "ogro2/red", "mrfixit/hudguns", NULL, "ogro2/quad", { "ogro2/armor/blue", "ogro2/armor/green", "ogro2/armor/yellow" }, "ogro", "ogro_blue", "ogro_red", true },
         { "playermodels/male", "playermodels/male/blue", "playermodels/male/red", "playermodels/male/hudguns", NULL, "playermodels/male/horns", { "playermodels/male/armor/blue", "playermodels/male/armor/green", "playermodels/male/armor/yellow" }, "male", "male_blue", "male_red", true },
         { "playermodels/female", "playermodels/female/blue", "playermodels/female/red", "playermodels/female/hudguns", NULL, "playermodels/female/horns", { "playermodels/female/armor/blue", "playermodels/female/armor/green", "playermodels/female/armor/yellow" }, "female", "female_blue", "female_red", true },
+		// the buggy is ment for thirdperson view
+        { "playermodels/buggy", "playermodels/buggy/blue", "playermodels/buggy/red", "playermodels/buggy/hudguns", NULL, "playermodels/buggy/horns", { "playermodels/buggy/armor/blue", "playermodels/buggy/armor/green", "playermodels/buggy/armor/yellow" }, "buggy", "buggy_blue", "buggy_red", true },
     };
 
     int chooserandomplayermodel(int seed)
