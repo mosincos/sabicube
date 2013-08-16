@@ -2,7 +2,7 @@ SabiCube
 ========
 
 A single-player total conversion of Cube2-Sauerbraten with focus on adding rpg/adventure elements.
-This package includes the first three levels of the game ZetaProject, and a test-map for the new features.
+This package includes the first chapter of the game ZetaProject, and a test-map for the new features.
 The goal is to make the gamebuilding process as fun as playing a game, with intuitive menus and guides
 to help anyone make their own open-source rpg/adventure game, without prior knowledge of programming or 3D-modeling.
 
@@ -11,4 +11,4 @@ maps from the original sauerbraten (or compatible engines) will be able to load 
 no plans to change the map-format. SabiCube is tested on 64-bit (Kubuntu) and 32-bit (KXStudio), and compiling
 should be fairly simple, just follow the installguide below.
 
-To get the latest version of this document, please visit http://github.com/sandsound/sabicube/wiki
+To get the latest version of this document or SabiCube, please visit http://github.com/sandsound/sabicube/wiki

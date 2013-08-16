@@ -56,6 +56,32 @@ namespace game
 		delete f;
 	}
 	COMMAND(writegameprogress, "is");
+//////////////////////////////////////////////////////////////////////////// save/load game
+	void savegame(int *arg, char *curmapname)
+	{
+		string gamecfgname;
+		formatstring(gamecfgname)("packages/savegame/%s.sav", curmapname);
+		stream *f = openutf8file((gamecfgname), "w");
+	//	if(!f) return;
+		f->printf("// automaticly generated\n");
+		f->printf("// do not modify\n");
+		f->printf("// gamename %s\n", curmapname);
+		f->printf("gameprogress = %d\n", arg[0]);
+
+		string inventorystring;
+		int itemamount;
+		for(int x=0;x<100;x=x+1)
+		{
+			itemamount = player1->inventory[x];
+			formatstring(inventorystring)("inventoryoverwrite %d", x);
+			f->printf("%s ", inventorystring);
+			f->printf("%d\n", itemamount);
+		}
+		f->printf("mode -3;map %s\n", curmapname);
+		f->printf("logvar = %d\n", arg[0]);
+		delete f;
+	}
+	COMMAND(savegame, "is"); // gameprogress - curmapname
 ///////////////////////////////////////////////////////////////////////////// Zoom
     void waxon()
     {
