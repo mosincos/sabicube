@@ -8,7 +8,7 @@ to help anyone make their own open-source rpg/adventure game, without prior know
 
 This is a work in progress so editor-workflow might change in future releases as we add features to the engine, but
 maps from the original sauerbraten (or compatible engines) will be able to load with minor adjustment, and we have
-no plans to change the map-format. SabiCube is tested on 64-bit (Kubuntu) and 32-bit (KXStudio), and compiling
-should be fairly simple, just follow the installguide below.
+no plans to change the map-format. SabiCube is tested on 64-bit (Kubuntu) and 32-bit (KXStudio), and installing should be fairly simple, just follow the guide :https://github.com/sandsound/sabicube/wiki#installing
 
-To get the latest version of this document or SabiCube, please visit http://github.com/sandsound/sabicube/wiki
+To get the latest version of this document or SabiCube, please visit http://github.com/sandsound/sabicube
+or follow us on http://www.moddb.com/mods/sabicube
