@@ -28,20 +28,32 @@ namespace game
 
     void setplayerexp(int *arg)
     {
-        if(player1->state!=CS_ALIVE) return;
+//        if(player1->state!=CS_ALIVE) return; // Do we need this?
 		player1->playerexperience = player1->playerexperience + arg[0];
     }
     COMMAND(setplayerexp,  "i");
+    void addplayerexp(int *arg)
+    {
+//        if(player1->state!=CS_ALIVE) return;
+		player1->playerexperience = player1->playerexperience + arg[0];
+    }
+    COMMAND(addplayerexp,  "i");
     ICOMMAND(getplayerexp, "", (), intret(player1->playerexperience));
     void setplayerlvl(int *arg)
     {
-        if(player1->state!=CS_ALIVE) return;
-		player1->playerlevel = player1->playerlevel + arg[0];
+//        if(player1->state!=CS_ALIVE) return;
+		player1->playerlevel = arg[0];
     }
     COMMAND(setplayerlvl,  "i");
+    void addplayerlvl(int *arg)
+    {
+//        if(player1->state!=CS_ALIVE) return;
+		player1->playerlevel = player1->playerlevel + arg[0];
+    }
+    COMMAND(addplayerlvl,  "i");
     ICOMMAND(getplayerlvl, "", (), intret(player1->playerlevel));
 
-//////////////////////////////////////////////////////////////////////////// save/load game
+//////////////////////////////////////////////////////////////////////////// * OLD * save/load game
 	void writegameprogress(int *arg, char *gamename)
 	{
 		string gamecfgname;
@@ -66,8 +78,8 @@ namespace game
 		f->printf("// automaticly generated\n");
 		f->printf("// do not modify\n");
 		f->printf("// gamename %s\n", curmapname);
+		f->printf("mode -3;map %s\n", curmapname);
 		f->printf("gameprogress = %d\n", arg[0]);
-
 		string inventorystring;
 		int itemamount;
 		for(int x=0;x<100;x=x+1)
@@ -77,8 +89,36 @@ namespace game
 			f->printf("%s ", inventorystring);
 			f->printf("%d\n", itemamount);
 		}
-		f->printf("mode -3;map %s\n", curmapname);
 		f->printf("logvar = %d\n", arg[0]);
+
+		if((player1->energyregen * 10) == 1)
+		{
+			f->printf("addenergyregen\n");
+		}
+		if((player1->energyregen * 10) > 1)
+		{
+			f->printf("addenergyregen\n");
+		}
+		if((player1->energyregen * 10) > 2)
+		{
+			f->printf("addenergyregen\n");
+		}
+		if((player1->energyregen * 10) > 3)
+		{
+			f->printf("addenergyregen\n");
+		}
+		if((player1->energyregen * 10) > 4)
+		{
+			f->printf("addenergyregen\n");
+		}
+		if((player1->energyregen * 10) > 5)
+		{
+			f->printf("addenergyregen\n");
+		}
+		f->printf("setplayerexp %d\n", player1->playerexperience);
+		f->printf("setplayerlvl %d\n", player1->playerlevel);
+		f->printf("setmaxcarryweight %d\n", player1->maxcarryweight);
+		f->printf("setmaxhealth %d\n", player1->maxhealth);
 		delete f;
 	}
 	COMMAND(savegame, "is"); // gameprogress - curmapname
@@ -177,10 +217,16 @@ namespace game
 
     void setmaxcarryweight(int *arg)
     {
-        if(player1->state!=CS_ALIVE) return;
-		player1->maxcarryweight = player1->maxcarryweight + arg[0];
+//        if(player1->state!=CS_ALIVE) return;
+		player1->maxcarryweight = arg[0];
     }
 	COMMAND(setmaxcarryweight,  "i");
+    void addmaxcarryweight(int *arg)
+    {
+//        if(player1->state!=CS_ALIVE) return;
+		player1->maxcarryweight = player1->maxcarryweight + arg[0];
+    }
+	COMMAND(addmaxcarryweight,  "i");
 	ICOMMAND(getmaxcarryweight, "", (), intret(player1->maxcarryweight));
 	ICOMMAND(getcarryweight, "", (), intret(player1->weight));
 	
@@ -342,14 +388,11 @@ namespace game
     }
     COMMAND(getenergy, "i");
     ICOMMAND(getenergyregen, "", (), intret((player1->energyregen * 10)));
-    void setenergyregen()
+    void addenergyregen()
     {
-        if(player1->state!=CS_ALIVE) return;
-        {
-		    player1->energyregen = player1->energyregen + 0.2f;
-        }
+	    player1->energyregen = player1->energyregen + 0.1f;
     }
-    COMMAND(setenergyregen, "");
+    COMMAND(addenergyregen, "");
 //////////////////////////////////////////////////////////////////////// HEALTH
     void gethealing(int *arg)
     {

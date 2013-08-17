@@ -577,7 +577,7 @@ struct fpsent : dynent, fpsstate
 		{
 			inventory[x]=(0); // set amount of all items to 0
 		}
-		energyregen = 0.2f;
+		energyregen = 0.1f;
 //		carryweight = 0.0f;
 		maxcarryweight = 120;
 		respawn();
