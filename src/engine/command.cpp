@@ -2648,6 +2648,7 @@ ICOMMAND(listdel, "ss", (char *list, char *del), commandret->setstr(listdel(list
 ICOMMAND(indexof, "ss", (char *list, char *elem), intret(listincludes(list, elem, strlen(elem))));
 ICOMMAND(listfind, "rse", (ident *id, char *list, uint *body), looplist(id, list, body, true));
 ICOMMAND(looplist, "rse", (ident *id, char *list, uint *body), looplist(id, list, body, false));
+/////////
 ICOMMAND(loopfiles, "rsse", (ident *id, char *dir, char *ext, uint *body),
 {
     if(id->type!=ID_ALIAS) return;
@@ -2660,13 +2661,13 @@ ICOMMAND(loopfiles, "rsse", (ident *id, char *dir, char *ext, uint *body),
         bool redundant = false;
         loopj(i) if(!strcmp(files[j], file)) { redundant = true; break; }
         if(redundant) { delete[] file; continue; }
-        if(i) 
+        if(i)
         {
-            if(id->valtype == VAL_STR) delete[] id->val.s;
+            if(id->type == VAL_STR) delete[] id->val.s;
             else id->valtype = VAL_STR;
             id->val.s = file;
         }
-        else 
+        else
         {
             tagval t;
             t.setstr(file);
@@ -2677,6 +2678,7 @@ ICOMMAND(loopfiles, "rsse", (ident *id, char *dir, char *ext, uint *body),
     }
     if(files.length()) poparg(*id);
 });
+/////////
 
 struct sortitem
 {
