@@ -29,7 +29,7 @@ namespace game
     void setplayerexp(int *arg)
     {
 //        if(player1->state!=CS_ALIVE) return; // Do we need this?
-		player1->playerexperience = player1->playerexperience + arg[0];
+		player1->playerexperience = arg[0];
     }
     COMMAND(setplayerexp,  "i");
     void addplayerexp(int *arg)
@@ -78,7 +78,7 @@ namespace game
 		f->printf("// automaticly generated\n");
 		f->printf("// do not modify\n");
 		f->printf("// gamename %s\n", curmapname);
-		f->printf("mode -3;map %s\n", curmapname);
+//		f->printf("mode -3;map %s\n", curmapname);
 		f->printf("gameprogress = %d\n", arg[0]);
 		string inventorystring;
 		int itemamount;
@@ -119,6 +119,7 @@ namespace game
 		f->printf("setplayerlvl %d\n", player1->playerlevel);
 		f->printf("setmaxcarryweight %d\n", player1->maxcarryweight);
 		f->printf("setmaxhealth %d\n", player1->maxhealth);
+		f->printf("sethealth %d\n", player1->health);
 		delete f;
 	}
 	COMMAND(savegame, "is"); // gameprogress - curmapname
@@ -414,25 +415,23 @@ namespace game
     ICOMMAND(getmaxhealthstat, "", (), intret(player1->maxhealth));
     void setmaxhealth(int *arg)
     {
-        if(player1->state!=CS_ALIVE) return;
-        {
-		    player1->maxhealth = arg[0];
-        }
+	    player1->maxhealth = arg[0];
     }
     COMMAND(setmaxhealth, "i");
+    void sethealth(int *arg)
+    {
+	    player1->health = arg[0];
+    }
+    COMMAND(sethealth, "i");
 	void getpoison(int *arg)
 	{
-        if(player1->state!=CS_ALIVE) return;
-        {
-			if(arg[0] - player1->health >= 0)
-			{
-				suicide(player1);
-			}
-			else
-			{
-				player1->health = player1->health - arg[0];
-			}
-			
+		if(arg[0] - player1->health >= 0)
+		{
+			suicide(player1);
+		}
+		else
+		{
+			player1->health = player1->health - arg[0];
 		}
 	}
 	COMMAND(getpoison, "i");	
