@@ -23,7 +23,7 @@ namespace game
         addmsg(N_TAUNT, "rc", player1);
     }
     COMMAND(taunt, "");
-
+	
 /////////////////////////////////////////////////////////////////////// exp and lvl
 
     void setplayerexp(int *arg)
@@ -104,7 +104,10 @@ namespace game
 ///////////////////////////////////////////////////////////////////////////// Zoom
     void waxon()
     {
-		player1->scopezoom = 1;
+		if(player1->gunselect==GUN_RIFLE)
+		{
+			player1->scopezoom = 1;
+		}
     }
     COMMAND(waxon, "");
     void waxof()
