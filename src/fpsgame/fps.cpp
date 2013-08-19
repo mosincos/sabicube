@@ -74,10 +74,12 @@ namespace game
 		string gamecfgname;
 		formatstring(gamecfgname)("packages/savegame/%s.sav", curmapname);
 		stream *f = openutf8file((gamecfgname), "w");
-	//	if(!f) return;
+//		check for existing file ? should give a warning if file exist
+//		if(!f) return;
 		f->printf("// automaticly generated\n");
 		f->printf("// do not modify\n");
 		f->printf("// gamename %s\n", curmapname);
+//		below added in scripting instead
 //		f->printf("mode -3;map %s\n", curmapname);
 		f->printf("gameprogress = %d\n", arg[0]);
 		string inventorystring;
@@ -90,31 +92,7 @@ namespace game
 			f->printf("%d\n", itemamount);
 		}
 		f->printf("logvar = %d\n", arg[0]);
-
-		if((player1->energyregen * 10) == 1)
-		{
-			f->printf("addenergyregen\n");
-		}
-		if((player1->energyregen * 10) > 1)
-		{
-			f->printf("addenergyregen\n");
-		}
-		if((player1->energyregen * 10) > 2)
-		{
-			f->printf("addenergyregen\n");
-		}
-		if((player1->energyregen * 10) > 3)
-		{
-			f->printf("addenergyregen\n");
-		}
-		if((player1->energyregen * 10) > 4)
-		{
-			f->printf("addenergyregen\n");
-		}
-		if((player1->energyregen * 10) > 5)
-		{
-			f->printf("addenergyregen\n");
-		}
+		f->printf("setenergyregen %f\n", player1->energyregen);
 		f->printf("setplayerexp %d\n", player1->playerexperience);
 		f->printf("setplayerlvl %d\n", player1->playerlevel);
 		f->printf("setmaxcarryweight %d\n", player1->maxcarryweight);
@@ -388,12 +366,18 @@ namespace game
         }
     }
     COMMAND(getenergy, "i");
-    ICOMMAND(getenergyregen, "", (), intret((player1->energyregen * 10)));
+    ICOMMAND(getenergyregen, "", (), floatret(player1->energyregen));
+    ICOMMAND(getenergyregenint, "", (), intret(player1->energyregen * 10));
     void addenergyregen()
     {
 	    player1->energyregen = player1->energyregen + 0.1f;
     }
     COMMAND(addenergyregen, "");
+    void setenergyregen(float  *arg)
+    {
+	    player1->energyregen = arg[0];
+    }
+    COMMAND(setenergyregen, "f");
 //////////////////////////////////////////////////////////////////////// HEALTH
     void gethealing(int *arg)
     {
