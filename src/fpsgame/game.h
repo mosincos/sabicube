@@ -502,10 +502,7 @@ struct fpsstate
                 armourtype = A_BLUE;
                 armour = 25;
             }
-//            ammo[GUN_PISTOL] = 80;
-//            ammo[GUN_GL] = 1;
 			gunselect = GUN_FIST;
-//			ammo[GUN_PISTOL] = inventory87test;
 		}
         else
         {
@@ -548,6 +545,8 @@ struct fpsent : dynent, fpsstate
     int lastspeedrun;
     float energy;
 	float energyregen;
+	float mana;
+	float maxmana;
 //	float carryweight;
 //	float maxcarryweight;
 	int playerexperience;
@@ -580,6 +579,7 @@ struct fpsent : dynent, fpsstate
 		energyregen = 0.1f;
 //		carryweight = 0.0f;
 		maxcarryweight = 120;
+		maxmana = 512.0f;
 		respawn();
     }
     ~fpsent()
@@ -622,6 +622,7 @@ struct fpsent : dynent, fpsstate
         lastspeedrun = 0;
         energy = 512.0f;
 		scopezoom = 0;
+		mana = 512.0f;
 ///////////////////////////////////////////////////////////////////////////
         lastpickup = -1;
         lastpickupmillis = 0;
@@ -760,6 +761,12 @@ namespace game
     extern void drawhudbg(int icon, float x, float y, float sz = 512);
     extern void drawhealthbar(int icon, float x, float y, float sz = 512);
     extern void drawenergybar(int icon, float x, float y, float sz = 512);
+    extern void drawmanabar(int icon, float x, float y, float sz = 512);
+    extern void drawhotkeybg(int icon, float x, float y, float sz = 512);
+    extern void drawhotkey1(int icon, float x, float y, float sz = 512);
+    extern void drawhotkey2(int icon, float x, float y, float sz = 512);
+    extern void drawhotkey3(int icon, float x, float y, float sz = 512);
+    extern void drawhotkey4(int icon, float x, float y, float sz = 512);
 	extern int activecrosshair;
 	extern int activateitem;
 //////////////////////////////////////////////////////////////////////////////////

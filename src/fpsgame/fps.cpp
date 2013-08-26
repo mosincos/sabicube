@@ -153,13 +153,20 @@ namespace game
     ICOMMAND(getglstat, "", (), intret(player1->ammo[GUN_GL]));
     ICOMMAND(getchaingunstat, "", (), intret(player1->ammo[GUN_CG]));
     ICOMMAND(getrlstat, "", (), intret(player1->ammo[GUN_RL]));
-	ICOMMAND(inventory87read, "", (), intret(player1->inventory[87])); // pistolammo
-	ICOMMAND(inventory88read, "", (), intret(player1->inventory[88])); // shotgunammo
-	ICOMMAND(inventory89read, "", (), intret(player1->inventory[89])); // rifleammo
-	ICOMMAND(inventory90read, "", (), intret(player1->inventory[89])); // grenades
-	ICOMMAND(inventory91read, "", (), intret(player1->inventory[90])); // chaingunammo
-	ICOMMAND(inventory92read, "", (), intret(player1->inventory[91])); // rockets
 
+	void testfire()
+	{
+		player1->gunselect = GUN_FIREBALL;
+		player1->ammo[GUN_FIREBALL] = 100;
+	}
+	COMMAND(testfire, "");
+	void testice()
+	{
+		player1->gunselect = GUN_ICEBALL;
+		player1->ammo[GUN_ICEBALL] = 100;
+	}
+	COMMAND(testice, "");
+	
 //////////////////////////////////////////////////////////////////////////// inventory
 
 	void inventoryoverwrite(int &x, int *arg, int &y)
@@ -181,7 +188,8 @@ namespace game
 			if(player1->weight>=player1->maxcarryweight)
 			{
 				conoutf("You are over-encumbered");
-				player1->maxspeed = player1->maxspeed / 2;
+//				player1->maxspeed = player1->maxspeed / 2;
+				player1->maxspeed = 50;
 			}
 		}
 		if(y<0)
@@ -190,7 +198,8 @@ namespace game
 			if(player1->weight>=player1->maxcarryweight)
 			{
 				conoutf("You are over-encumbered");
-				player1->maxspeed = player1->maxspeed / 2;
+//				player1->maxspeed = player1->maxspeed / 2;
+				player1->maxspeed = 50;
 			}
 		}
 		player1->inventory[x] = player1->inventory[x] + arg[0];
@@ -213,102 +222,12 @@ namespace game
 	ICOMMAND(getcarryweight, "", (), intret(player1->weight));
 	
 	
-//******************** something like this?
-//	void inventoryread(int *arg)
-//	{
-//		intret(player1->inventory[arg[0]]);
-//	}
-//	COMMAND(inventoryread, "i");
-//********************
-
-	ICOMMAND(inventory0read, "", (), intret(player1->inventory[0]));
-	ICOMMAND(inventory1read, "", (), intret(player1->inventory[1]));
-	ICOMMAND(inventory2read, "", (), intret(player1->inventory[2]));
-	ICOMMAND(inventory3read, "", (), intret(player1->inventory[3]));
-	ICOMMAND(inventory4read, "", (), intret(player1->inventory[4]));
-	ICOMMAND(inventory5read, "", (), intret(player1->inventory[5]));
-	ICOMMAND(inventory6read, "", (), intret(player1->inventory[6]));
-	ICOMMAND(inventory7read, "", (), intret(player1->inventory[7]));
-	ICOMMAND(inventory8read, "", (), intret(player1->inventory[8]));
-	ICOMMAND(inventory9read, "", (), intret(player1->inventory[9]));
-
-	ICOMMAND(inventory10read, "", (), intret(player1->inventory[10]));
-	ICOMMAND(inventory11read, "", (), intret(player1->inventory[11]));
-	ICOMMAND(inventory12read, "", (), intret(player1->inventory[12]));
-	ICOMMAND(inventory13read, "", (), intret(player1->inventory[13]));
-	ICOMMAND(inventory14read, "", (), intret(player1->inventory[14]));
-	ICOMMAND(inventory15read, "", (), intret(player1->inventory[15]));
-	ICOMMAND(inventory16read, "", (), intret(player1->inventory[16]));
-	ICOMMAND(inventory17read, "", (), intret(player1->inventory[17]));
-	ICOMMAND(inventory18read, "", (), intret(player1->inventory[18]));
-	ICOMMAND(inventory19read, "", (), intret(player1->inventory[19]));
-
-	ICOMMAND(inventory20read, "", (), intret(player1->inventory[20]));
-	ICOMMAND(inventory21read, "", (), intret(player1->inventory[21]));
-	ICOMMAND(inventory22read, "", (), intret(player1->inventory[22]));
-	ICOMMAND(inventory23read, "", (), intret(player1->inventory[23]));
-	ICOMMAND(inventory24read, "", (), intret(player1->inventory[24]));
-	ICOMMAND(inventory25read, "", (), intret(player1->inventory[25]));
-	ICOMMAND(inventory26read, "", (), intret(player1->inventory[26]));
-	ICOMMAND(inventory27read, "", (), intret(player1->inventory[27]));
-	ICOMMAND(inventory28read, "", (), intret(player1->inventory[28]));
-	ICOMMAND(inventory29read, "", (), intret(player1->inventory[29]));
-	
-	ICOMMAND(inventory30read, "", (), intret(player1->inventory[30]));
-	ICOMMAND(inventory31read, "", (), intret(player1->inventory[31]));
-	ICOMMAND(inventory32read, "", (), intret(player1->inventory[32]));
-	ICOMMAND(inventory33read, "", (), intret(player1->inventory[33]));
-	ICOMMAND(inventory34read, "", (), intret(player1->inventory[34]));
-	ICOMMAND(inventory35read, "", (), intret(player1->inventory[35]));
-	ICOMMAND(inventory36read, "", (), intret(player1->inventory[36]));
-	ICOMMAND(inventory37read, "", (), intret(player1->inventory[37]));
-	ICOMMAND(inventory38read, "", (), intret(player1->inventory[38]));
-	ICOMMAND(inventory39read, "", (), intret(player1->inventory[39]));
-	
-	ICOMMAND(inventory40read, "", (), intret(player1->inventory[40]));
-	ICOMMAND(inventory41read, "", (), intret(player1->inventory[41]));
-	ICOMMAND(inventory42read, "", (), intret(player1->inventory[42]));
-	ICOMMAND(inventory43read, "", (), intret(player1->inventory[43]));
-	ICOMMAND(inventory44read, "", (), intret(player1->inventory[44]));
-	ICOMMAND(inventory45read, "", (), intret(player1->inventory[45]));
-	ICOMMAND(inventory46read, "", (), intret(player1->inventory[46]));
-	ICOMMAND(inventory47read, "", (), intret(player1->inventory[47]));
-	ICOMMAND(inventory48read, "", (), intret(player1->inventory[48]));
-	ICOMMAND(inventory49read, "", (), intret(player1->inventory[49]));
-	
-	ICOMMAND(inventory50read, "", (), intret(player1->inventory[50]));
-	ICOMMAND(inventory51read, "", (), intret(player1->inventory[51]));
-	ICOMMAND(inventory52read, "", (), intret(player1->inventory[52]));
-	ICOMMAND(inventory53read, "", (), intret(player1->inventory[53]));
-	ICOMMAND(inventory54read, "", (), intret(player1->inventory[54]));
-	ICOMMAND(inventory55read, "", (), intret(player1->inventory[55]));
-	ICOMMAND(inventory56read, "", (), intret(player1->inventory[56]));
-	ICOMMAND(inventory57read, "", (), intret(player1->inventory[57]));
-	ICOMMAND(inventory58read, "", (), intret(player1->inventory[58]));
-	ICOMMAND(inventory59read, "", (), intret(player1->inventory[59]));
-	
-	ICOMMAND(inventory60read, "", (), intret(player1->inventory[60]));
-	ICOMMAND(inventory61read, "", (), intret(player1->inventory[61]));
-	ICOMMAND(inventory62read, "", (), intret(player1->inventory[62]));
-	ICOMMAND(inventory63read, "", (), intret(player1->inventory[63]));
-	ICOMMAND(inventory64read, "", (), intret(player1->inventory[64]));
-	ICOMMAND(inventory65read, "", (), intret(player1->inventory[65]));
-	ICOMMAND(inventory66read, "", (), intret(player1->inventory[66]));
-	ICOMMAND(inventory67read, "", (), intret(player1->inventory[67]));
-	ICOMMAND(inventory68read, "", (), intret(player1->inventory[68]));
-	ICOMMAND(inventory69read, "", (), intret(player1->inventory[69]));
-
-	ICOMMAND(inventory70read, "", (), intret(player1->inventory[70]));
-	ICOMMAND(inventory71read, "", (), intret(player1->inventory[71]));
-	ICOMMAND(inventory72read, "", (), intret(player1->inventory[72]));
-	ICOMMAND(inventory73read, "", (), intret(player1->inventory[73]));
-	ICOMMAND(inventory74read, "", (), intret(player1->inventory[74]));
-	ICOMMAND(inventory75read, "", (), intret(player1->inventory[75]));
-	ICOMMAND(inventory76read, "", (), intret(player1->inventory[76]));
-	ICOMMAND(inventory77read, "", (), intret(player1->inventory[77]));
-	ICOMMAND(inventory78read, "", (), intret(player1->inventory[78]));
-	ICOMMAND(inventory79read, "", (), intret(player1->inventory[79]));
+//////////////////////////////////////////////////////////////////////////// INVENTORY
+//	0-79 reserved for pickups
 //	80-100 reserved for ammo/guns
+	
+	ICOMMAND(inventoryread, "i", (int *arg), intret(player1->inventory[arg[0]]));
+
 //////////////////////////////////////////////////////////////////////////// ENERGY
 
 	void setmaxspeed(int *arg)
@@ -1169,11 +1088,10 @@ namespace game
         glBegin(GL_TRIANGLE_STRIP);
         glTexCoord2f(0.0f, 0.0f); glVertex2f(x,     y);
         glTexCoord2f(1.0f, 0.0f); glVertex2f(x+570, y);
-        glTexCoord2f(0.0f, 0.5f); glVertex2f(x,     y+140);
-        glTexCoord2f(1.0f, 0.5f); glVertex2f(x+570, y+140);
+        glTexCoord2f(0.0f, 0.75f); glVertex2f(x,     y+180);
+        glTexCoord2f(1.0f, 0.75f); glVertex2f(x+570, y+180);
         glEnd();
     }
-
     void drawhealthbar(int icon, float x, float y, float sz)
     {
 		float healthbarstat = sz * player1->health / player1->maxhealth;
@@ -1181,11 +1099,10 @@ namespace game
         glBegin(GL_TRIANGLE_STRIP);
         glTexCoord2f(0.0f, 0.0f); glVertex2f(x,               y);
         glTexCoord2f(1.0f, 0.0f); glVertex2f(x+healthbarstat, y);
-        glTexCoord2f(0.0f, 0.5f); glVertex2f(x,               y+sz/18);
-        glTexCoord2f(1.0f, 0.5f); glVertex2f(x+healthbarstat, y+sz/18);
+        glTexCoord2f(0.0f, 0.5f); glVertex2f(x,               y+sz/20);
+        glTexCoord2f(1.0f, 0.5f); glVertex2f(x+healthbarstat, y+sz/20);
         glEnd();
     }
-
 	void drawenergybar(int icon, float x, float y, float sz)
     {
 		if((player1->maxspeed != 100) && (player1->energy == 512.0f)) // 1
@@ -1194,8 +1111,8 @@ namespace game
 		    glBegin(GL_TRIANGLE_STRIP);
 		    glTexCoord2f(0.0f, 0.0f); glVertex2f(x,    y);
 		    glTexCoord2f(1.0f, 0.0f); glVertex2f(x+sz, y);
-		    glTexCoord2f(0.0f, 0.5f); glVertex2f(x,    y+sz/18);
-		    glTexCoord2f(1.0f, 0.5f); glVertex2f(x+sz, y+sz/18);
+		    glTexCoord2f(0.0f, 0.5f); glVertex2f(x,    y+sz/20);
+		    glTexCoord2f(1.0f, 0.5f); glVertex2f(x+sz, y+sz/20);
 		    glEnd();
 		}
 		if((player1->maxspeed == 100) && (player1->energy >= 1.0f)) // 2
@@ -1219,8 +1136,8 @@ namespace game
 			glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,               y);
 			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+energybarstat, y);
-			glTexCoord2f(0.0f, 0.5f); glVertex2f(x,               y+sz/18);
-			glTexCoord2f(1.0f, 0.5f); glVertex2f(x+energybarstat, y+sz/18);
+			glTexCoord2f(0.0f, 0.5f); glVertex2f(x,               y+sz/20);
+			glTexCoord2f(1.0f, 0.5f); glVertex2f(x+energybarstat, y+sz/20);
 			glEnd();
 
 		}
@@ -1238,8 +1155,8 @@ namespace game
 			glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,               y);
 			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+energybarstat, y);
-			glTexCoord2f(0.0f, 0.5f); glVertex2f(x,               y+sz/18);
-			glTexCoord2f(1.0f, 0.5f); glVertex2f(x+energybarstat, y+sz/18);
+			glTexCoord2f(0.0f, 0.5f); glVertex2f(x,               y+sz/20);
+			glTexCoord2f(1.0f, 0.5f); glVertex2f(x+energybarstat, y+sz/20);
 			glEnd();
 		}
 		if((player1->maxspeed != 100) && (player1->energy >= 1.0f)) // 4
@@ -1255,12 +1172,109 @@ namespace game
 			glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,               y);
 			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+energybarstat, y);
-			glTexCoord2f(0.0f, 0.5f); glVertex2f(x,               y+sz/18);
-			glTexCoord2f(1.0f, 0.5f); glVertex2f(x+energybarstat, y+sz/18);
+			glTexCoord2f(0.0f, 0.5f); glVertex2f(x,               y+sz/20);
+			glTexCoord2f(1.0f, 0.5f); glVertex2f(x+energybarstat, y+sz/20);
 			glEnd();
 		}
     }
-	void drawsniperscope()
+	void drawmanabar(int icon, float x, float y, float sz)
+    {
+		float manabarstat = sz * player1->mana / player1->maxmana;
+        settexture("packages/hud/manabar.png");
+        glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(x,             y);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(x+manabarstat, y);
+        glTexCoord2f(0.0f, 0.5f); glVertex2f(x,             y+sz/20);
+        glTexCoord2f(1.0f, 0.5f); glVertex2f(x+manabarstat, y+sz/20);
+        glEnd();
+    }
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
+    void drawhotkeybg(int icon, float x, float y, float sz)
+    {
+        settexture("packages/hud/hotkeybg.png");
+        glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(x,     y);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(x+1800, y);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(x,     y+160);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(x+1800, y+160);
+        glEnd();
+    }
+    void drawhotkey1(int icon, float x, float y, float sz)
+    {
+//		hotkey1 = getbind 1;
+//		if(((getbind) 1)!=0)
+		if(player1->ammo[GUN_FIST]>=1)
+		{
+			settexture("packages/hud/huditem1.png");
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(600.0f, 1640.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(756.0f, 1640.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(600.0f, 1790.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(756.0f, 1790.0f);
+			glEnd();
+		}
+		else
+		{
+			return;
+		}
+    }
+    void drawhotkey2(int icon, float x, float y, float sz)
+    {
+		if(player1->ammo[GUN_PISTOL]>=1)
+		{
+			settexture("packages/hud/huditem2.png");
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(786.0f, 1640.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(950.0f, 1640.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(786.0f, 1790.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(950.0f, 1790.0f);
+			glEnd();
+		}
+		else
+		{
+			return;
+		}
+    }
+    void drawhotkey3(int icon, float x, float y, float sz)
+    {
+		if(player1->ammo[GUN_SG]>=1)
+		{
+			settexture("packages/hud/huditem3.png");
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(970.0f, 1640.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(1100.0f, 1640.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(970.0f, 1790.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(1100.0f, 1790.0f);
+			glEnd();
+		}
+		else
+		{
+			return;
+		}
+    }
+    void drawhotkey4(int icon, float x, float y, float sz)
+    {
+		if(player1->inventory[8]>=1)
+		{
+			settexture("packages/hud/huditem4.png");
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(1170.0f, 1640.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(1300.0f, 1640.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(1170.0f, 1790.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(1300.0f, 1790.0f);
+			glEnd();
+		}
+		else
+		{
+			return;
+		}
+    }
+/////////////////////////////////////
+    void drawsniperscope()
     {
 		if((player1->scopezoom==1) && (player1->ammo[GUN_RIFLE]>=1) && (player1->gunselect==GUN_RIFLE))
 		{
@@ -1276,6 +1290,34 @@ namespace game
 		else
 		{
 			return;
+		}
+    }
+    void drawlevelup()
+    {
+//		draw_textf("Exp: %d", 1300, 800, (player1->playerexperience));
+		if((player1->playerexperience>=99) && (player1->playerlevel==0))
+		{
+			draw_textf("You have reached level 1", 1800, 400);
+		}
+		else if((player1->playerexperience>=199) && (player1->playerlevel==1))
+		{
+			draw_textf("You have reached level 2", 1800, 400);
+		}
+		else if((player1->playerexperience>=399) && (player1->playerlevel==2))
+		{
+			draw_textf("You have reached level 3", 1800, 400);
+		}
+		else if((player1->playerexperience>=799) && (player1->playerlevel==3))
+		{
+			draw_textf("You have reached level 4", 1800, 400);
+		}
+		else if((player1->playerexperience>=1599) && (player1->playerlevel==4))
+		{
+			draw_textf("You have reached level 5", 1800, 400);
+		}
+		else if((player1->playerexperience>=3199) && (player1->playerlevel==5))
+		{
+			draw_textf("You have reached level 6", 1800, 400);
 		}
     }
 ////////////////////////////////////////////////////////////////////////////
@@ -1361,8 +1403,9 @@ namespace game
 //      draw_textf("%d", (HICON_X + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->state==CS_DEAD ? 0 : d->health);
         if(d->state!=CS_DEAD)
         {
-            if(d->armour) draw_textf("%d", (HICON_X + HICON_STEP + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->armour);
-            draw_textf("%d", (HICON_X + 2*HICON_STEP + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->ammo[d->gunselect]);
+//            if(d->armour) draw_textf("%d", (HICON_X + HICON_STEP + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->armour);
+//            draw_textf("%d", (HICON_X + 2*HICON_STEP + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->ammo[d->gunselect]);
+			draw_textf("%d", 1200, 800, d->ammo[d->gunselect]);
         }
 
         glPopMatrix();
@@ -1371,13 +1414,20 @@ namespace game
         if(d->state!=CS_DEAD)			
         {		
 //          if(d->armour) drawicon(HICON_BLUE_ARMOUR+d->armourtype, HICON_X + HICON_STEP, HICON_Y);
-            drawicon(HICON_FIST+d->gunselect, HICON_X + 2*HICON_STEP, HICON_Y);
+//            drawicon(HICON_FIST+d->gunselect, HICON_X + 2*HICON_STEP, HICON_Y);
 //          if(d->quadmillis) drawicon(HICON_QUAD, HICON_X + 3*HICON_STEP, HICON_Y);
             if(ammohud) drawammohud(d);
-			drawhealthbar(HICON_BLUE_ARMOUR, 40.0f, 1658.0f);
-			drawenergybar(HICON_BLUE_ARMOUR, 40.0f, 1720.0f);
-			drawhudbg(HICON_BLUE_ARMOUR, 10.0f, 1630.0f);   // left
+			drawhealthbar(HICON_BLUE_ARMOUR, 40.0f, 1654.0f);
+			drawenergybar(HICON_BLUE_ARMOUR, 40.0f, 1708.0f);
+			drawmanabar(HICON_BLUE_ARMOUR, 40.0f, 1762.0f);
+			drawhudbg(HICON_BLUE_ARMOUR, 10.0f, 1630.0f);
+			drawhotkeybg(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
+			drawhotkey1(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
+			drawhotkey2(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
+			drawhotkey3(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
+			drawhotkey4(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
 			drawsniperscope();
+			drawlevelup();
         }
     }
 

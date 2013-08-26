@@ -244,6 +244,10 @@ void guibutton(char *name, char *action, char *icon)
         updatelater.add().schedule(action[0] ? action : name);
         if(shouldclearmenu) clearlater = true;
     }
+//    else if(ret&G3D_RMB)
+//    {
+//        conoutf("%s", name);
+//    }
     else if(ret&G3D_ROLLOVER)
     {
         alias("guirollovername", name);

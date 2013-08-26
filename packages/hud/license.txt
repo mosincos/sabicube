@@ -3,3 +3,5 @@ blip_blue.skull
     Derived from 21_skull.png by Joseph Wain (http://penandthink.com) available at http://glyphish.com
     Licensed as CC-BY 3.0 
     
+hudbg and bars by Sandie
+    Licensed as CC-BY 3.0 

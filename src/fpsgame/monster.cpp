@@ -502,7 +502,7 @@ namespace game
         numkilled++;
         player1->frags = numkilled;
         remain = monstertotal-numkilled;
-        if(remain>0 && remain<=5) conoutf(CON_GAMEINFO, "\f2only %d monster(s) remaining", remain);
+//        if(remain>0 && remain<=5) conoutf(CON_GAMEINFO, "\f2only %d monster(s) remaining", remain);
     }
 
     void updatemonsters(int curtime)
