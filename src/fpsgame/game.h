@@ -553,6 +553,7 @@ struct fpsent : dynent, fpsstate
 	int scopezoom;
 	int maxcarryweight;
 	int lockpicking;
+	int alchemy;
 	int hotkey1;
 	int hotkey2;
 	int hotkey3;
@@ -590,16 +591,17 @@ struct fpsent : dynent, fpsstate
 		maxcarryweight = 120;
 		maxmana = 512.0f;
 		lockpicking = 0;
+		alchemy = 0;
 		hotkey1 = 80;
 		hotkey2 = 81;
 		hotkey3 = 82;
 		hotkey4 = 8;
-//		hotkey5 = 0;
-//		hotkey6 = 0;
-//		hotkey7 = 0;
-//		hotkey8 = 0;
-//		hotkey9 = 0;
-//		hotkey0 = 0;
+		hotkey5 = 0;
+		hotkey6 = 0;
+		hotkey7 = 0;
+		hotkey8 = 0;
+		hotkey9 = 0;
+		hotkey0 = 0;
 		respawn();
     }
     ~fpsent()

@@ -67,6 +67,21 @@ namespace game
     COMMAND(addlockpicking,  "i");
     ICOMMAND(getlockpicking, "", (), intret(player1->lockpicking));
 	
+//////////////////////////////////////////////////////////////////////////// Alchemy
+    void setalchemy(int *arg)
+    {
+//        if(player1->state!=CS_ALIVE) return; // Do we need this?
+		player1->alchemy = arg[0];
+    }
+    COMMAND(setalchemy,  "i");
+    void addalchemy(int *arg)
+    {
+//        if(player1->state!=CS_ALIVE) return;
+		player1->alchemy = player1->alchemy + arg[0];
+    }
+    COMMAND(addalchemy,  "i");
+    ICOMMAND(getalchemy, "", (), intret(player1->alchemy));
+
 //////////////////////////////////////////////////////////////////////////// Hotkeys
     void sethotkey1(int *arg)
     {
