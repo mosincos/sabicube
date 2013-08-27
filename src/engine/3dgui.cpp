@@ -126,7 +126,8 @@ struct gui : g3d_gui
                 y1 = cury - ((skiny[6]-skiny[1])-(skiny[3]-skiny[2]))*SKIN_SCALE-h,
                 y2 = cury;
             bool hit = tcurrent && windowhit==this && hitx>=x1 && hity>=y1 && hitx<x2 && hity<y2;
-            if(hit && (!guiclicktab || mousebuttons&G3D_DOWN)) 
+//            if(hit && (!guiclicktab || mousebuttons&G3D_DOWN)) 
+            if(hit && mousebuttons&G3D_DOWN) 
                 *tcurrent = tpos; //roll-over to switch tab
             
             drawskin(x1-skinx[visible()?2:6]*SKIN_SCALE, y1-skiny[1]*SKIN_SCALE, w, h, visible()?10:19, 9, gui2d ? 1 : 2, light, alpha);

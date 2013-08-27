@@ -1,3 +1,8 @@
+Please note!
+------------
+The text below is from the original Cube2 - Sauerbraten, just replace sauerbraten with sabicube.
+************************************************************************************************
+
 * Installing and Running Sauerbraten
 
 *nix versions of Sauerbraten clients and standalone servers.

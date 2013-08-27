@@ -554,6 +554,7 @@ struct fpsent : dynent, fpsstate
 	int inventory [100];
 	int scopezoom;
 	int maxcarryweight;
+	int lockpicking;
 ///////////////////////////////////////////////////////////////////////////
     int lastpickup, lastpickupmillis, lastbase, lastrepammo, flagpickup, tokens;
     vec lastcollect;
@@ -580,6 +581,7 @@ struct fpsent : dynent, fpsstate
 //		carryweight = 0.0f;
 		maxcarryweight = 120;
 		maxmana = 512.0f;
+		lockpicking = 1;
 		respawn();
     }
     ~fpsent()

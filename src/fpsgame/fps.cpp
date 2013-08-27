@@ -53,6 +53,22 @@ namespace game
     COMMAND(addplayerlvl,  "i");
     ICOMMAND(getplayerlvl, "", (), intret(player1->playerlevel));
 
+//////////////////////////////////////////////////////////////////////////// Lockpicking
+	
+    void setlockpicking(int *arg)
+    {
+//        if(player1->state!=CS_ALIVE) return; // Do we need this?
+		player1->lockpicking = arg[0];
+    }
+    COMMAND(setlockpicking,  "i");
+    void addlockpicking(int *arg)
+    {
+//        if(player1->state!=CS_ALIVE) return;
+		player1->lockpicking = player1->lockpicking + arg[0];
+    }
+    COMMAND(addlockpicking,  "i");
+    ICOMMAND(getlockpicking, "", (), intret(player1->lockpicking));
+	
 //////////////////////////////////////////////////////////////////////////// * OLD * save/load game
 	void writegameprogress(int *arg, char *gamename)
 	{
@@ -98,6 +114,7 @@ namespace game
 		f->printf("setmaxcarryweight %d\n", player1->maxcarryweight);
 		f->printf("setmaxhealth %d\n", player1->maxhealth);
 		f->printf("sethealth %d\n", player1->health);
+		f->printf("setlockpicking %d\n", player1->lockpicking);
 		delete f;
 	}
 	COMMAND(savegame, "is"); // gameprogress - curmapname
