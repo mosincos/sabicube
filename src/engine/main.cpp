@@ -125,16 +125,21 @@ void writemapcfg(int *arg, int *loadinv, int *loadtri, char *mapname)
 	string mapcfgname;
 	formatstring(mapcfgname)("packages/base/%s.cfg", mapname);
 	stream *f = openutf8file((mapcfgname), "w");
-//	if(!f) return;
+//	if(f) return;
 	f->printf("// mapname %s\n", mapname);
 	f->printf("// Automaticly generated cfg-file\n// by SabiCube\n\n");	
-//	if(loadinv[0] == 1) f->printf("exec packages/base/escape/inventory.cfg\n");
+
 	if(loadinv[0] == 0) f->printf("//exec packages/base/zetaproject/inventory.cfg\n");
 	if(loadinv[0] == 1) f->printf("exec packages/base/zetaproject/inventory.cfg\n");
 	if(loadtri[0] == 0) f->printf("//exec packages/base/zetaproject/sabitest/triggers.cfg\n");
 	if(loadtri[0] == 1) f->printf("exec packages/base/zetaproject/sabitest/triggers.cfg\n");
 	if(loadtri[0] == 0) f->printf("//exec packages/base/zetaproject/gamevars.cfg\n\n");
 	if(loadtri[0] == 1) f->printf("exec packages/base/zetaproject/gamevars.cfg\n\n");
+	if(loadtri[0] == 0) f->printf("//exec packages/base/zetaproject/shop.cfg\n\n");
+	if(loadtri[0] == 1) f->printf("exec packages/base/zetaproject/shop.cfg\n\n");
+	if(loadtri[0] == 0) f->printf("//exec packages/base/zetaproject/start.cfg\n\n");
+	if(loadtri[0] == 1) f->printf("exec packages/base/zetaproject/start.cfg\n\n");
+
 	f->printf("loadsky \"skyboxes/remus/sky01\"\n\n");
 	f->printf("texturereset \n\n");
 	f->printf("setshader stdworld // use default world shader unless specified otherwise\n");

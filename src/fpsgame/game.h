@@ -547,14 +547,22 @@ struct fpsent : dynent, fpsstate
 	float energyregen;
 	float mana;
 	float maxmana;
-//	float carryweight;
-//	float maxcarryweight;
 	int playerexperience;
 	int playerlevel;
 	int inventory [100];
 	int scopezoom;
 	int maxcarryweight;
 	int lockpicking;
+	int hotkey1;
+	int hotkey2;
+	int hotkey3;
+	int hotkey4;
+	int hotkey5;
+	int hotkey6;
+	int hotkey7;
+	int hotkey8;
+	int hotkey9;
+	int hotkey0;
 ///////////////////////////////////////////////////////////////////////////
     int lastpickup, lastpickupmillis, lastbase, lastrepammo, flagpickup, tokens;
     vec lastcollect;
@@ -581,7 +589,17 @@ struct fpsent : dynent, fpsstate
 //		carryweight = 0.0f;
 		maxcarryweight = 120;
 		maxmana = 512.0f;
-		lockpicking = 1;
+		lockpicking = 0;
+		hotkey1 = 80;
+		hotkey2 = 81;
+		hotkey3 = 82;
+		hotkey4 = 8;
+//		hotkey5 = 0;
+//		hotkey6 = 0;
+//		hotkey7 = 0;
+//		hotkey8 = 0;
+//		hotkey9 = 0;
+//		hotkey0 = 0;
 		respawn();
     }
     ~fpsent()

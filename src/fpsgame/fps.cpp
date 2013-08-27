@@ -25,7 +25,6 @@ namespace game
     COMMAND(taunt, "");
 	
 /////////////////////////////////////////////////////////////////////// exp and lvl
-
     void setplayerexp(int *arg)
     {
 //        if(player1->state!=CS_ALIVE) return; // Do we need this?
@@ -54,7 +53,6 @@ namespace game
     ICOMMAND(getplayerlvl, "", (), intret(player1->playerlevel));
 
 //////////////////////////////////////////////////////////////////////////// Lockpicking
-	
     void setlockpicking(int *arg)
     {
 //        if(player1->state!=CS_ALIVE) return; // Do we need this?
@@ -68,6 +66,32 @@ namespace game
     }
     COMMAND(addlockpicking,  "i");
     ICOMMAND(getlockpicking, "", (), intret(player1->lockpicking));
+	
+//////////////////////////////////////////////////////////////////////////// Hotkeys
+    void sethotkey1(int *arg)
+    {
+		player1->hotkey1 = arg[0];
+    }
+    COMMAND(sethotkey1,  "i");
+    ICOMMAND(gethotkey1, "", (), intret(player1->hotkey1));
+    void sethotkey2(int *arg)
+    {
+		player1->hotkey2 = arg[0];
+    }
+    COMMAND(sethotkey2,  "i");
+    ICOMMAND(gethotkey2, "", (), intret(player1->hotkey2));
+    void sethotkey3(int *arg)
+    {
+		player1->hotkey3 = arg[0];
+    }
+    COMMAND(sethotkey3,  "i");
+    ICOMMAND(gethotkey3, "", (), intret(player1->hotkey3));
+    void sethotkey4(int *arg)
+    {
+		player1->hotkey4 = arg[0];
+    }
+    COMMAND(sethotkey4,  "i");
+    ICOMMAND(gethotkey4, "", (), intret(player1->hotkey4));
 	
 //////////////////////////////////////////////////////////////////////////// * OLD * save/load game
 	void writegameprogress(int *arg, char *gamename)
@@ -84,6 +108,7 @@ namespace game
 		delete f;
 	}
 	COMMAND(writegameprogress, "is");
+	
 //////////////////////////////////////////////////////////////////////////// save/load game
 	void savegame(int *arg, char *curmapname)
 	{
@@ -1222,11 +1247,11 @@ namespace game
     }
     void drawhotkey1(int icon, float x, float y, float sz)
     {
-//		hotkey1 = getbind 1;
-//		if(((getbind) 1)!=0)
-		if(player1->ammo[GUN_FIST]>=1)
+		if((player1->hotkey1)!=0)
 		{
-			settexture("packages/hud/huditem1.png");
+			string xkey1;
+			formatstring(xkey1)("packages/hud/%d.png", player1->hotkey1);
+			settexture(xkey1);
 			glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f(0.0f, 0.0f); glVertex2f(600.0f, 1640.0f);
 			glTexCoord2f(1.0f, 0.0f); glVertex2f(756.0f, 1640.0f);
@@ -1241,9 +1266,11 @@ namespace game
     }
     void drawhotkey2(int icon, float x, float y, float sz)
     {
-		if(player1->ammo[GUN_PISTOL]>=1)
+		if((player1->hotkey2)!=0)
 		{
-			settexture("packages/hud/huditem2.png");
+			string xkey2;
+			formatstring(xkey2)("packages/hud/%d.png", player1->hotkey2);
+			settexture(xkey2);
 			glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f(0.0f, 0.0f); glVertex2f(786.0f, 1640.0f);
 			glTexCoord2f(1.0f, 0.0f); glVertex2f(950.0f, 1640.0f);
@@ -1258,9 +1285,11 @@ namespace game
     }
     void drawhotkey3(int icon, float x, float y, float sz)
     {
-		if(player1->ammo[GUN_SG]>=1)
+		if((player1->hotkey3)!=0)
 		{
-			settexture("packages/hud/huditem3.png");
+			string xkey3;
+			formatstring(xkey3)("packages/hud/%d.png", player1->hotkey3);
+			settexture(xkey3);
 			glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f(0.0f, 0.0f); glVertex2f(970.0f, 1640.0f);
 			glTexCoord2f(1.0f, 0.0f); glVertex2f(1100.0f, 1640.0f);
@@ -1275,9 +1304,11 @@ namespace game
     }
     void drawhotkey4(int icon, float x, float y, float sz)
     {
-		if(player1->inventory[8]>=1)
+		if((player1->hotkey4)!=0)
 		{
-			settexture("packages/hud/huditem4.png");
+			string xkey4;
+			formatstring(xkey4)("packages/hud/%d.png", player1->hotkey4);
+			settexture(xkey4);
 			glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f(0.0f, 0.0f); glVertex2f(1170.0f, 1640.0f);
 			glTexCoord2f(1.0f, 0.0f); glVertex2f(1300.0f, 1640.0f);
