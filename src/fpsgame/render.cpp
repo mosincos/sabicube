@@ -282,7 +282,7 @@ namespace game
 
     void drawhudmodel(fpsent *d, int anim, float speed = 0, int base = 0)
     {
-        if(d->gunselect>GUN_PISTOL) return;
+        if(d->gunselect>GUN_SLIMEBALL) return;
 
         vec sway;
         vecfromyawpitch(d->yaw, 0, 0, 1, sway);

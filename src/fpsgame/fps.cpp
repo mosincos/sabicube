@@ -83,6 +83,11 @@ namespace game
     ICOMMAND(getalchemy, "", (), intret(player1->alchemy));
 
 //////////////////////////////////////////////////////////////////////////// Hotkeys
+//	void sethotkey(int *arg, int *arg)
+//	{
+//		player1->hotkey1 = arg[0];
+//	}
+//	COMMAND(sethotkey,  "ii");
     void sethotkey1(int *arg)
     {
 		player1->hotkey1 = arg[0];
@@ -107,6 +112,37 @@ namespace game
     }
     COMMAND(sethotkey4,  "i");
     ICOMMAND(gethotkey4, "", (), intret(player1->hotkey4));
+
+	void sethotkey5(int *arg)
+    {
+		player1->hotkey5 = arg[0];
+    }
+    COMMAND(sethotkey5,  "i");
+    ICOMMAND(gethotkey5, "", (), intret(player1->hotkey5));
+    void sethotkey6(int *arg)
+    {
+		player1->hotkey6 = arg[0];
+    }
+    COMMAND(sethotkey6,  "i");
+    ICOMMAND(gethotkey6, "", (), intret(player1->hotkey6));
+    void sethotkey7(int *arg)
+    {
+		player1->hotkey7 = arg[0];
+    }
+    COMMAND(sethotkey7,  "i");
+    ICOMMAND(gethotkey7, "", (), intret(player1->hotkey7));
+    void sethotkey8(int *arg)
+    {
+		player1->hotkey8 = arg[0];
+    }
+    COMMAND(sethotkey8,  "i");
+    ICOMMAND(gethotkey8, "", (), intret(player1->hotkey8));
+    void sethotkey9(int *arg)
+    {
+		player1->hotkey9 = arg[0];
+    }
+    COMMAND(sethotkey9,  "i");
+    ICOMMAND(gethotkey9, "", (), intret(player1->hotkey9));
 	
 //////////////////////////////////////////////////////////////////////////// * OLD * save/load game
 	void writegameprogress(int *arg, char *gamename)
@@ -214,15 +250,21 @@ namespace game
 	void testfire()
 	{
 		player1->gunselect = GUN_FIREBALL;
-		player1->ammo[GUN_FIREBALL] = 100;
+		player1->ammo[GUN_FIREBALL] = player1->mana;
 	}
 	COMMAND(testfire, "");
 	void testice()
 	{
 		player1->gunselect = GUN_ICEBALL;
-		player1->ammo[GUN_ICEBALL] = 100;
+		player1->ammo[GUN_ICEBALL] = player1->mana;
 	}
 	COMMAND(testice, "");
+	void testslime()
+	{
+		player1->gunselect = GUN_SLIMEBALL;
+		player1->ammo[GUN_SLIMEBALL] = player1->mana;
+	}
+	COMMAND(testslime, "");
 	
 //////////////////////////////////////////////////////////////////////////// inventory
 
@@ -398,6 +440,26 @@ namespace game
 		}
 	}
 	COMMAND(getpoison, "i");	
+/////////////////////////////////////////////////////////////////////// MANA
+    void getmana(int *arg)
+    {
+        if(player1->ammo[GUN_FIREBALL] != 512)
+        {
+			if(arg[0] + player1->ammo[GUN_FIREBALL] >= 512)
+			{
+				player1->ammo[GUN_FIREBALL] = 512;
+				player1->mana = 512.0f;
+			}
+			else
+			{
+				player1->ammo[GUN_FIREBALL] = player1->ammo[GUN_FIREBALL] + arg[0];
+				player1->mana = player1->mana + arg[0];
+			}
+        }
+    }
+    COMMAND(getmana, "i");
+	ICOMMAND(getmanastat, "", (), intret(player1->mana));
+	
 /////////////////////////////////////////////////////////////////////// ARMOUR
     void getarmour(int *arg)
     {
@@ -1201,7 +1263,6 @@ namespace game
 		if((player1->maxspeed == 100) && (player1->energy <= 1.0f)) // 3
 		{
 			player1->maxspeed = 50;
-//			float energybarstat = player1->energy + 0.2f;
 			float energybarstat = player1->energy + player1->energyregen;
 			player1->energy = energybarstat;
 			if(player1->energy>512.0f)
@@ -1218,7 +1279,6 @@ namespace game
 		}
 		if((player1->maxspeed != 100) && (player1->energy >= 1.0f)) // 4
 		{
-//			float energybarstat = player1->energy + 0.2f;
 			float energybarstat = player1->energy + player1->energyregen;
 			player1->energy = energybarstat;
 			if(player1->energy>512.0f)
@@ -1234,22 +1294,43 @@ namespace game
 			glEnd();
 		}
     }
+////////////////////////////////////////////////////////////////////////// Mana
+
 	void drawmanabar(int icon, float x, float y, float sz)
     {
-		float manabarstat = sz * player1->mana / player1->maxmana;
-        settexture("packages/hud/manabar.png");
-        glBegin(GL_TRIANGLE_STRIP);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(x,             y);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(x+manabarstat, y);
-        glTexCoord2f(0.0f, 0.5f); glVertex2f(x,             y+sz/20);
-        glTexCoord2f(1.0f, 0.5f); glVertex2f(x+manabarstat, y+sz/20);
-        glEnd();
+//		if((player1->mana >= 512.0f))
+//		{
+//			player1->mana = 512.0f;
+//		}
+		if(player1->gunselect >= GUN_FIREBALL)
+		{
+			if(player1->mana == 512.0f)
+			{
+				float manabarstat = sz * player1->mana / player1->maxmana;
+				settexture("packages/hud/manabar.png");
+				glBegin(GL_TRIANGLE_STRIP);
+				glTexCoord2f(0.0f, 0.0f); glVertex2f(x,             y);
+				glTexCoord2f(1.0f, 0.0f); glVertex2f(x+manabarstat, y);
+				glTexCoord2f(0.0f, 0.5f); glVertex2f(x,             y+sz/20);
+				glTexCoord2f(1.0f, 0.5f); glVertex2f(x+manabarstat, y+sz/20);
+				glEnd();
+			}
+			if(player1->mana != 512.0f)
+			{
+//				player1->mana = (player1->ammo[GUN_FIREBALL]);
+				float manabarstat = sz * player1->mana / player1->maxmana;
+				settexture("packages/hud/manabar.png");
+				glBegin(GL_TRIANGLE_STRIP);
+				glTexCoord2f(0.0f, 0.0f); glVertex2f(x,             y);
+				glTexCoord2f(1.0f, 0.0f); glVertex2f(x+manabarstat, y);
+				glTexCoord2f(0.0f, 0.5f); glVertex2f(x,             y+sz/20);
+				glTexCoord2f(1.0f, 0.5f); glVertex2f(x+manabarstat, y+sz/20);
+				glEnd();
+			}
+		}
     }
-/////////////////////////////////////
-/////////////////////////////////////
-/////////////////////////////////////
-/////////////////////////////////////
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////// Hotkeys
+
     void drawhotkeybg(int icon, float x, float y, float sz)
     {
         settexture("packages/hud/hotkeybg.png");
@@ -1336,6 +1417,121 @@ namespace game
 			return;
 		}
     }
+    void drawhotkey5(int icon, float x, float y, float sz)
+    {
+		if((player1->hotkey5)!=0)
+		{
+			string xkey5;
+			formatstring(xkey5)("packages/hud/%d.png", player1->hotkey5);
+			settexture(xkey5);
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(1370.0f, 1640.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(1500.0f, 1640.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(1370.0f, 1790.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(1500.0f, 1790.0f);
+			glEnd();
+		}
+		else
+		{
+			return;
+		}
+    }
+    void drawhotkey6(int icon, float x, float y, float sz)
+    {
+		if((player1->hotkey6)!=0)
+		{
+			string xkey6;
+			formatstring(xkey6)("packages/hud/%d.png", player1->hotkey6);
+			settexture(xkey6);
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(1570.0f, 1640.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(1700.0f, 1640.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(1570.0f, 1790.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(1700.0f, 1790.0f);
+			glEnd();
+		}
+		else
+		{
+			return;
+		}
+    }
+    void drawhotkey7(int icon, float x, float y, float sz)
+    {
+		if((player1->hotkey7)!=0)
+		{
+			string xkey7;
+			formatstring(xkey7)("packages/hud/%d.png", player1->hotkey7);
+			settexture(xkey7);
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(1770.0f, 1640.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(1900.0f, 1640.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(1770.0f, 1790.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(1900.0f, 1790.0f);
+			glEnd();
+		}
+		else
+		{
+			return;
+		}
+    }
+    void drawhotkey8(int icon, float x, float y, float sz)
+    {
+		if((player1->hotkey8)!=0)
+		{
+			string xkey8;
+			formatstring(xkey8)("packages/hud/%d.png", player1->hotkey8);
+			settexture(xkey8);
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(1970.0f, 1640.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(2100.0f, 1640.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(1970.0f, 1790.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(2100.0f, 1790.0f);
+			glEnd();
+		}
+		else
+		{
+			return;
+		}
+    }
+    void drawhotkey9(int icon, float x, float y, float sz)
+    {
+		if((player1->hotkey9)!=0)
+		{
+			string xkey9;
+			formatstring(xkey9)("packages/hud/%d.png", player1->hotkey9);
+			settexture(xkey9);
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(2170.0f, 1640.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(2300.0f, 1640.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(2170.0f, 1790.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(2300.0f, 1790.0f);
+			glEnd();
+		}
+		else
+		{
+			return;
+		}
+    }
+    void drawhotkey0(int icon, float x, float y, float sz)
+    {
+		if((player1->hotkey0)!=0)
+		{
+			string xkey0;
+			formatstring(xkey0)("packages/hud/%d.png", player1->hotkey0);
+			settexture(xkey0);
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(2370.0f, 1640.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(2500.0f, 1640.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(2370.0f, 1790.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(2500.0f, 1790.0f);
+			glEnd();
+		}
+		else
+		{
+			return;
+		}
+    }
+
 /////////////////////////////////////
     void drawsniperscope()
     {
@@ -1489,6 +1685,12 @@ namespace game
 			drawhotkey2(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
 			drawhotkey3(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
 			drawhotkey4(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
+			drawhotkey5(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
+			drawhotkey6(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
+			drawhotkey7(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
+			drawhotkey8(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
+			drawhotkey9(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
+			drawhotkey0(HICON_BLUE_ARMOUR, 600.0f, 1640.0f);
 			drawsniperscope();
 			drawlevelup();
         }

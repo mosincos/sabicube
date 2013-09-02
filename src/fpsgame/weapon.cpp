@@ -753,18 +753,28 @@ namespace game
         if((d==player1 || d->ai) && !d->attacking) return;
         d->lastaction = lastmillis;
         d->lastattackgun = d->gunselect;
+/////////////////////////////////////////////////////////////////////////
         if(!d->ammo[d->gunselect])
         {
             if(d==player1)
             {
                 msgsound(S_NOAMMO, d);
                 d->gunwait = 600;
-                d->lastattackgun = -1;
-                weaponswitch(d);
+//                d->lastattackgun = -1;
+//                weaponswitch(d);
             }
             return;
-        }
-        if(d->gunselect) d->ammo[d->gunselect]--;
+        }		
+//		if(d->gunselect) d->ammo[d->gunselect]--;
+		if((d->gunselect) && (d->gunselect <= GUN_FIREBALL)) d->ammo[d->gunselect]--;
+		if(d->gunselect >= GUN_FIREBALL)
+		{
+			d->mana = d->mana - 64;
+			d->ammo[GUN_FIREBALL] = d->mana;
+			d->ammo[GUN_ICEBALL] = d->mana;
+			d->ammo[GUN_SLIMEBALL] = d->mana;
+		}
+/////////////////////////////////////////////////////////////////////////
         vec from = d->o;
         vec to = targ;
 
