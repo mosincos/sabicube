@@ -767,12 +767,24 @@ namespace game
         }		
 //		if(d->gunselect) d->ammo[d->gunselect]--;
 		if((d->gunselect) && (d->gunselect <= GUN_FIREBALL)) d->ammo[d->gunselect]--;
-		if(d->gunselect >= GUN_FIREBALL)
+		if((d->gunselect >= GUN_FIREBALL) && (d->mana >= 64))
 		{
 			d->mana = d->mana - 64;
 			d->ammo[GUN_FIREBALL] = d->mana;
 			d->ammo[GUN_ICEBALL] = d->mana;
 			d->ammo[GUN_SLIMEBALL] = d->mana;
+		}
+		else if(d->mana <= 63)
+        {
+			d->ammo[GUN_FIREBALL] = d->mana;
+			d->ammo[GUN_ICEBALL] = d->mana;
+			d->ammo[GUN_SLIMEBALL] = d->mana;
+            if(d==player1)
+            {
+                msgsound(S_NOAMMO, d);
+                d->gunwait = 600;
+            }
+            return;
 		}
 /////////////////////////////////////////////////////////////////////////
         vec from = d->o;

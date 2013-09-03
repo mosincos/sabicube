@@ -85,7 +85,7 @@ namespace game
 //////////////////////////////////////////////////////////////////////////// Hotkeys
 //	void sethotkey(int *arg, int *arg)
 //	{
-//		player1->hotkey1 = arg[0];
+//		player1->hotkey arg[0] = arg[0];
 //	}
 //	COMMAND(sethotkey,  "ii");
     void sethotkey1(int *arg)
@@ -443,16 +443,16 @@ namespace game
 /////////////////////////////////////////////////////////////////////// MANA
     void getmana(int *arg)
     {
-        if(player1->ammo[GUN_FIREBALL] != 512)
+        if(player1->mana != 512.0f)
         {
-			if(arg[0] + player1->ammo[GUN_FIREBALL] >= 512)
+			if(arg[0] + player1->mana >= 512)
 			{
-				player1->ammo[GUN_FIREBALL] = 512;
+//				player1->ammo[GUN_FIREBALL] = 512;
 				player1->mana = 512.0f;
 			}
 			else
 			{
-				player1->ammo[GUN_FIREBALL] = player1->ammo[GUN_FIREBALL] + arg[0];
+//				player1->ammo[GUN_FIREBALL] = player1->ammo[GUN_FIREBALL] + arg[0];
 				player1->mana = player1->mana + arg[0];
 			}
         }
@@ -460,6 +460,18 @@ namespace game
     COMMAND(getmana, "i");
 	ICOMMAND(getmanastat, "", (), intret(player1->mana));
 	
+    ICOMMAND(getmanaregen, "", (), floatret(player1->manaregen));
+    ICOMMAND(getmanaregenint, "", (), intret(player1->manaregen * 10));
+    void addmanaregen()
+    {
+	    player1->manaregen = player1->manaregen + 0.1f;
+    }
+    COMMAND(addmanaregen, "");
+    void setmanaregen(float  *arg)
+    {
+	    player1->manaregen = arg[0];
+    }
+    COMMAND(setmanaregen, "f");
 /////////////////////////////////////////////////////////////////////// ARMOUR
     void getarmour(int *arg)
     {
@@ -1298,35 +1310,37 @@ namespace game
 
 	void drawmanabar(int icon, float x, float y, float sz)
     {
-//		if((player1->mana >= 512.0f))
-//		{
-//			player1->mana = 512.0f;
-//		}
-		if(player1->gunselect >= GUN_FIREBALL)
+		if(player1->mana == 512.0f)
 		{
-			if(player1->mana == 512.0f)
+			float manabarstat = sz * player1->mana / player1->maxmana;
+			settexture("packages/hud/manabar.png");
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,             y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+manabarstat, y);
+			glTexCoord2f(0.0f, 0.5f); glVertex2f(x,             y+sz/20);
+			glTexCoord2f(1.0f, 0.5f); glVertex2f(x+manabarstat, y+sz/20);
+			glEnd();
+		}
+		if(player1->mana != 512.0f)
+		{
+			if(player1->mana >= 512.0f)
 			{
-				float manabarstat = sz * player1->mana / player1->maxmana;
-				settexture("packages/hud/manabar.png");
-				glBegin(GL_TRIANGLE_STRIP);
-				glTexCoord2f(0.0f, 0.0f); glVertex2f(x,             y);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(x+manabarstat, y);
-				glTexCoord2f(0.0f, 0.5f); glVertex2f(x,             y+sz/20);
-				glTexCoord2f(1.0f, 0.5f); glVertex2f(x+manabarstat, y+sz/20);
-				glEnd();
+				player1->mana = 512.0f;
 			}
-			if(player1->mana != 512.0f)
+			if(player1->mana <= 0.0f)
 			{
-//				player1->mana = (player1->ammo[GUN_FIREBALL]);
-				float manabarstat = sz * player1->mana / player1->maxmana;
-				settexture("packages/hud/manabar.png");
-				glBegin(GL_TRIANGLE_STRIP);
-				glTexCoord2f(0.0f, 0.0f); glVertex2f(x,             y);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(x+manabarstat, y);
-				glTexCoord2f(0.0f, 0.5f); glVertex2f(x,             y+sz/20);
-				glTexCoord2f(1.0f, 0.5f); glVertex2f(x+manabarstat, y+sz/20);
-				glEnd();
+				player1->mana = 0.0f;
 			}
+//			float manabarstat = sz * player1->mana / player1->maxmana;
+			float manabarstat = player1->mana + player1->manaregen;
+			player1->mana = manabarstat;
+			settexture("packages/hud/manabar.png");
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,             y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+manabarstat, y);
+			glTexCoord2f(0.0f, 0.5f); glVertex2f(x,             y+sz/20);
+			glTexCoord2f(1.0f, 0.5f); glVertex2f(x+manabarstat, y+sz/20);
+			glEnd();
 		}
     }
 ////////////////////////////////////////////////////////////////////////// Hotkeys

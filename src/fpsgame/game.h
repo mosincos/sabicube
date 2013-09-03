@@ -355,9 +355,9 @@ static const struct guninfo { int sound, attackdelay, damage, spread, projspeed,
     { S_RIFLE,    1500, 100,   0,   0, 30, 2048,  1,  80,  0,    0, "rifle",           "rifle",  0 },
     { S_FLAUNCH,   600,  90,   0, 200, 10, 1024,  1, 250, 45, 1500, "grenadelauncher", "gl",     0 },
     { S_PISTOL,    500,  35,  50,   0,  7, 1024,  1,  80,  0,    0, "pistol",          "pistol", 0 },
-    { S_FLAUNCH,   200,  20,   0, 200,  1, 1024,  1,  80, 40,    0, "fireball",        "fireball",     PART_FIREBALL1 },
-    { S_ICEBALL,   200,  40,   0, 120,  1, 1024,  1,  80, 40,    0, "iceball",         "iceball",     PART_FIREBALL2 },
-    { S_SLIMEBALL, 200,  30,   0, 640,  1, 1024,  1,  80, 40,    0, "slimeball",       "slimeball",     PART_FIREBALL3 },
+    { S_FLAUNCH,   600,  20,   0, 200,  1, 1024,  1,  80, 40,    0, "fireball",        "fireball",     PART_FIREBALL1 },
+    { S_ICEBALL,   600,  40,   0, 120,  1, 1024,  1,  80, 40,    0, "iceball",         "iceball",     PART_FIREBALL2 },
+    { S_SLIMEBALL, 600,  30,   0, 640,  1, 1024,  1,  80, 40,    0, "slimeball",       "slimeball",     PART_FIREBALL3 },
     { S_PIGR1,     250,  50,   0,   0,  1,   12,  1,  80,  0,    0, "bite",            NULL,     0 },
     { -1,            0, 120,   0,   0,  0,    0,  1,  80, 40,    0, "barrel",          NULL,     0 }
 };
@@ -547,6 +547,7 @@ struct fpsent : dynent, fpsstate
 	float energyregen;
 	float mana;
 	float maxmana;
+	float manaregen;
 	int playerexperience;
 	int playerlevel;
 	int inventory [100];
@@ -587,6 +588,7 @@ struct fpsent : dynent, fpsstate
 			inventory[x]=(0); // set amount of all items to 0
 		}
 		energyregen = 0.1f;
+		manaregen = 0.1f;
 //		carryweight = 0.0f;
 		maxcarryweight = 120;
 		maxmana = 512.0f;
