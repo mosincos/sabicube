@@ -138,7 +138,7 @@ void writemapcfg(int *arg, int *loadinv, int *loadtri, char *mapname)
 	if(loadtri[0] == 0) f->printf("//exec packages/base/zetaproject/shop.cfg\n\n");
 	if(loadtri[0] == 1) f->printf("exec packages/base/zetaproject/shop.cfg\n\n");
 	if(loadtri[0] == 0) f->printf("//exec packages/base/zetaproject/start.cfg\n\n");
-	if(loadtri[0] == 1) f->printf("exec packages/base/zetaproject/start.cfg\n\n");
+	if(loadtri[0] == 1) f->printf("//exec packages/base/zetaproject/start.cfg\n\n");
 
 	f->printf("loadsky \"skyboxes/remus/sky01\"\n\n");
 	f->printf("texturereset \n\n");
