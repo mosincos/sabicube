@@ -569,7 +569,7 @@ namespace game
         switch(gun)
         {
             case GUN_FIST:
-                if(d->type==ENT_PLAYER && chainsawhudgun) sound = S_CHAINSAW_ATTACK;
+//                if(d->type==ENT_PLAYER && chainsawhudgun) sound = S_CHAINSAW_ATTACK;
                 break;
 
             case GUN_SG:
@@ -637,11 +637,11 @@ namespace game
         if(d->idlesound >= 0) d->stopidlesound();
         switch(sound)
         {
-            case S_CHAINSAW_ATTACK:
-                if(d->attacksound >= 0) looped = true;
-                d->attacksound = sound;
-                d->attackchan = playsound(sound, d==hudplayer() ? NULL : &d->o, NULL, 0, -1, 100, d->attackchan);
-                break;
+//            case S_CHAINSAW_ATTACK:
+//                if(d->attacksound >= 0) looped = true;
+//                d->attacksound = sound;
+//                d->attackchan = playsound(sound, d==hudplayer() ? NULL : &d->o, NULL, 0, -1, 100, d->attackchan);
+//                break;
             default:
                 playsound(sound, d==hudplayer() ? NULL : &d->o);
                 break;
@@ -767,24 +767,27 @@ namespace game
         }		
 //		if(d->gunselect) d->ammo[d->gunselect]--;
 		if((d->gunselect) && (d->gunselect <= GUN_FIREBALL)) d->ammo[d->gunselect]--;
-		if((d->gunselect >= GUN_FIREBALL) && (d->mana >= 64))
+		if(d==player1)
 		{
-			d->mana = d->mana - 64;
-			d->ammo[GUN_FIREBALL] = d->mana;
-			d->ammo[GUN_ICEBALL] = d->mana;
-			d->ammo[GUN_SLIMEBALL] = d->mana;
-		}
-		else if(d->mana <= 63)
-        {
-			d->ammo[GUN_FIREBALL] = d->mana;
-			d->ammo[GUN_ICEBALL] = d->mana;
-			d->ammo[GUN_SLIMEBALL] = d->mana;
-            if(d==player1)
-            {
-                msgsound(S_NOAMMO, d);
-                d->gunwait = 600;
-            }
-            return;
+			if((d->gunselect >= GUN_FIREBALL) && (d->mana >= 64))
+			{
+				d->mana = d->mana - 64;
+				d->ammo[GUN_FIREBALL] = d->mana;
+				d->ammo[GUN_ICEBALL] = d->mana;
+				d->ammo[GUN_SLIMEBALL] = d->mana;
+			}
+			else if(d->mana <= 63)
+			{
+				d->ammo[GUN_FIREBALL] = d->mana;
+				d->ammo[GUN_ICEBALL] = d->mana;
+				d->ammo[GUN_SLIMEBALL] = d->mana;
+				if(d==player1)
+				{
+					msgsound(S_NOAMMO, d);
+					d->gunwait = 600;
+				}
+				return;
+			}
 		}
 /////////////////////////////////////////////////////////////////////////
         vec from = d->o;
@@ -942,11 +945,11 @@ namespace game
         if(d->clientnum >= 0 && d->state == CS_ALIVE) switch(d->gunselect)
         {
             case GUN_FIST:
-                if(chainsawhudgun && d->attacksound < 0)
-                {
-                    sound = S_CHAINSAW_IDLE;
-                    radius = 50;
-                }
+//                if(chainsawhudgun && d->attacksound < 0)
+//                {
+//                    sound = S_CHAINSAW_IDLE;
+//                    radius = 50;
+//                }
                 break;
         }
         if(d->idlesound != sound)
