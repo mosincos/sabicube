@@ -197,15 +197,12 @@ namespace game
 ///////////////////////////////////////////////////////////////////////////// Zoom
     void waxon()
     {
-		if(player1->gunselect==GUN_RIFLE)
-		{
-			player1->scopezoom = 1;
-		}
+		player1->zoom = 1;
     }
     COMMAND(waxon, "");
     void waxof()
     {
-        player1->scopezoom = 0;
+        player1->zoom = 0;
     }
     COMMAND(waxof, "");
 ///////////////////////////////////////////////////////////////////////////// GUNS
@@ -1549,7 +1546,7 @@ namespace game
 /////////////////////////////////////
     void drawsniperscope()
     {
-		if((player1->scopezoom==1) && (player1->ammo[GUN_RIFLE]>=1) && (player1->gunselect==GUN_RIFLE))
+		if((player1->inventory[76]==1) && (player1->zoom==1))
 		{
 //			float x = SCR_W, y = SCR_H;
 			settexture("packages/hud/scope.png");

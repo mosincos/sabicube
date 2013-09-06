@@ -552,6 +552,7 @@ struct fpsent : dynent, fpsstate
 	int playerlevel;
 	int inventory [100];
 	int scopezoom;
+	int zoom;
 	int maxcarryweight;
 	int lockpicking;
 	int alchemy;
@@ -646,6 +647,7 @@ struct fpsent : dynent, fpsstate
         lastspeedrun = 0;
         energy = 512.0f;
 		scopezoom = 0;
+		zoom = 0;
 		mana = 512.0f;
 ///////////////////////////////////////////////////////////////////////////
         lastpickup = -1;
