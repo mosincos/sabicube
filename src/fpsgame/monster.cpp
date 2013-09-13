@@ -267,8 +267,8 @@ namespace game
 					}
 					else if(trigger<lastmillis && (monsterstate!=M_HOME || !rnd(5)))  // search for a way around (common)
 					{
-						targetyaw += 90+rnd(180);                                        // patented "random walk" AI pathfinding (tm) ;)
-						transition(M_SEARCH, 1, 100, 1000);
+//						targetyaw += 90+rnd(180); // patented "random walk" AI pathfinding (tm) ;)
+						transition(M_SLEEP, 1, 100, 200); // loose interrest and go to M_SLEEP
 					}
 				}
             
@@ -286,7 +286,22 @@ namespace game
 					{
 						if(editmode) break;
 						normalize_yaw(enemyyaw);
-//						float angle = (float)fabs(enemyyaw-yaw);
+						if(dist<32) // if proximity
+						{
+//							vec target;
+//							if(raycubelos(o, enemy->o, target))
+//							{
+//								transition(M_HOME, 1, 500, 200);
+//								playsound(S_GRUNT1+rnd(2), &o);
+//							targetyaw = enemy->o;
+//								if(physsteps > 0) stacked = NULL;
+//							moveplayer(this, 1, true);        // use physics to move monster
+//							targetyaw += 90+rnd(180); // patented "random walk" AI pathfinding (tm) ;)
+							targetyaw = enemyyaw;
+//							break;
+//							}
+						}
+//						if(dist<256 || (monsterhurt && o.dist(monsterhurtpos)<128)) // if hit, npc's will attack
 						if((monsterhurt && o.dist(monsterhurtpos)<128)) // if hit, npc's will attack
 						{
 							vec target;
@@ -314,9 +329,13 @@ namespace game
 						if(trigger<lastmillis)
 						{
 							vec target;
-							if(!raycubelos(o, enemy->o, target))    // no visual contact anymore, let monster get as close as possible then search for player
+							if(!raycubelos(o, enemy->o, target))    // lost visual contact
 							{
-								transition(M_HOME, 1, 800, 500);
+//								targetyaw += 90+rnd(180); // patented "random walk" AI pathfinding (tm) ;)
+								enemy = player1;
+								anger = 0;
+								transition(M_SLEEP, 1, 100, 200);
+//								transition(M_HOME, 1, 800, 500);
 							}
 							else 
 							{
