@@ -1,5 +1,5 @@
-SabiCube
-========
+SabiCube 1.1
+============
 
 A single-player total conversion of Cube2-Sauerbraten with focus on adding rpg/adventure elements.
 This package includes the first chapter of the game ZetaProject, and a test-map for the new features.
