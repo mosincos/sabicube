@@ -36,7 +36,7 @@ namespace game
         { NULL,           0,  10, 3, 0,   100, 400, 1, 10, 256, NULL,    S_PIGGR2,  "planks",     "monster/planks",      NULL },
         { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "femalenpc",       "playermodels/female",     NULL },
         { GUN_BITE,       6, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "clippy",          "monster/clippy",      NULL },
-        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "malenpc",         "playermodels/male",     NULL },
+        { GUN_BITE,       1, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "malenpc",         "playermodels/male",     NULL },
     };
 
     VAR(skill, 1, 3, 10);
@@ -266,10 +266,11 @@ namespace game
 					{
 						jumping = true;
 					}
-					else if(trigger<lastmillis && (monsterstate!=M_HOME || !rnd(5)))  // search for a way around (common)
+//					else if(trigger<lastmillis && (monsterstate!=M_HOME || !rnd(5)))  // search for a way around (common)
+					else if(trigger<lastmillis && monsterstate!=M_HOME)  // search for a way around (common)
 					{
-						targetyaw += 90+rnd(180); // patented "random walk" AI pathfinding (tm) ;)
-//						transition(M_SLEEP, 1, 100, 200); // loose interrest and go to M_SLEEP
+						targetyaw += 90+rnd(180); // targetyaw += targetyaw + 180; // turn around ?
+						transition(M_SLEEP, 1, 100, 200); // loose interrest and go to M_SLEEP
 					}
 				}
             
