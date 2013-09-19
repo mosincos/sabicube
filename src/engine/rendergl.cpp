@@ -2290,7 +2290,7 @@ void drawcrosshair(int w, int h)
     if(windowhit)
     {
         static Texture *cursor = NULL;
-        if(!cursor) cursor = textureload("data/guicursor.png", 3, true);
+        if(!cursor) cursor = textureload("data/skin/default/guicursor.png", 3, true);
         crosshair = cursor;
         chsize = cursorsize*w/900.0f;
         g3d_cursorpos(cx, cy);

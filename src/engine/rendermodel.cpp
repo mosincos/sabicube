@@ -368,7 +368,9 @@ void flushpreloadedmodels(bool msg)
     {
         loadprogress = float(i+1)/preloadmodels.length();
         model *m = loadmodel(preloadmodels[i], -1, msg);
+////////////////////////////////////////////////////////////////////////////////////////////// fixme
         if(!m) { if(msg) conoutf(CON_WARN, "could not load model: %s", preloadmodels[i]); }
+//////////////////////////////////////////////////////////////////////////////////////////////
         else
         {
             m->preloadmeshes();

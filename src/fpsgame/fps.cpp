@@ -1788,6 +1788,7 @@ namespace game
 			float dist = player1->o.dist(worldpos);
 //			if(o && o->type==ENT_INANIMATE && dist<25)
 			if(o && o->type==ET_MAPMODEL && dist<25)
+//			if(o && o->type==MONSTER && dist<25)
             {
                 crosshair = 1;
 				r = 0.5f; g = 1.0f; b = 0;

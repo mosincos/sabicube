@@ -456,7 +456,7 @@ struct Texture;
 struct VSlot;
 
 extern Texture *textureload(const char *name, int clamp = 0, bool mipit = true, bool msg = true);
-extern bool settexture(Texture *&tex);
+extern bool setcamtexture(Texture *&tex);
 
 enum { G3D_DOWN = 1, G3D_UP = 2, G3D_PRESSED = 4, G3D_ROLLOVER = 8, G3D_DRAGGED = 16 };
 

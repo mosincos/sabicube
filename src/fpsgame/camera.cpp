@@ -187,7 +187,8 @@ namespace camera
                 hoffset += 64;
             }
 
-            draw_textf("Test: %p", 100, 0 + hoffset);
+            draw_textf("Test: %p", 100, 0 + hoffset, test);
+//            draw_textf("Test: %p", 100, 0 + hoffset);
             draw_textf("Loop: %i/%i", 100, 64 + hoffset, i, limit);
             hoffset += 128;
 
@@ -475,7 +476,7 @@ namespace camera
             }
 
             glColor4f(color.x, color.y, color.z, color.w * alpha);
-            settexture(img);
+            setcamtexture(img);
 
             glBegin(GL_TRIANGLE_STRIP);
 

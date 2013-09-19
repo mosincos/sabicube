@@ -8,7 +8,7 @@ namespace game
     static vector<int> teleports;
 
     static const int TOTMFREQ = 14;
-    static const int NUMMONSTERTYPES = 17;
+    static const int NUMMONSTERTYPES = 18;
 
     struct monstertype      // see docs for how these values modify behaviour
     {
@@ -34,8 +34,9 @@ namespace game
         { GUN_BITE,       5, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "boneman",         "monster/boneman",     NULL },
         { GUN_BITE,       8, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "bonesword",       "monster/bonesword",   NULL },
         { NULL,           0,  10, 3, 0,   100, 400, 1, 10, 256, NULL,    S_PIGGR2,  "planks",     "monster/planks",      NULL },
-        { GUN_BITE,       6, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "soldier",         "monster/soldier",     NULL },
+        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "femalenpc",       "playermodels/female",     NULL },
         { GUN_BITE,       6, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "clippy",          "monster/clippy",      NULL },
+        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "malenpc",         "playermodels/male",     NULL },
     };
 
     VAR(skill, 1, 3, 10);
@@ -118,7 +119,7 @@ namespace game
         void monsteraction(int curtime)           // main AI thinking routine, called every frame for every monster
         {
 //////////////////////////////////////////////////////////////////////////////////// if not box
-            if(mtype!=10 && mtype!=14 && mtype!=15)
+            if(mtype!=10 && mtype!=14 && mtype!=15 && mtype!=17)
 			{
 ////////////////////////////////////////////////////////////////////////////////////
 				if(enemy->state==CS_DEAD) { enemy = player1; anger = 0; }
@@ -145,7 +146,7 @@ namespace game
 					}
 					else if(trigger<lastmillis && (monsterstate!=M_HOME || !rnd(5)))  // search for a way around (common)
 					{
-						targetyaw += 90+rnd(180);                                        // patented "random walk" AI pathfinding (tm) ;)
+						targetyaw += 90+rnd(180); // patented "random walk" AI pathfinding (tm) ;)
 						transition(M_SEARCH, 1, 100, 1000);
 					}
 				}
@@ -241,7 +242,7 @@ namespace game
 				}
 			}
 //******************************************
-            if(mtype==15) // NPC
+            if(mtype==15 || mtype==17) // NPC
 			{
 				if(enemy->state==CS_DEAD) { enemy = player1; anger = 0; }
 				normalize_yaw(targetyaw);
@@ -267,8 +268,8 @@ namespace game
 					}
 					else if(trigger<lastmillis && (monsterstate!=M_HOME || !rnd(5)))  // search for a way around (common)
 					{
-//						targetyaw += 90+rnd(180); // patented "random walk" AI pathfinding (tm) ;)
-						transition(M_SLEEP, 1, 100, 200); // loose interrest and go to M_SLEEP
+						targetyaw += 90+rnd(180); // patented "random walk" AI pathfinding (tm) ;)
+//						transition(M_SLEEP, 1, 100, 200); // loose interrest and go to M_SLEEP
 					}
 				}
             
@@ -282,26 +283,22 @@ namespace game
 						if(trigger<lastmillis) transition(M_HOME, 1, 100, 200);
 						break;
 						
-					case M_SLEEP:                       // state classic sp monster start in, wait for visual contact
+					case M_SLEEP:                       // state npc start in, wander untill proximity or attack
 					{
 						if(editmode) break;
 						normalize_yaw(enemyyaw);
-						if(dist<32) // if proximity
+						if(dist<16) // if proximity
 						{
-//							vec target;
-//							if(raycubelos(o, enemy->o, target))
-//							{
-//								transition(M_HOME, 1, 500, 200);
-//								playsound(S_GRUNT1+rnd(2), &o);
-//							targetyaw = enemy->o;
-//								if(physsteps > 0) stacked = NULL;
-//							moveplayer(this, 1, true);        // use physics to move monster
-//							targetyaw += 90+rnd(180); // patented "random walk" AI pathfinding (tm) ;)
 							targetyaw = enemyyaw;
-//							break;
-//							}
+							move = false;
 						}
-//						if(dist<256 || (monsterhurt && o.dist(monsterhurtpos)<128)) // if hit, npc's will attack
+						if(dist>16) // if NOT proximity
+						{
+							if(trigger<lastmillis)
+							{
+								move = true;
+							}
+						}
 						if((monsterhurt && o.dist(monsterhurtpos)<128)) // if hit, npc's will attack
 						{
 							vec target;
@@ -335,7 +332,6 @@ namespace game
 								enemy = player1;
 								anger = 0;
 								transition(M_SLEEP, 1, 100, 200);
-//								transition(M_HOME, 1, 800, 500);
 							}
 							else 
 							{

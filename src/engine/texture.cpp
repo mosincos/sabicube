@@ -1297,7 +1297,7 @@ bool settexture(const char *name, int clamp)
     return t != notexture;
 }
 
-bool settexture(Texture *&tex)
+bool setcamtexture(Texture *&tex)
 {
     if(!tex)
         tex = notexture;
