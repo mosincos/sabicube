@@ -266,10 +266,9 @@ namespace game
 					{
 						jumping = true;
 					}
-//					else if(trigger<lastmillis && (monsterstate!=M_HOME || !rnd(5)))  // search for a way around (common)
 					else if(trigger<lastmillis && monsterstate!=M_HOME)  // search for a way around (common)
 					{
-						targetyaw += 90+rnd(180); // targetyaw += targetyaw + 180; // turn around ?
+						targetyaw += 90+rnd(180);
 						transition(M_SLEEP, 1, 100, 200); // loose interrest and go to M_SLEEP
 					}
 				}
@@ -292,8 +291,19 @@ namespace game
 						{
 							targetyaw = enemyyaw;
 							move = false;
+							if(mtype==15)
+							{
+//								conoutf(CON_GAMEINFO, "\f2female");
+								playsound(S_FLAGPICKUP, &o);
+							}
+							if(mtype==17)
+							{
+//								conoutf(CON_GAMEINFO, "\f2male");
+								playsound(S_FLAGDROP, &o);
+							}
+							transition(M_SMALLTALK, 1, 100, 200);
 						}
-						if(dist>16) // if NOT proximity
+						if(dist>64) // if NOT proximity
 						{
 							if(trigger<lastmillis)
 							{
@@ -311,7 +321,33 @@ namespace game
 						}
 						break;
 					}
-                
+					
+					case M_SMALLTALK:                       // state npc start in, wander untill proximity or attack
+					{
+						if(editmode) break;
+						move = false;
+						normalize_yaw(enemyyaw);
+						if(dist>64) // if NOT proximity
+						{
+							if(trigger<lastmillis)
+							{
+								transition(M_SLEEP, 1, 100, 200);
+								targetyaw += 90+rnd(180);
+//								move = true;
+							}
+						}
+						if((monsterhurt && o.dist(monsterhurtpos)<128)) // if hit, npc's will attack
+						{
+							vec target;
+							if(raycubelos(o, enemy->o, target))
+							{
+								transition(M_HOME, 1, 500, 200);
+								playsound(S_GRUNT1+rnd(2), &o);
+							}
+						}
+						break;
+					}
+
 					case M_AIMING:                      // this state is the delay between wanting to shoot and actually firing
 						if(trigger<lastmillis)
 						{
@@ -355,6 +391,7 @@ namespace game
 								}
 							}
 						}
+						
 						break;
                     
 				}
