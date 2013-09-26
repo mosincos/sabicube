@@ -291,14 +291,12 @@ namespace game
 						{
 							targetyaw = enemyyaw;
 							move = false;
-							if(mtype==15)
+							if(mtype==15) // female voice
 							{
-//								conoutf(CON_GAMEINFO, "\f2female");
 								playsound(S_FLAGPICKUP, &o);
 							}
-							if(mtype==17)
+							if(mtype==17) // male voice
 							{
-//								conoutf(CON_GAMEINFO, "\f2male");
 								playsound(S_FLAGDROP, &o);
 							}
 							transition(M_SMALLTALK, 1, 100, 200);

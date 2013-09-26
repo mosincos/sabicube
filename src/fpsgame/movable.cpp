@@ -97,11 +97,10 @@ namespace game
 				state = CS_DEAD;
 				explode(player1);
 			}
-//			if(etype==MONSTER)
-//			{
-//				state = CS_DEAD;
-//				explode(player1);
-//			}
+			if(etype==PLATFORM)
+			{
+				return;
+			}
         }
     };
 ////////////////////////////////////////////////////////////
