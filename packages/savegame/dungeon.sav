@@ -1,13 +1,12 @@
 // automaticly generated
 // do not modify
-// gamename escape
-//gameprogress = 1
-//mode -3;map escape
+// gamename dungeon
+gameprogress = 2
 inventoryoverwrite 0 0
 inventoryoverwrite 1 0
 inventoryoverwrite 2 0
 inventoryoverwrite 3 0
-inventoryoverwrite 4 0
+inventoryoverwrite 4 8
 inventoryoverwrite 5 0
 inventoryoverwrite 6 0
 inventoryoverwrite 7 0
@@ -83,7 +82,7 @@ inventoryoverwrite 76 0
 inventoryoverwrite 77 0
 inventoryoverwrite 78 0
 inventoryoverwrite 79 0
-inventoryoverwrite 80 1
+inventoryoverwrite 80 5
 inventoryoverwrite 81 0
 inventoryoverwrite 82 0
 inventoryoverwrite 83 0
@@ -103,8 +102,8 @@ inventoryoverwrite 96 0
 inventoryoverwrite 97 0
 inventoryoverwrite 98 0
 inventoryoverwrite 99 0
-setenergyregen 0.1
-setmanaregen 0.1
+logvar = 2
+setenergyregen 0.100000
 setplayerexp 0
 setplayerlvl 0
 setmaxcarryweight 120
