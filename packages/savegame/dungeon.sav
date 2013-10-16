@@ -6,7 +6,7 @@ inventoryoverwrite 0 0
 inventoryoverwrite 1 0
 inventoryoverwrite 2 0
 inventoryoverwrite 3 0
-inventoryoverwrite 4 8
+inventoryoverwrite 4 0
 inventoryoverwrite 5 0
 inventoryoverwrite 6 0
 inventoryoverwrite 7 0
@@ -82,7 +82,7 @@ inventoryoverwrite 76 0
 inventoryoverwrite 77 0
 inventoryoverwrite 78 0
 inventoryoverwrite 79 0
-inventoryoverwrite 80 5
+inventoryoverwrite 80 1
 inventoryoverwrite 81 0
 inventoryoverwrite 82 0
 inventoryoverwrite 83 0

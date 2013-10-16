@@ -129,16 +129,16 @@ void writemapcfg(int *arg, int *loadinv, int *loadtri, char *mapname)
 	f->printf("// mapname %s\n", mapname);
 	f->printf("// Automaticly generated cfg-file\n// by SabiCube\n\n");	
 
-	if(loadinv[0] == 0) f->printf("//exec packages/base/zetaproject/inventory.cfg\n");
-	if(loadinv[0] == 1) f->printf("exec packages/base/zetaproject/inventory.cfg\n");
-	if(loadtri[0] == 0) f->printf("//exec packages/base/zetaproject/sabitest/triggers.cfg\n");
-	if(loadtri[0] == 1) f->printf("exec packages/base/zetaproject/sabitest/triggers.cfg\n");
-	if(loadtri[0] == 0) f->printf("//exec packages/base/zetaproject/gamevars.cfg\n\n");
-	if(loadtri[0] == 1) f->printf("exec packages/base/zetaproject/gamevars.cfg\n\n");
-	if(loadtri[0] == 0) f->printf("//exec packages/base/zetaproject/shop.cfg\n\n");
-	if(loadtri[0] == 1) f->printf("exec packages/base/zetaproject/shop.cfg\n\n");
-	if(loadtri[0] == 0) f->printf("//exec packages/base/zetaproject/start.cfg\n\n");
-	if(loadtri[0] == 1) f->printf("//exec packages/base/zetaproject/start.cfg\n\n");
+	if(loadinv[0] == 0) f->printf("//exec packages/base/ageofreason/inventory.cfg\n");
+	if(loadinv[0] == 1) f->printf("exec packages/base/ageofreason/inventory.cfg\n");
+	if(loadtri[0] == 0) f->printf("//exec packages/base/ageofreason/sabitest/triggers.cfg\n");
+	if(loadtri[0] == 1) f->printf("exec packages/base/ageofreason/sabitest/triggers.cfg\n");
+	if(loadtri[0] == 0) f->printf("//exec packages/base/ageofreason/gamevars.cfg\n\n");
+	if(loadtri[0] == 1) f->printf("exec packages/base/ageofreason/gamevars.cfg\n\n");
+	if(loadtri[0] == 0) f->printf("//exec packages/base/ageofreason/shop.cfg\n\n");
+	if(loadtri[0] == 1) f->printf("exec packages/base/ageofreason/shop.cfg\n\n");
+	if(loadtri[0] == 0) f->printf("//exec packages/base/ageofreason/start.cfg\n\n");
+	if(loadtri[0] == 1) f->printf("//exec packages/base/ageofreason/start.cfg\n\n");
 
 	f->printf("loadsky \"skyboxes/remus/sky01\"\n\n");
 	f->printf("texturereset \n\n");
