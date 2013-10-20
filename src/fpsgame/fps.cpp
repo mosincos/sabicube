@@ -1686,7 +1686,7 @@ namespace game
 //          if(d->armour) drawicon(HICON_BLUE_ARMOUR+d->armourtype, HICON_X + HICON_STEP, HICON_Y);
 //            drawicon(HICON_FIST+d->gunselect, HICON_X + 2*HICON_STEP, HICON_Y);
 //          if(d->quadmillis) drawicon(HICON_QUAD, HICON_X + 3*HICON_STEP, HICON_Y);
-            if(ammohud) drawammohud(d);
+//            if(ammohud) drawammohud(d);
 			drawhealthbar(HICON_BLUE_ARMOUR, 40.0f, 1654.0f);
 			drawenergybar(HICON_BLUE_ARMOUR, 40.0f, 1708.0f);
 			drawmanabar(HICON_BLUE_ARMOUR, 40.0f, 1762.0f);
