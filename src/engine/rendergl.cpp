@@ -962,42 +962,37 @@ void recomputecamera()
     game::setupcamera();
     computezoom();
 
-	static physent tempcamera;
-	
-	if(!game::recomputecamera(camera1, tempcamera, detachedcamera, thirdpersondistance))
+    bool shoulddetach = thirdperson > 1 || game::detachcamera();
+    if(!thirdperson && !shoulddetach)
     {
-        bool shoulddetach = thirdperson > 1 || game::detachcamera();
-        if(!thirdperson && !shoulddetach)
-        {
-            camera1 = player;
-            detachedcamera = false;
-        }
-		else
-        {
-            camera1 = &tempcamera;
-            if(detachedcamera && shoulddetach) camera1->o = player->o;
-            else
-            {
-                *camera1 = *player;
-                detachedcamera = shoulddetach;
-            }
-            camera1->reset();
-            camera1->type = ENT_CAMERA;
-            camera1->collidetype = COLLIDE_AABB;
-            camera1->move = -1;
-            camera1->eyeheight = camera1->aboveeye = camera1->radius = camera1->xradius = camera1->yradius = 2;
-
-            vec dir;
-            vecfromyawpitch(camera1->yaw, camera1->pitch, -1, 0, dir);
-            if(game::collidecamera())
-            {
-                movecamera(camera1, dir, thirdpersondistance, 1);
-                movecamera(camera1, dir, clamp(thirdpersondistance - camera1->o.dist(player->o), 0.0f, 1.0f), 0.1f);
-            }
-            else camera1->o.add(vec(dir).mul(thirdpersondistance));		
-        }
+        camera1 = player;
+        detachedcamera = false;
     }
-    
+    else
+    {
+        static physent tempcamera;
+        camera1 = &tempcamera;
+        if(detachedcamera && shoulddetach) camera1->o = player->o;
+        else
+        {
+            *camera1 = *player;
+            detachedcamera = shoulddetach;
+        }
+        camera1->reset();
+        camera1->type = ENT_CAMERA;
+        camera1->collidetype = COLLIDE_AABB;
+        camera1->move = -1;
+        camera1->eyeheight = camera1->aboveeye = camera1->radius = camera1->xradius = camera1->yradius = 2;
+
+        vec dir;
+        vecfromyawpitch(camera1->yaw, camera1->pitch, -1, 0, dir);
+        if(game::collidecamera())
+        {
+            movecamera(camera1, dir, thirdpersondistance, 1);
+            movecamera(camera1, dir, clamp(thirdpersondistance - camera1->o.dist(player->o), 0.0f, 1.0f), 0.1f);
+        }
+        else camera1->o.add(vec(dir).mul(thirdpersondistance));
+    }
     setviewcell(camera1->o);
 }
 
@@ -2528,19 +2523,4 @@ void gl_drawhud(int w, int h)
 
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
-}
-
-void setnotextureshader()
-{
-    notextureshader->set();
-}
-
-void setdefaultshader()
-{
-    defaultshader->set();
-}
-
-void setlineshader()
-{
-    lineshader->set();
 }

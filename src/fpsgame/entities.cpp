@@ -74,7 +74,7 @@ namespace entities
             "checkpoint",
             NULL, NULL,
             NULL, NULL,
-            NULL, NULL
+            NULL
         };
         return entmdlnames[type];
     }
@@ -692,7 +692,7 @@ namespace entities
             "base", "respawnpoint",
             "box", "xbox", "barrel",
             "platform", "elevator",
-            "flag", "camera",
+            "flag",
             "", "", "", "",
         };
         return i>=0 && size_t(i)<sizeof(entnames)/sizeof(entnames[0]) ? entnames[i] : "";

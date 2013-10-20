@@ -88,7 +88,6 @@ CLIENT_OBJS= \
 	engine/worldio.o \
 	fpsgame/ai.o \
 	fpsgame/client.o \
-	fpsgame/camera.o \
 	fpsgame/entities.o \
 	fpsgame/fps.o \
 	fpsgame/monster.o \

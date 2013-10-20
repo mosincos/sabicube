@@ -720,7 +720,6 @@ namespace game
         gets2c();
         updatemovables(curtime);
         updatemonsters(curtime);
-		camera::update();
         if(player1->state == CS_DEAD)
         {
             if(player1->ragdoll) moveragdoll(player1);
@@ -1069,7 +1068,6 @@ namespace game
     {
         ai::savewaypoints();
         ai::clearwaypoints(true);
-		camera::cleanup();
 
         respawnent = -1; // so we don't respawn at an old spot
         if(!m_mp(gamemode)) spawnplayer(player1);
@@ -1711,44 +1709,29 @@ namespace game
 
     void gameplayhud(int w, int h)
     {
-        if(camera::cutscene)
+        glPushMatrix();
+        glScalef(h/1800.0f, h/1800.0f, 1);
+        if(player1->state==CS_SPECTATOR)
         {
-            glPushMatrix();
-            float scale = min (w / 1600.0f, h / 1200.0f);
-            glScalef(scale, scale, 1);
-
-            float right = w / scale, bottom = h / scale; // top and left are ALWAYS 0
-
-            camera::render(ceil(right), ceil(bottom));
-            glPopMatrix();
-            return;
+            int pw, ph, tw, th, fw, fh;
+            text_bounds("  ", pw, ph);
+            text_bounds("SPECTATOR", tw, th);
+            th = max(th, ph);
+            fpsent *f = followingplayer();
+            text_bounds(f ? colorname(f) : " ", fw, fh);
+            fh = max(fh, ph);
+            draw_text("SPECTATOR", w*1800/h - tw - pw, 1650 - th - fh);
+            if(f) draw_text(colorname(f), w*1800/h - fw - pw, 1650 - fh);
         }
-        else
+
+        fpsent *d = hudplayer();
+        if(d->state!=CS_EDITING)
         {
-            glPushMatrix();
-            glScalef(h/1800.0f, h/1800.0f, 1);
-            if(player1->state==CS_SPECTATOR)
-            {
-                int pw, ph, tw, th, fw, fh;
-                text_bounds("  ", pw, ph);
-                text_bounds("SPECTATOR", tw, th);
-                th = max(th, ph);
-                fpsent *f = followingplayer();
-                text_bounds(f ? colorname(f) : " ", fw, fh);
-                fh = max(fh, ph);
-                draw_text("SPECTATOR", w*1800/h - tw - pw, 1650 - th - fh);
-                if(f) draw_text(colorname(f), w*1800/h - fw - pw, 1650 - fh);
-            }
-
-            fpsent *d = hudplayer();
-            if(d->state!=CS_EDITING)
-            {
-                if(d->state!=CS_SPECTATOR) drawhudicons(d);
-                if(cmode) cmode->drawhud(d, w, h);
-            }
-
-            glPopMatrix();
+            if(d->state!=CS_SPECTATOR) drawhudicons(d);
+            if(cmode) cmode->drawhud(d, w, h);
         }
+
+        glPopMatrix();
     }
 
     int clipconsole(int w, int h)

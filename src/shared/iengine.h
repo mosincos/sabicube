@@ -276,10 +276,6 @@ extern void damagecompass(int n, const vec &loc);
 extern vec minimapcenter, minimapradius, minimapscale;
 extern void bindminimap();
 
-extern void setnotextureshader();
-extern void setdefaultshader();
-extern void setlineshader();
-
 // renderparticles
 enum
 {
@@ -454,9 +450,6 @@ extern bool checkchallenge(const char *answerstr, void *correct);
 // 3dgui
 struct Texture;
 struct VSlot;
-
-extern Texture *textureload(const char *name, int clamp = 0, bool mipit = true, bool msg = true);
-extern bool setcamtexture(Texture *&tex);
 
 enum { G3D_DOWN = 1, G3D_UP = 2, G3D_PRESSED = 4, G3D_ROLLOVER = 8, G3D_DRAGGED = 16 };
 
