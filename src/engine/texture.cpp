@@ -1,6 +1,7 @@
 // texture.cpp: texture slot management
 
 #include "engine.h"
+#include "SDL_image.h"
 
 #define FUNCNAME(name) name##1
 #define DEFPIXEL uint OP(r, 0);
@@ -38,7 +39,7 @@ static void scaletexture(uchar *src, uint sw, uint sh, uint bpp, uint pitch, uch
             case 4: return halvetexture4(src, sw, sh, pitch, dst);
         }
     }
-    else if(sw < dw || sh < dh || sw&(sw-1) || sh&(sh-1))
+    else if(sw < dw || sh < dh || sw&(sw-1) || sh&(sh-1) || dw&(dw-1) || dh&(dh-1))
     {
         switch(bpp)
         {
@@ -2415,7 +2416,7 @@ GLuint genenvmap(const vec &o, int envmapsize, int blur)
         }
         if(blur > 0)
         {
-            blurtexture(blur, 3, texsize, texsize, src, dst);
+            blurtexture(blur, 3, texsize, texsize, dst, src);
             swap(src, dst);
         }
         createtexture(tex, texsize, texsize, src, 3, 2, GL_RGB5, side.target);

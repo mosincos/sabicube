@@ -105,7 +105,7 @@ namespace game
         if(m_capture) cmode = &capturemode;
         else if(m_ctf) cmode = &ctfmode;
         else if(m_collect) cmode = &collectmode;
-	else cmode = NULL;
+        else cmode = NULL;
     }
 
     bool senditemstoserver = false, sendcrc = false; // after a map change, since server doesn't have map data
@@ -1748,7 +1748,7 @@ namespace game
                 fpsent *w = getclient(wn);
                 if(!w) return;
                 filtertext(w->team, text, false, MAXTEAMLEN);
-                static const char *fmt[2] = { "%s switched to team %s", "%s forced to team %s"};
+                static const char * const fmt[2] = { "%s switched to team %s", "%s forced to team %s"};
                 if(reason >= 0 && size_t(reason) < sizeof(fmt)/sizeof(fmt[0]))
                     conoutf(fmt[reason], colorname(w), w->team);
                 break;

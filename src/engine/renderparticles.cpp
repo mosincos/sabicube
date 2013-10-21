@@ -7,13 +7,13 @@ Shader *particleshader = NULL, *particlenotextureshader = NULL;
 
 VARP(particlesize, 20, 100, 500);
     
-// Check emit_particles() to limit the rate that paricles can be emitted for models/sparklies
+// Check canemitparticles() to limit the rate that paricles can be emitted for models/sparklies
 // Automatically stops particles being emitted when paused or in reflective drawing
 VARP(emitmillis, 1, 17, 1000);
 static int lastemitframe = 0, emitoffset = 0;
 static bool canemit = false, regenemitters = false, canstep = false;
 
-static bool emit_particles()
+static bool canemitparticles()
 {
     if(reflecting || refracting) return false;
     return canemit || emitoffset;
@@ -32,7 +32,7 @@ struct particleemitter
     vec bbmin, bbmax;
     vec center;
     float radius;
-    ivec bborigin, bbsize;
+    ivec cullmin, cullmax;
     int maxfade, lastemit, lastcull;
 
     particleemitter(extentity *ent)
@@ -43,8 +43,8 @@ struct particleemitter
     {
         center = vec(bbmin).add(bbmax).mul(0.5f);
         radius = bbmin.dist(bbmax)/2;
-        bborigin = ivec(int(floor(bbmin.x)), int(floor(bbmin.y)), int(floor(bbmin.z)));
-        bbsize = ivec(int(ceil(bbmax.x)), int(ceil(bbmax.y)), int(ceil(bbmax.z))).sub(bborigin);
+        cullmin = ivec(int(floor(bbmin.x)), int(floor(bbmin.y)), int(floor(bbmin.z)));
+        cullmax = ivec(int(ceil(bbmax.x)), int(ceil(bbmax.y)), int(ceil(bbmax.z)));
         if(dbgpseed) conoutf(CON_DEBUG, "radius: %f, maxfade: %d", radius, maxfade);
     }
     
@@ -126,7 +126,7 @@ struct particle
     float size;
     union
     {
-        const char *text;         // will call delete[] on this only if it starts with an @
+        const char *text;
         float val;
         physent *owner;
         struct
@@ -493,7 +493,7 @@ struct textrenderer : listrenderer
 
         float xoff = -text_width(p->text)/2;
         float yoff = 0;
-        if((type&0xFF)==PT_TEXTUP) { xoff += detrnd((size_t)p, 100)-50; yoff -= detrnd((size_t)p, 101); } //@TODO instead in worldspace beforehand?
+        if((type&0xFF)==PT_TEXTUP) { xoff += detrnd((size_t)p, 100)-50; yoff -= detrnd((size_t)p, 101); }
         glTranslatef(xoff, yoff, 50);
 
         draw_text(p->text, 0, 0, color[0], color[1], color[2], blend);
@@ -1105,13 +1105,13 @@ static void splash(int type, int color, int radius, int num, int fade, const vec
 
 static void regularsplash(int type, int color, int radius, int num, int fade, const vec &p, float size, int gravity, int delay = 0) 
 {
-    if(!emit_particles() || (delay > 0 && rnd(delay) != 0)) return;
+    if(!canemitparticles() || (delay > 0 && rnd(delay) != 0)) return;
     splash(type, color, radius, num, fade, p, size, gravity);
 }
 
 bool canaddparticles()
 {
-    return !renderedgame && !shadowmapping;
+    return !renderedgame && !shadowmapping && !minimized;
 }
 
 void regular_particle_splash(int type, int num, int fade, const vec &p, int color, float size, int radius, int gravity, int delay) 
@@ -1222,7 +1222,7 @@ static inline int colorfromattr(int attr)
  */
 void regularshape(int type, int radius, int color, int dir, int num, int fade, const vec &p, float size, int gravity, int vel = 200)
 {
-    if(!emit_particles()) return;
+    if(!canemitparticles()) return;
     
     int basetype = parts[type]->type&0xFF;
     bool flare = (basetype == PT_TAPE) || (basetype == PT_LIGHTNING),
@@ -1320,7 +1320,7 @@ void regularshape(int type, int radius, int color, int dir, int num, int fade, c
 
 static void regularflame(int type, const vec &p, float radius, float height, int color, int density = 3, float scale = 2.0f, float speed = 200.0f, float fade = 600.0f, int gravity = -15) 
 {
-    if(!emit_particles()) return;
+    if(!canemitparticles()) return;
     
     float size = scale * min(radius, height);
     vec v(0, 0, min(1.0f, height)*speed);
@@ -1465,6 +1465,8 @@ void updateparticles()
 {
     if(regenemitters) addparticleemitters();
 
+    if(minimized) { canemit = false; return; }
+
     if(lastmillis - lastemitframe >= emitmillis)
     {
         canemit = true;
@@ -1486,7 +1488,7 @@ void updateparticles()
             if(cullparticles && pe.maxfade >= 0)
             {
                 if(isfoggedsphere(pe.radius, pe.center)) { pe.lastcull = lastmillis; continue; }
-                if(pvsoccluded(pe.bborigin, pe.bbsize)) { pe.lastcull = lastmillis; continue; }
+                if(pvsoccluded(pe.cullmin, pe.cullmax)) { pe.lastcull = lastmillis; continue; }
             }
             makeparticles(e);
             emitted++;

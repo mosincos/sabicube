@@ -85,14 +85,15 @@ extern const uchar uni2cubechars[878] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-int decodeutf8(uchar *dstbuf, int dstlen, uchar *srcbuf, int srclen, int *carry)
+int decodeutf8(uchar *dstbuf, int dstlen, const uchar *srcbuf, int srclen, int *carry)
 {
-    uchar *dst = dstbuf, *dstend = &dstbuf[dstlen], *src = srcbuf, *srcend = &srcbuf[srclen];
+    uchar *dst = dstbuf, *dstend = &dstbuf[dstlen];
+    const uchar *src = srcbuf, *srcend = &srcbuf[srclen];
     if(dstbuf == srcbuf)
     {
         int len = min(dstlen, srclen);
-        for(uchar *end4 = &srcbuf[len&~3]; src < end4; src += 4) if(*(int *)src & 0x80808080) goto decode;
-        for(uchar *end = &srcbuf[len]; src < end; src++) if(*src & 0x80) goto decode;
+        for(const uchar *end4 = &srcbuf[len&~3]; src < end4; src += 4) if(*(const int *)src & 0x80808080) goto decode;
+        for(const uchar *end = &srcbuf[len]; src < end; src++) if(*src & 0x80) goto decode;
         if(carry) *carry += len;
         return len;
     }
@@ -138,18 +139,24 @@ decode:
     return dst - dstbuf;
 }
 
-int encodeutf8(uchar *dstbuf, int dstlen, uchar *srcbuf, int srclen, int *carry)
+int encodeutf8(uchar *dstbuf, int dstlen, const uchar *srcbuf, int srclen, int *carry)
 {
-    uchar *dst = dstbuf, *dstend = &dstbuf[dstlen], *src = srcbuf, *srcend = &srcbuf[srclen];
+    uchar *dst = dstbuf, *dstend = &dstbuf[dstlen];
+    const uchar *src = srcbuf, *srcend = &srcbuf[srclen];
     if(src < srcend && dst < dstend) do
     {
         int uni = cube2uni(*src);
         if(uni <= 0x7F)
         {
             if(dst >= dstend) goto done;
-            uchar *end = min(srcend, &src[dstend-dst]);
+            const uchar *end = min(srcend, &src[dstend-dst]);
             do 
             { 
+                if(uni == '\f')
+                {
+                    if(++src >= srcend) goto done;
+                    goto uni1;
+                }
                 *dst++ = uni; 
                 if(++src >= end) goto done; 
                 uni = cube2uni(*src); 
@@ -284,9 +291,9 @@ bool fileexists(const char *path, const char *mode)
     bool exists = true;
     if(mode[0]=='w' || mode[0]=='a') path = parentdir(path);
 #ifdef WIN32
-    if(GetFileAttributes(path) == INVALID_FILE_ATTRIBUTES) exists = false;
+    if(GetFileAttributes(path[0] ? path : ".\\") == INVALID_FILE_ATTRIBUTES) exists = false;
 #else
-    if(access(path, R_OK | (mode[0]=='w' || mode[0]=='a' ? W_OK : 0)) == -1) exists = false;
+    if(access(path[0] ? path : ".", mode[0]=='w' || mode[0]=='a' ? W_OK : (mode[0]=='d' ? X_OK : R_OK)) == -1) exists = false;
 #endif
     return exists;
 }
@@ -385,7 +392,7 @@ const char *findfile(const char *filename, const char *mode)
             while(dir)
             {
                 *dir = '\0';
-                if(!fileexists(dirs, "r") && !createdir(dirs)) return s;
+                if(!fileexists(dirs, "d") && !createdir(dirs)) return s;
                 *dir = PATHDIV;
                 dir = strchr(dir+1, PATHDIV);
             }
@@ -400,6 +407,7 @@ const char *findfile(const char *filename, const char *mode)
         formatstring(s)("%s%s", pf.dir, filename);
         if(fileexists(s, mode)) return s;
     }
+    if(mode[0]=='e') return NULL;
     return filename;
 }
 

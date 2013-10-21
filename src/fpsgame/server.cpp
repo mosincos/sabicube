@@ -248,7 +248,7 @@ namespace server
 
         enum
         {
-            PUSHMILLIS = 2500
+            PUSHMILLIS = 3000
         };
 
         int calcpushrange()
@@ -425,18 +425,22 @@ namespace server
  
     struct maprotation
     {
+        static int exclude;
         int modes;
         string map;
+        
+        int calcmodemask() const { return modes&(1<<NUMGAMEMODES) ? modes & ~exclude : modes; }
+        bool hasmode(int mode, int offset = STARTGAMEMODE) const { return (calcmodemask() & (1 << (mode-offset))) != 0; }
 
         int findmode(int mode) const
         {
-            if(!(modes&(1<<(mode-STARTGAMEMODE)))) loopi(NUMGAMEMODES) if(modes&(1<<i)) return i+STARTGAMEMODE;
+            if(!hasmode(mode)) loopi(NUMGAMEMODES) if(hasmode(i, 0)) return i+STARTGAMEMODE;
             return mode;
         }
 
         bool match(int reqmode, const char *reqmap) const
         {
-            return modes&(1<<(reqmode-STARTGAMEMODE)) && (!map[0] || !reqmap[0] || !strcmp(map, reqmap));
+            return hasmode(reqmode) && (!map[0] || !reqmap[0] || !strcmp(map, reqmap));
         }
 
         bool includes(const maprotation &rot) const
@@ -444,15 +448,17 @@ namespace server
             return rot.modes == modes ? rot.map[0] && !map[0] : (rot.modes & modes) == rot.modes;
         }
     };
+    int maprotation::exclude = 0;
     vector<maprotation> maprotations;
     int curmaprotation = 0;
 
-    VAR(lockmaprotation, 0, 0, 1);
+    VAR(lockmaprotation, 0, 0, 2);
 
     void maprotationreset()
     {
         maprotations.setsize(0);
         curmaprotation = 0;
+        maprotation::exclude = 0;
     }
 
     void nextmaprotation()
@@ -466,14 +472,14 @@ namespace server
 
     int findmaprotation(int mode, const char *map)
     {
-        for(int i = curmaprotation; i < maprotations.length(); i++)
+        for(int i = max(curmaprotation, 0); i < maprotations.length(); i++)
         {
             maprotation &rot = maprotations[i];
             if(!rot.modes) break;
             if(rot.match(mode, map)) return i;
         }
         int start;
-        for(start = curmaprotation - 1; start >= 0; start--) if(!maprotations[start].modes) break;
+        for(start = max(curmaprotation, 0) - 1; start >= 0; start--) if(!maprotations[start].modes) break;
         start++;
         for(int i = start; i < curmaprotation; i++)
         {
@@ -490,6 +496,29 @@ namespace server
         return best;
     }
 
+    bool searchmodename(const char *haystack, const char *needle)
+    {
+        if(!needle[0]) return true;
+        do
+        {
+            if(needle[0] != '.')
+            {
+                haystack = strchr(haystack, needle[0]);
+                if(!haystack) break;
+                haystack++;
+            }
+            const char *h = haystack, *n = needle+1;
+            for(; *h && *n; h++)
+            {
+                if(*h == *n) n++;
+                else if(*h != ' ') break; 
+            }
+            if(!*n) return true;
+            if(*n == '.') return !*h;
+        } while(needle[0] != '.');
+        return false;
+    }
+
     int genmodemask(vector<char *> &modes)
     {
         int modemask = 0;
@@ -500,6 +529,7 @@ namespace server
             switch(mode[0])
             {
                 case '*':
+                    modemask |= 1<<NUMGAMEMODES;
                     loopk(NUMGAMEMODES) if(m_checknot(k+STARTGAMEMODE, M_DEMO|M_EDIT|M_LOCAL)) modemask |= 1<<k;
                     continue;
                 case '!':
@@ -507,7 +537,7 @@ namespace server
                     if(mode[0] != '?') break;
                 case '?':
                     mode++;
-                    loopk(NUMGAMEMODES) if(strstr(gamemodes[k].name, mode))
+                    loopk(NUMGAMEMODES) if(searchmodename(gamemodes[k].name, mode))
                     {
                         if(op == '!') modemask &= ~(1<<k);
                         else modemask |= 1<<k;
@@ -516,7 +546,7 @@ namespace server
             }
             int modenum = INT_MAX;
             if(isdigit(mode[0])) modenum = atoi(mode);
-            else loopk(NUMGAMEMODES) if(strstr(mode, gamemodes[k].name)) { modenum = k+STARTGAMEMODE; break; }
+            else loopk(NUMGAMEMODES) if(searchmodename(gamemodes[k].name, mode)) { modenum = k+STARTGAMEMODE; break; }
             if(!m_valid(modenum)) continue;
             switch(op)
             {
@@ -527,26 +557,27 @@ namespace server
         return modemask;
     }
          
-    void addmaprotation(tagval *args, int numargs)
+    bool addmaprotation(int modemask, const char *map)
+    {
+        if(!map[0]) loopk(NUMGAMEMODES) if(modemask&(1<<k) && !m_check(k+STARTGAMEMODE, M_EDIT)) modemask &= ~(1<<k);
+        if(!modemask) return false;
+        if(!(modemask&(1<<NUMGAMEMODES))) maprotation::exclude |= modemask;
+        maprotation &rot = maprotations.add();
+        rot.modes = modemask;
+        copystring(rot.map, map);
+        return true;
+    }
+        
+    void addmaprotations(tagval *args, int numargs)
     {
         vector<char *> modes, maps;
         for(int i = 0; i + 1 < numargs; i += 2)
         {
             explodelist(args[i].getstr(), modes);
             explodelist(args[i+1].getstr(), maps);
-            if(modes.length() && maps.length())
-            {
-                int modemask = genmodemask(modes);
-                if(modemask) loopvj(maps)
-                {
-                    int rotmask = modemask;
-                    if(!maps[j][0]) loopk(NUMGAMEMODES) if(modemask&(1<<k) && !m_check(k+STARTGAMEMODE, M_EDIT)) rotmask &= ~(1<<k);
-                    if(!rotmask) continue;
-                    maprotation &rot = maprotations.add();
-                    rot.modes = modemask;
-                    copystring(rot.map, maps[j]);
-                }
-            }
+            int modemask = genmodemask(modes);
+            if(maps.length()) loopvj(maps) addmaprotation(modemask, maps[j]);
+            else addmaprotation(modemask, "");
             modes.deletearrays();
             maps.deletearrays();
         }
@@ -559,7 +590,7 @@ namespace server
     }
     
     COMMAND(maprotationreset, "");
-    COMMANDN(maprotation, addmaprotation, "ss2V");
+    COMMANDN(maprotation, addmaprotations, "ss2V");
 
     struct demofile
     {
@@ -999,7 +1030,7 @@ namespace server
     {
         int n = clamp(demos.length() + extra - maxdemos, 0, demos.length());
         if(n <= 0) return;
-        loopi(n) delete[] demos[n].data;
+        loopi(n) delete[] demos[i].data;
         demos.remove(0, n);
     }
  
@@ -1465,25 +1496,56 @@ namespace server
         if(sc) sc->save(ci->state);
     }
 
+    static struct msgfilter
+    {
+        uchar msgmask[NUMMSG];
+
+        msgfilter(int msg, ...)
+        {
+            memset(msgmask, 0, sizeof(msgmask));
+            va_list msgs;
+            va_start(msgs, msg);
+            for(uchar val = 1; msg < NUMMSG; msg = va_arg(msgs, int))
+            {
+                if(msg < 0) val = uchar(-msg);
+                else msgmask[msg] = val;
+            }
+            va_end(msgs);
+        }
+
+        uchar operator[](int msg) const { return msg >= 0 && msg < NUMMSG ? msgmask[msg] : 0; }
+    } msgfilter(-1, N_CONNECT, N_SERVINFO, N_INITCLIENT, N_WELCOME, N_MAPCHANGE, N_SERVMSG, N_DAMAGE, N_HITPUSH, N_SHOTFX, N_EXPLODEFX, N_DIED, N_SPAWNSTATE, N_FORCEDEATH, N_TEAMINFO, N_ITEMACC, N_ITEMSPAWN, N_TIMEUP, N_CDIS, N_CURRENTMASTER, N_PONG, N_RESUME, N_BASESCORE, N_BASEINFO, N_BASEREGEN, N_ANNOUNCE, N_SENDDEMOLIST, N_SENDDEMO, N_DEMOPLAYBACK, N_SENDMAP, N_DROPFLAG, N_SCOREFLAG, N_RETURNFLAG, N_RESETFLAG, N_INVISFLAG, N_CLIENT, N_AUTHCHAL, N_INITAI, N_EXPIRETOKENS, N_DROPTOKENS, N_STEALTOKENS, N_DEMOPACKET, -2, N_REMIP, N_NEWMAP, N_GETMAP, N_SENDMAP, N_CLIPBOARD, -3, N_EDITENT, N_EDITF, N_EDITT, N_EDITM, N_FLIP, N_COPY, N_PASTE, N_ROTATE, N_REPLACE, N_DELCUBE, N_EDITVAR, -4, N_POS, NUMMSG),
+      connectfilter(-1, N_CONNECT, -2, N_AUTHANS, -3, N_PING, NUMMSG);
+
     int checktype(int type, clientinfo *ci)
     {
         if(ci)
         {
-            if(!ci->connected) return type == (ci->connectauth ? N_AUTHANS : N_CONNECT) || type == N_PING ? type : -1;
+            if(!ci->connected) switch(connectfilter[type])
+            {
+                // allow only before authconnect
+                case 1: return !ci->connectauth ? type : -1;
+                // allow only during authconnect
+                case 2: return ci->connectauth ? type : -1;
+                // always allow
+                case 3: return type;
+                // never allow
+                default: return -1;
+            }
             if(ci->local) return type;
         }
-        // only allow edit messages in coop-edit mode
-        if(type>=N_EDITENT && type<=N_EDITVAR && !m_edit) return -1;
-        // server only messages
-        static const int servtypes[] = { N_SERVINFO, N_INITCLIENT, N_WELCOME, N_MAPCHANGE, N_SERVMSG, N_DAMAGE, N_HITPUSH, N_SHOTFX, N_EXPLODEFX, N_DIED, N_SPAWNSTATE, N_FORCEDEATH, N_TEAMINFO, N_ITEMACC, N_ITEMSPAWN, N_TIMEUP, N_CDIS, N_CURRENTMASTER, N_PONG, N_RESUME, N_BASESCORE, N_BASEINFO, N_BASEREGEN, N_ANNOUNCE, N_SENDDEMOLIST, N_SENDDEMO, N_DEMOPLAYBACK, N_SENDMAP, N_DROPFLAG, N_SCOREFLAG, N_RETURNFLAG, N_RESETFLAG, N_INVISFLAG, N_CLIENT, N_AUTHCHAL, N_INITAI, N_EXPIRETOKENS, N_DROPTOKENS, N_STEALTOKENS, N_DEMOPACKET };
-        if(ci) 
+        switch(msgfilter[type])
         {
-            loopi(sizeof(servtypes)/sizeof(int)) if(type == servtypes[i]) return -1;
-            if(type < N_EDITENT || type > N_EDITVAR || !m_edit) 
-            {
-                if(type != N_POS && ++ci->overflow >= 200) return -2;
-            }
+            // server-only messages
+            case 1: return ci ? -1 : type;
+            // only allowed in coop-edit
+            case 2: if(m_edit) break; return -1;
+            // only allowed in coop-edit, no overflow check
+            case 3: return m_edit ? type : -1;
+            // no overflow check
+            case 4: return type;
         }
+        if(ci && ++ci->overflow >= 200) return -2;
         return type;
     }
 
@@ -1959,10 +2021,9 @@ namespace server
         }
         if(next) 
         {
-            maprotation &rot = maprotations[curmaprotation];
-            if(!(rot.modes&(1<<(gamemode-STARTGAMEMODE))) || (rot.map[0] && strcmp(rot.map, smapname)))
-                curmaprotation = max(findmaprotation(gamemode, smapname), 0);
-            nextmaprotation();
+            curmaprotation = findmaprotation(gamemode, smapname);
+            if(curmaprotation >= 0) nextmaprotation();
+            else curmaprotation = smapname[0] ? max(findmaprotation(gamemode, ""), 0) : 0;
         }
         maprotation &rot = maprotations[curmaprotation];
         changemap(rot.map, rot.findmode(gamemode));
@@ -2015,16 +2076,10 @@ namespace server
         stopdemo();
         if(!map[0] && !m_check(mode, M_EDIT)) 
         {
-            if(smapname[0]) map = smapname;
-            else
-            {
-                int idx = findmaprotation(mode, "");
-                if(idx >= 0) 
-                {
-                    curmaprotation = idx;
-                    map = maprotations[curmaprotation].map;
-                }
-            }
+            int idx = findmaprotation(mode, smapname);
+            if(idx < 0 && smapname[0]) idx = findmaprotation(mode, "");
+            if(idx < 0) return;
+            map = maprotations[idx].map;
         }
         if(hasnonlocalclients()) sendservmsgf("local player forced %s on map %s", modename(mode), map[0] ? map : "[new map]");
         changemap(map, mode);
@@ -2035,8 +2090,14 @@ namespace server
         clientinfo *ci = getinfo(sender);
         if(!ci || (ci->state.state==CS_SPECTATOR && !ci->privilege && !ci->local) || (!ci->local && !m_mp(reqmode))) return;
         if(!m_valid(reqmode)) return;
-        if(!map[0] && !m_check(reqmode, M_EDIT)) map = smapname;
-        if(lockmaprotation && !ci->privilege && !ci->local && findmaprotation(reqmode, map) < 0) 
+        if(!map[0] && !m_check(reqmode, M_EDIT)) 
+        {
+            int idx = findmaprotation(reqmode, smapname);
+            if(idx < 0 && smapname[0]) idx = findmaprotation(reqmode, "");
+            if(idx < 0) return;
+            map = maprotations[idx].map;
+        }
+        if(lockmaprotation && !ci->local && ci->privilege < (lockmaprotation > 1 ? PRIV_ADMIN : PRIV_MASTER) && findmaprotation(reqmode, map) < 0) 
         {
             sendf(sender, 1, "ris", N_SERVMSG, "This server has locked the map rotation.");
             return;
@@ -2542,12 +2603,17 @@ namespace server
         return NULL;
     }
 
-    void authfailed(uint id)
+
+    void authfailed(clientinfo *ci)
     {
-        clientinfo *ci = findauth(id);
         if(!ci) return;
         ci->cleanauth();
         if(ci->connectauth) disconnect_client(ci->clientnum, ci->connectauth);
+    }
+
+    void authfailed(uint id)
+    {
+        authfailed(findauth(id));
     }
 
     void authsucceeded(uint id)
@@ -2603,13 +2669,12 @@ namespace server
         return false;
     }
 
-    void answerchallenge(clientinfo *ci, uint id, char *val, const char *desc)
+    bool answerchallenge(clientinfo *ci, uint id, char *val, const char *desc)
     {
         if(ci->authreq != id || strcmp(ci->authdesc, desc)) 
         {
             ci->cleanauth();
-            if(ci->connectauth) disconnect_client(ci->clientnum, ci->connectauth);
-            return;
+            return !ci->connectauth;
         }
         for(char *s = val; *s; s++)
         {
@@ -2638,7 +2703,20 @@ namespace server
             ci->cleanauth();
             sendf(ci->clientnum, 1, "ris", N_SERVMSG, "not connected to authentication server");
         }
-        if(!ci->authreq && ci->connectauth) disconnect_client(ci->clientnum, ci->connectauth);
+        return ci->authreq || !ci->connectauth;
+    }
+
+    void masterconnected()
+    {
+    }
+
+    void masterdisconnected()
+    {
+        loopvrev(clients)
+        {
+            clientinfo *ci = clients[i];
+            if(ci->authreq) authfailed(ci); 
+        }
     }
 
     void processmasterinput(const char *cmd, int cmdlen, const char *args)
@@ -2760,7 +2838,11 @@ namespace server
                     getstring(desc, p, sizeof(desc));
                     uint id = (uint)getint(p);
                     getstring(ans, p, sizeof(ans));
-                    answerchallenge(ci, id, ans, desc);
+                    if(!answerchallenge(ci, id, ans, desc)) 
+                    {
+                        disconnect_client(sender, ci->connectauth);
+                        return;
+                    }
                     break;
                 }
 
@@ -2770,7 +2852,7 @@ namespace server
 
                 default:
                     disconnect_client(sender, DISC_MSGERR);
-                    break;
+                    return;
             }
             return;
         }
@@ -3038,7 +3120,7 @@ namespace server
                 getstring(text, p);
                 filtertext(text, text);
                 QUEUE_STR(text);
-                if(isdedicatedserver()) logoutf("%s: %s", colorname(cq), text);
+                if(isdedicatedserver() && cq) logoutf("%s: %s", colorname(cq), text);
                 break;
             }
 
@@ -3052,7 +3134,7 @@ namespace server
                     if(t==cq || t->state.state==CS_SPECTATOR || t->state.aitype != AI_NONE || strcmp(cq->team, t->team)) continue;
                     sendf(t->clientnum, 1, "riis", N_SAYTEAM, cq->clientnum, text);
                 }
-                if(isdedicatedserver()) logoutf("%s <%s>: %s", colorname(cq), cq->team, text);
+                if(isdedicatedserver() && cq) logoutf("%s <%s>: %s", colorname(cq), cq->team, text);
                 break;
             }
 

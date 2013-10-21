@@ -363,8 +363,8 @@ struct animmodel : model
             DELETEA(name);
         }
 
-        virtual void calcbb(int frame, vec &bbmin, vec &bbmax, const matrix3x4 &m) {}
-        virtual void gentris(int frame, Texture *tex, vector<BIH::tri> *out, const matrix3x4 &m) {}
+        virtual void calcbb(vec &bbmin, vec &bbmax, const matrix3x4 &m) {}
+        virtual void gentris(Texture *tex, vector<BIH::tri> *out, const matrix3x4 &m) {}
 
         virtual void setshader(Shader *s) 
         { 
@@ -494,10 +494,8 @@ struct animmodel : model
         int shared;
         char *name;
         vector<mesh *> meshes;
-        float scale;
-        vec translate;
 
-        meshgroup() : next(NULL), shared(0), name(NULL), scale(1), translate(0, 0, 0)
+        meshgroup() : next(NULL), shared(0), name(NULL)
         {
         }
 
@@ -509,18 +507,19 @@ struct animmodel : model
         }            
 
         virtual int findtag(const char *name) { return -1; }
-        virtual void concattagtransform(part *p, int frame, int i, const matrix3x4 &m, matrix3x4 &n) {}
+        virtual void concattagtransform(part *p, int i, const matrix3x4 &m, matrix3x4 &n) {}
 
-        void calcbb(int frame, vec &bbmin, vec &bbmax, const matrix3x4 &m)
+        void calcbb(vec &bbmin, vec &bbmax, const matrix3x4 &m)
         {
-            loopv(meshes) meshes[i]->calcbb(frame, bbmin, bbmax, m);
+            loopv(meshes) meshes[i]->calcbb(bbmin, bbmax, m);
         }
 
-        void gentris(int frame, vector<skin> &skins, vector<BIH::tri> *tris, const matrix3x4 &m)
+        void gentris(vector<skin> &skins, vector<BIH::tri> *tris, const matrix3x4 &m)
         {
-            loopv(meshes) meshes[i]->gentris(frame, skins[i].tex && skins[i].tex->type&Texture::ALPHA ? skins[i].tex : NULL, tris, m);
+            loopv(meshes) meshes[i]->gentris(skins[i].tex && skins[i].tex->type&Texture::ALPHA ? skins[i].tex : NULL, tris, m);
         }
 
+        virtual void *animkey() { return this; }
         virtual int totalframes() const { return 1; }
         bool hasframe(int i) const { return i>=0 && i<totalframes(); }
         bool hasframes(int i, int n) const { return i>=0 && i+n<=totalframes(); }
@@ -585,33 +584,33 @@ struct animmodel : model
             if(meshes) meshes->cleanup();
         }
 
-        void calcbb(int frame, vec &bbmin, vec &bbmax, const matrix3x4 &m)
+        void calcbb(vec &bbmin, vec &bbmax, const matrix3x4 &m)
         {
             matrix3x4 t = m;
             t.translate(translate);
             t.scale(model->scale);
-            meshes->calcbb(frame, bbmin, bbmax, t);
+            meshes->calcbb(bbmin, bbmax, t);
             loopv(links)
             {
                 matrix3x4 n;
-                meshes->concattagtransform(this, frame, links[i].tag, m, n);
+                meshes->concattagtransform(this, links[i].tag, m, n);
                 n.transformedtranslate(links[i].translate, model->scale);
-                links[i].p->calcbb(frame, bbmin, bbmax, n);
+                links[i].p->calcbb(bbmin, bbmax, n);
             }
         }
 
-        void gentris(int frame, vector<BIH::tri> *tris, const matrix3x4 &m)
+        void gentris(vector<BIH::tri> *tris, const matrix3x4 &m)
         {
             matrix3x4 t = m;
             t.translate(translate);
             t.scale(model->scale);
-            meshes->gentris(frame, skins, tris, t);
+            meshes->gentris(skins, tris, t);
             loopv(links)
             {
                 matrix3x4 n;
-                meshes->concattagtransform(this, frame, links[i].tag, m, n);
+                meshes->concattagtransform(this, links[i].tag, m, n);
                 n.transformedtranslate(links[i].translate, model->scale);
-                links[i].p->gentris(frame, tris, n);
+                links[i].p->gentris(tris, n);
             }
         }
 
@@ -694,19 +693,27 @@ struct animmodel : model
                 animspec *spec = NULL;
                 if(anims[animpart])
                 {
-                    vector<animspec> &primary = anims[animpart][anim&ANIM_INDEX];
-                    if(&primary < &anims[animpart][NUMANIMS] && primary.length()) spec = &primary[uint(varseed + basetime)%primary.length()];
+                    int primaryidx = anim&ANIM_INDEX;
+                    if(primaryidx < NUMANIMS)
+                    {
+                        vector<animspec> &primary = anims[animpart][primaryidx];
+                        if(primary.length()) spec = &primary[uint(varseed + basetime)%primary.length()];
+                    }
                     if((anim>>ANIM_SECONDARY)&(ANIM_INDEX|ANIM_DIR))
                     {
-                        vector<animspec> &secondary = anims[animpart][(anim>>ANIM_SECONDARY)&ANIM_INDEX];
-                        if(&secondary < &anims[animpart][NUMANIMS] && secondary.length())
-                        {
-                            animspec &spec2 = secondary[uint(varseed + basetime2)%secondary.length()];
-                            if(!spec || spec2.priority > spec->priority)
+                        int secondaryidx = (anim>>ANIM_SECONDARY)&ANIM_INDEX;
+                        if(secondaryidx < NUMANIMS)
+                        { 
+                            vector<animspec> &secondary = anims[animpart][secondaryidx];
+                            if(secondary.length())
                             {
-                                spec = &spec2;
-                                info.anim >>= ANIM_SECONDARY;
-                                info.basetime = basetime2;
+                                animspec &spec2 = secondary[uint(varseed + basetime2)%secondary.length()];
+                                if(!spec || spec2.priority > spec->priority)
+                                {
+                                    spec = &spec2;
+                                    info.anim >>= ANIM_SECONDARY;
+                                    info.basetime = basetime2;
+                                }
                             }
                         }
                     }
@@ -746,12 +753,13 @@ struct animmodel : model
             {
                 animinterpinfo &ai = d->animinterp[interp];
                 if((info.anim&ANIM_CLAMP)==ANIM_CLAMP) aitime = min(aitime, int(info.range*info.speed*0.5e-3f));
+                void *ak = meshes->animkey();
                 if(d->ragdoll && !(anim&ANIM_RAGDOLL)) 
                 {
                     ai.prev.range = ai.cur.range = 0;
                     ai.lastswitch = -1;
                 }
-                else if(ai.lastmodel!=this || ai.lastswitch<0 || lastmillis-d->lastrendered>aitime)
+                else if(ai.lastmodel!=ak || ai.lastswitch<0 || lastmillis-d->lastrendered>aitime)
                 {
                     ai.prev = ai.cur = info;
                     ai.lastswitch = lastmillis-aitime*2;
@@ -763,7 +771,7 @@ struct animmodel : model
                     ai.lastswitch = lastmillis;
                 }
                 else if(info.anim&ANIM_SETTIME) ai.cur.basetime = info.basetime;
-                ai.lastmodel = this;
+                ai.lastmodel = ak;
             }
             return true;
         }
@@ -1119,12 +1127,12 @@ struct animmodel : model
         if(offsetpitch) m.rotate_around_y(-offsetpitch*RAD);
     }
 
-    void gentris(int frame, vector<BIH::tri> *tris)
+    void gentris(vector<BIH::tri> *tris)
     {
         if(parts.empty()) return;
         matrix3x4 m;
         initmatrix(m);
-        parts[0]->gentris(frame, tris, m);
+        parts[0]->gentris(tris, m);
     }
 
     void preloadBIH()
@@ -1137,7 +1145,7 @@ struct animmodel : model
     {
         if(bih) return bih;
         vector<BIH::tri> tris[2];
-        gentris(0, tris);
+        gentris(tris);
         bih = new BIH(tris);
         return bih;
     }
@@ -1255,13 +1263,13 @@ struct animmodel : model
         loopv(parts) loopvj(parts[i]->skins) parts[i]->skins[j].cullface = cullface;
     }
 
-    void calcbb(int frame, vec &center, vec &radius)
+    void calcbb(vec &center, vec &radius)
     {
         if(parts.empty()) return;
         vec bbmin(1e16f, 1e16f, 1e16f), bbmax(-1e16f, -1e16f, -1e16f);
         matrix3x4 m;
         initmatrix(m); 
-        parts[0]->calcbb(frame, bbmin, bbmax, m);
+        parts[0]->calcbb(bbmin, bbmax, m);
         radius = bbmax;
         radius.sub(bbmin);
         radius.mul(0.5f);

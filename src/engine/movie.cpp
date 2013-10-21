@@ -981,7 +981,7 @@ namespace recorder
         shouldencode = shouldread = NULL;
         thread = NULL;
  
-        static const char *mesgs[] = { "ok", "stopped", "computer too slow", "file error"};
+        static const char * const mesgs[] = { "ok", "stopped", "computer too slow", "file error"};
         conoutf("movie recording halted: %s, %d frames", mesgs[state], file->videoframes);
         
         DELETEP(file);
@@ -1170,9 +1170,9 @@ namespace recorder
         glDisable(GL_BLEND);
     }
 
-    void capture()
+    void capture(bool overlay)
     {
-        if(readbuffer()) drawhud();
+        if(readbuffer() && overlay) drawhud();
     }
 }
 

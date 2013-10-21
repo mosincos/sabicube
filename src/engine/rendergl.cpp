@@ -666,10 +666,15 @@ void gl_checkextensions()
 #endif
             if(dbgexts) conoutf(CON_INIT, "Using GL_EXT_texture_compression_s3tc extension.");
         }
+        else if(hasext(exts, "GL_EXT_texture_compression_dxt1") && hasext(exts, "GL_ANGLE_texture_compression_dxt3") && hasext(exts, "GL_ANGLE_texture_compression_dxt5"))
+        {
+            hasS3TC = true;
+            if(dbgexts) conoutf(CON_INIT, "Using GL_EXT_texture_compression_dxt1 extension.");
+        }
         if(hasext(exts, "GL_3DFX_texture_compression_FXT1"))
         {
             hasFXT1 = true;
-            if(mesa) usetexcompress = 1;
+            if(mesa) usetexcompress = max(usetexcompress, 1);
             if(dbgexts) conoutf(CON_INIT, "Using GL_3DFX_texture_compression_FXT1.");
         }
     }
@@ -835,9 +840,9 @@ vec worldpos, camdir, camright, camup;
 
 void findorientation()
 {
-    vecfromyawpitch(camera1->yaw, camera1->pitch, 1, 0, camdir);
-    vecfromyawpitch(camera1->yaw, 0, 0, -1, camright);
-    vecfromyawpitch(camera1->yaw, camera1->pitch+90, 1, 0, camup);
+    mvmatrix.transposedtransformnormal(vec(viewmatrix.getcolumn(1)), camdir);
+    mvmatrix.transposedtransformnormal(vec(viewmatrix.getcolumn(0)).neg(), camright);
+    mvmatrix.transposedtransformnormal(vec(viewmatrix.getcolumn(2)), camup);
 
     if(raycubepos(camera1->o, camdir, worldpos, 0, RAY_CLIPMAT|RAY_SKIPFIRST) == -1)
         worldpos = vec(camdir).mul(2*worldsize).add(camera1->o); //otherwise 3dgui won't work when outside of map
@@ -980,19 +985,45 @@ void recomputecamera()
         }
         camera1->reset();
         camera1->type = ENT_CAMERA;
-        camera1->collidetype = COLLIDE_AABB;
         camera1->move = -1;
         camera1->eyeheight = camera1->aboveeye = camera1->radius = camera1->xradius = camera1->yradius = 2;
+       
+        matrix3x3 orient;
+        orient.identity();
+        orient.rotate_around_y(camera1->roll*RAD);
+        orient.rotate_around_x(camera1->pitch*-RAD);
+        orient.rotate_around_z(camera1->yaw*-RAD);
+        vec dir = vec(orient.b).neg(), side = vec(orient.a).neg(), up = orient.c;
 
-        vec dir;
-        vecfromyawpitch(camera1->yaw, camera1->pitch, -1, 0, dir);
-        if(game::collidecamera())
+        if(game::collidecamera()) 
         {
             movecamera(camera1, dir, thirdpersondistance, 1);
             movecamera(camera1, dir, clamp(thirdpersondistance - camera1->o.dist(player->o), 0.0f, 1.0f), 0.1f);
+            if(thirdpersonup)
+            {
+                vec pos = camera1->o;
+                float dist = fabs(thirdpersonup);
+                if(thirdpersonup < 0) up.neg();
+                movecamera(camera1, up, dist, 1);
+                movecamera(camera1, up, clamp(dist - camera1->o.dist(pos), 0.0f, 1.0f), 0.1f);
+            }
+            if(thirdpersonside)
+            {
+                vec pos = camera1->o;
+                float dist = fabs(thirdpersonside);
+                if(thirdpersonside < 0) side.neg();
+                movecamera(camera1, side, dist, 1);
+                movecamera(camera1, side, clamp(dist - camera1->o.dist(pos), 0.0f, 1.0f), 0.1f);
+            }
         }
-        else camera1->o.add(vec(dir).mul(thirdpersondistance));
+        else 
+        {
+            camera1->o.add(vec(dir).mul(thirdpersondistance));
+            if(thirdpersonup) camera1->o.add(vec(up).mul(thirdpersonup));
+            if(thirdpersonside) camera1->o.add(vec(side).mul(thirdpersonside));
+        }
     }
+
     setviewcell(camera1->o);
 }
 
@@ -2285,7 +2316,7 @@ void drawcrosshair(int w, int h)
     if(windowhit)
     {
         static Texture *cursor = NULL;
-        if(!cursor) cursor = textureload("data/skin/default/guicursor.png", 3, true);
+        if(!cursor) cursor = textureload("data/guicursor.png", 3, true);
         crosshair = cursor;
         chsize = cursorsize*w/900.0f;
         g3d_cursorpos(cx, cy);
@@ -2524,3 +2555,5 @@ void gl_drawhud(int w, int h)
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
 }
+
+

@@ -1084,7 +1084,8 @@ static void gengenericvariant(Shader &s, const char *sname, const char *vs, cons
             memset(vspragma, ' ', olen);
             vspragma += olen;
             char *end = vspragma + strcspn(vspragma, "\n\r");
-            int endlen = strspn(end, "\n\r");
+            end += strspn(end, "\n\r");
+            int endlen = strcspn(end, "\n\r");
             memset(end, ' ', endlen);
         }
     }
@@ -1099,7 +1100,8 @@ static void gengenericvariant(Shader &s, const char *sname, const char *vs, cons
             memset(pspragma, ' ', olen);
             pspragma += olen;
             char *end = pspragma + strcspn(pspragma, "\n\r");
-            int endlen = strspn(end, "\n\r");
+            end += strspn(end, "\n\r");
+            int endlen = strcspn(end, "\n\r");
             memset(end, ' ', endlen);
         }
     }
@@ -1120,11 +1122,11 @@ static bool genwatervariant(Shader &s, const char *sname, vector<char> &vs, vect
     if(*pspragma) pspragma++;
     if(s.type & SHADER_GLSLANG)
     {
-        const char *fadedef = "waterfade = gl_Vertex.z*waterfadeparams.x + waterfadeparams.y;\n";
+        const char *fadedef = "fadedepth = gl_Vertex.z*waterfadeparams.x + waterfadeparams.y;\n";
         vs.insert(vspragma-vs.getbuf(), fadedef, strlen(fadedef));
-        const char *fadeuse = "gl_FragColor.a = waterfade;\n";
+        const char *fadeuse = "gl_FragColor.a = fadedepth;\n";
         ps.insert(pspragma-ps.getbuf(), fadeuse, strlen(fadeuse));
-        const char *fadedecl = "uniform vec4 waterfadeparams; varying float waterfade;\n";
+        const char *fadedecl = "uniform vec4 waterfadeparams; varying float fadedepth;\n";
         const char *vsmain = findglslmain(vs.getbuf()), *psmain = findglslmain(ps.getbuf());
         vs.insert(vsmain ? vsmain - vs.getbuf() : 0, fadedecl, strlen(fadedecl));
         ps.insert(psmain ? psmain - ps.getbuf() : 0, fadedecl, strlen(fadedecl));
@@ -2337,7 +2339,7 @@ void setblurshader(int pass, int size, int radius, float *weights, float *offset
         (offsets[3] - offsets[2])/size);
     loopk(4)
     {
-        static const char *names[4] = { "offset4", "offset5", "offset6", "offset7" };
+        static const char * const names[4] = { "offset4", "offset5", "offset6", "offset7" };
         setlocalparamf(names[k], SHPARAM_PIXEL, 3+k,
             pass==0 ? offsets[4+k]/size : offsets[0]/size,
             pass==1 ? offsets[4+k]/size : offsets[0]/size,

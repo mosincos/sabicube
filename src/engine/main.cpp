@@ -119,6 +119,7 @@ void writeinitcfg()
 }
 
 COMMAND(quit, "");
+
 ////////////////////////////////////////////////////////////////////////////
 void writemapcfg(int *arg, int *loadinv, int *loadtri, char *mapname)
 {
@@ -224,8 +225,9 @@ void renderbackground(const char *caption, Texture *mapshot, const char *mapname
 
     defaultshader->set();
     glEnable(GL_TEXTURE_2D);
-
+	
     static int lastupdate = -1, lastw = -1, lasth = -1;
+///////////////////////////////////////////////////////////////////////////
 //    static float backgroundu = 0, backgroundv = 0, detailu = 0, detailv = 0;
 //    static int numdecals = 0;
 //    static struct decal { float x, y, size; int side; } decals[12];
@@ -254,8 +256,7 @@ void renderbackground(const char *caption, Texture *mapshot, const char *mapname
     {
         glColor3f(1, 1, 1);
         settexture("data/background.png", 0);
-//		float bu = w*0.67f/256.0f + backgroundu, bv = h*0.67f/256.0f + backgroundv;
-//		float bu = w, bv = h;
+//        float bu = w*0.67f/256.0f + backgroundu, bv = h*0.67f/256.0f + backgroundv;
         glBegin(GL_TRIANGLE_STRIP);
 //        glTexCoord2f(0,  0);  glVertex2f(0, 0);
 //        glTexCoord2f(bu, 0);  glVertex2f(w, 0);
@@ -268,7 +269,6 @@ void renderbackground(const char *caption, Texture *mapshot, const char *mapname
         glEnd();
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
-//////////////////////////////
 //        settexture("data/background_detail.png", 0);
 //        float du = w*0.8f/512.0f + detailu, dv = h*0.8f/512.0f + detailv;
 //        glBegin(GL_TRIANGLE_STRIP);
@@ -277,7 +277,6 @@ void renderbackground(const char *caption, Texture *mapshot, const char *mapname
 //        glTexCoord2f(0,  dv); glVertex2f(0, h);
 //        glTexCoord2f(du, dv); glVertex2f(w, h);
 //        glEnd();
-//////////////////////////////
 //        settexture("data/background_decal.png", 3);
 //        glBegin(GL_QUADS);
 //        loopj(numdecals)
@@ -289,7 +288,7 @@ void renderbackground(const char *caption, Texture *mapshot, const char *mapname
 //            glTexCoord2f(side,   1); glVertex2f(hx-hsz, hy+hsz);
 //        }
 //        glEnd();
-//////////////////////////////
+///////////////////////////////////////////////////////////////////////////
         float lh = 0.5f*min(w, h), lw = lh*2,
               lx = 0.5f*(w - lw), ly = 0.5f*(h*0.5f - lh);
         settexture((maxtexsize ? min(maxtexsize, hwtexsize) : hwtexsize) >= 1024 && (screen->w > 1280 || screen->h > 800) ? "data/logo_1024.png" : "data/logo.png", 3);
@@ -372,7 +371,7 @@ void renderbackground(const char *caption, Texture *mapshot, const char *mapname
             }
         }
         glDisable(GL_BLEND);
-        if(!restore) swapbuffers();
+        if(!restore) swapbuffers(false);
     }
     glDisable(GL_TEXTURE_2D);
 
@@ -417,10 +416,10 @@ void renderprogress(float bar, const char *text, GLuint tex, bool background)   
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
-/////////////////////////////////
-	glEnable(GL_TEXTURE_2D);
-	defaultshader->set();
-	glColor3f(1, 1, 1);
+
+    glEnable(GL_TEXTURE_2D);
+    defaultshader->set();
+    glColor3f(1, 1, 1);
 
     float fh = 0.075f*min(w, h), fw = fh*10,
           fx = renderedframe ? w - fw - fh/4 : 0.5f*(w - fw), 
@@ -434,7 +433,7 @@ void renderprogress(float bar, const char *text, GLuint tex, bool background)   
     glTexCoord2f(fu1, fv2); glVertex2f(fx,    fy+fh);
     glTexCoord2f(fu2, fv2); glVertex2f(fx+fw, fy+fh);
     glEnd();
-/////////////////////////////////
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -509,7 +508,7 @@ void renderprogress(float bar, const char *text, GLuint tex, bool background)   
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
-    swapbuffers();
+    swapbuffers(false);
 }
 
 void keyrepeat(bool on)
@@ -941,9 +940,9 @@ void checkinput()
     if(mousemoved) resetmousemotion();
 }
 
-void swapbuffers()
+void swapbuffers(bool overlay)
 {
-    recorder::capture();
+    recorder::capture(overlay);
     SDL_GL_SwapBuffers();
 }
  
@@ -1195,7 +1194,7 @@ int main(int argc, char **argv)
     ASSERT(dedicated <= 1);
     game::initclient();
 
-    logoutf("init: video: mode");
+    logoutf("init: video");
     const SDL_VideoInfo *video = SDL_GetVideoInfo();
     if(video) 
     {
@@ -1205,7 +1204,6 @@ int main(int argc, char **argv)
     int usedcolorbits = 0, useddepthbits = 0, usedfsaa = 0;
     setupscreen(usedcolorbits, useddepthbits, usedfsaa);
 
-    logoutf("init: video: misc");
     SDL_WM_SetCaption("Cube 2: Sauerbraten", NULL);
     keyrepeat(false);
     SDL_ShowCursor(0);
@@ -1241,8 +1239,8 @@ int main(int argc, char **argv)
     execfile("data/stdedit.cfg");
     execfile("data/menus.cfg");
     execfile("data/sounds.cfg");
-    execfile("data/brush.cfg");
-    execfile("mybrushes.cfg", false);
+    execfile("data/heightmap.cfg");
+    execfile("data/blendbrush.cfg");
     if(game::savedservers()) execfile(game::savedservers(), false);
     
     identflags |= IDF_PERSIST;

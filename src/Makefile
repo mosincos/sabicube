@@ -18,11 +18,25 @@ MV=mv
 ifneq (,$(findstring MINGW,$(PLATFORM)))
 WINDRES= windres
 ifneq (,$(findstring 64,$(PLATFORM)))
+ifneq (,$(findstring CROSS,$(PLATFORM)))
+  CXX=x86_64-w64-mingw32-g++
+  WINDRES=x86_64-w64-mingw32-windres
+ifneq (,$(STRIP))
+  STRIP=x86_64-w64-mingw32-strip
+endif
+endif
 WINLIB=lib64
 WINBIN=../bin64
 override CXX+= -m64
 override WINDRES+= -F pe-x86-64
 else
+ifneq (,$(findstring CROSS,$(PLATFORM)))
+  CXX=i686-w64-mingw32-g++
+  WINDRES=i686-w64-mingw32-windres
+ifneq (,$(STRIP))
+  STRIP=i686-w64-mingw32-strip
+endif
+endif
 WINLIB=lib
 WINBIN=../bin
 override CXX+= -m32
@@ -41,6 +55,10 @@ CLIENT_LIBS= -Lenet/.libs -lenet -L/usr/X11R6/lib -lX11 `sdl-config --libs` -lSD
 endif
 ifeq ($(PLATFORM),Linux)
 CLIENT_LIBS+= -lrt
+else
+ifneq (,$(findstring GNU,$(PLATFORM)))
+CLIENT_LIBS+= -lrt        
+endif         
 endif
 CLIENT_OBJS= \
 	shared/crypto.o \
@@ -148,7 +166,7 @@ clean:
 	-$(RM) $(CLIENT_PCH) $(CLIENT_OBJS) $(SERVER_OBJS) $(MASTER_OBJS) sauer_client sauer_server sauer_master
 
 %.h.gch: %.h
-	$(CXX) $(CXXFLAGS) -o $(subst .h.gch,.tmp.h.gch,$@) $(subst .h.gch,.h,$@)
+	$(CXX) $(CXXFLAGS) -x c++-header -o $(subst .h.gch,.tmp.h.gch,$@) $(subst .h.gch,.h,$@)
 	$(MV) $(subst .h.gch,.tmp.h.gch,$@) $@
 
 %-standalone.o: %.cpp

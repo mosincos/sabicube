@@ -41,8 +41,10 @@ enum                            // static entity types
     JUMPPAD,                    // attr1 = zpush, attr2 = ypush, attr3 = xpush
     BASE,
     RESPAWNPOINT,
-    BOX,                        // attr1 = angle, attr2 = idx, attr3 = weight
-    XBOX,                       // attr1 = angle, attr2 = idx, attr3 = weight
+//////////////////////////////////////////////////////////////////
+	BOX,                        // attr1 = angle, attr2 = idx, attr3 = weight
+//////////////////////////////////////////////////////////////////
+	XBOX,                       // attr1 = angle, attr2 = idx, attr3 = weight
     BARREL,                     // attr1 = angle, attr2 = idx, attr3 = weight, attr4 = health
     PLATFORM,                   // attr1 = angle, attr2 = idx, attr3 = tag, attr4 = speed
     ELEVATOR,                   // attr1 = angle, attr2 = idx, attr3 = tag, attr4 = speed
@@ -325,21 +327,23 @@ enum
     HICON_SPACE   = 40
 };
 
+////////////////////////////////////////////////////////////////////////////////////
 static struct itemstat { int add, max, sound; const char *name; int icon, info; } itemstats[] =
 {
 // stock more ammo
-    {10,    999,   S_ITEMAMMO,   "SG", HICON_SG, GUN_SG},
-    {20,    999,   S_ITEMAMMO,   "CG", HICON_CG, GUN_CG},
-    {5,     999,   S_ITEMAMMO,   "RL", HICON_RL, GUN_RL},
-    {5,     999,   S_ITEMAMMO,   "RI", HICON_RIFLE, GUN_RIFLE},
-    {10,    999,   S_ITEMAMMO,   "GL", HICON_GL, GUN_GL},
-    {30,    999,   S_ITEMAMMO,   "PI", HICON_PISTOL, GUN_PISTOL},
-    {25,    100,   S_ITEMHEALTH, "H", HICON_HEALTH},
-    {10,    1000,  S_ITEMHEALTH, "MH", HICON_HEALTH},
-    {100,   100,   S_ITEMARMOUR, "GA", HICON_GREEN_ARMOUR, A_GREEN},
-    {200,   200,   S_ITEMARMOUR, "YA", HICON_YELLOW_ARMOUR, A_YELLOW},
-    {20000, 30000, S_ITEMPUP,    "Q", HICON_QUAD},
+    {10,    999,    S_ITEMAMMO,   "SG", HICON_SG, GUN_SG},
+    {20,    999,    S_ITEMAMMO,   "CG", HICON_CG, GUN_CG},
+    {5,     999,    S_ITEMAMMO,   "RL", HICON_RL, GUN_RL},
+    {5,     999,    S_ITEMAMMO,   "RI", HICON_RIFLE, GUN_RIFLE},
+    {10,    999,    S_ITEMAMMO,   "GL", HICON_GL, GUN_GL},
+    {30,    999,    S_ITEMAMMO,   "PI", HICON_PISTOL, GUN_PISTOL},
+    {25,    100,    S_ITEMHEALTH, "H", HICON_HEALTH, -1},
+    {10,    1000,   S_ITEMHEALTH, "MH", HICON_HEALTH, -1},
+    {100,   100,    S_ITEMARMOUR, "GA", HICON_GREEN_ARMOUR, A_GREEN},
+    {200,   200,    S_ITEMARMOUR, "YA", HICON_YELLOW_ARMOUR, A_YELLOW},
+    {20000, 30000,  S_ITEMPUP,    "Q", HICON_QUAD, -1},
 };
+////////////////////////////////////////////////////////////////////////////////////
 
 #define MAXRAYS 20
 #define EXP_SELFDAMDIV 2
@@ -347,6 +351,7 @@ static struct itemstat { int add, max, sound; const char *name; int icon, info; 
 #define EXP_DISTSCALE 1.5f
 
 static const struct guninfo { int sound, attackdelay, damage, spread, projspeed, kickamount, range, rays, hitpush, exprad, ttl; const char *name, *file; short part; } guns[NUMGUNS] =
+////////////////////////////////////////////////////////////////////////////////////
 {
     { S_PUNCH1,    250,  50,   0,   0,  0,   14,  1,  80,  0,    0, "fist",            "fist",   0 },
     { S_SG,       1400,  10, 400,   0, 20, 1024, 20,  80,  0,    0, "shotgun",         "shotg",  0 },
@@ -361,6 +366,7 @@ static const struct guninfo { int sound, attackdelay, damage, spread, projspeed,
     { S_PIGR1,     250,  50,   0,   0,  1,   12,  1,  80,  0,    0, "bite",            NULL,     0 },
     { -1,            0, 120,   0,   0,  0,    0,  1,  80, 40,    0, "barrel",          NULL,     0 }
 };
+////////////////////////////////////////////////////////////////////////////////////
 
 #include "ai.h"
 
@@ -495,6 +501,7 @@ struct fpsstate
             ammo[GUN_PISTOL] = 40;
             ammo[GUN_GL] = 1;
         }
+/////////////////////////////////////////////////////////////////////
         else if(m_sp)
         {
             if(m_dmsp) 
@@ -504,6 +511,7 @@ struct fpsstate
             }
 			gunselect = GUN_FIST;
 		}
+/////////////////////////////////////////////////////////////////////
         else
         {
             armourtype = A_BLUE;
@@ -581,7 +589,8 @@ struct fpsent : dynent, fpsstate
 
     vec muzzle;
 
-    fpsent() : weight(100), clientnum(-1), privilege(PRIV_NONE), lastupdate(0), plag(0), ping(0), lifesequence(0), respawned(-1), suicided(-1), lastpain(0), attacksound(-1), attackchan(-1), idlesound(-1), idlechan(-1), playerexperience(0), playerlevel(0), frags(0), flags(0), deaths(0), totaldamage(0), totalshots(0), edit(NULL), smoothmillis(-1), playermodel(-1), ai(NULL), ownernum(-1), muzzle(-1, -1, -1)
+/////////////////////////////////////////////////////////////////////////
+	fpsent() : weight(100), clientnum(-1), privilege(PRIV_NONE), lastupdate(0), plag(0), ping(0), lifesequence(0), respawned(-1), suicided(-1), lastpain(0), attacksound(-1), attackchan(-1), idlesound(-1), idlechan(-1), playerexperience(0), playerlevel(0), frags(0), flags(0), deaths(0), totaldamage(0), totalshots(0), edit(NULL), smoothmillis(-1), playermodel(-1), ai(NULL), ownernum(-1), muzzle(-1, -1, -1)
     {
         name[0] = team[0] = info[0] = 0;
 		for(int x=0;x<100;x=x+1)
@@ -607,7 +616,8 @@ struct fpsent : dynent, fpsstate
 		hotkey0 = 0;
 		respawn();
     }
-    ~fpsent()
+/////////////////////////////////////////////////////////////////////////
+	~fpsent()
     {
         freeeditinfo(edit);
         if(attackchan >= 0) stopsound(attacksound, attackchan);
@@ -701,9 +711,6 @@ namespace entities
     extern void preloadentities();
     extern void renderentities();
     extern void resettriggers();
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//    extern void disappeartrigger(); // why?
-/////////////////////////////////////////////////////////////////////////////////////////////////
     extern void checktriggers();
     extern void checkitems(fpsent *d);
     extern void checkquad(int time, fpsent *d);
@@ -744,7 +751,7 @@ namespace game
         virtual bool aicheck(fpsent *d, ai::aistate &b) { return false; }
         virtual bool aidefend(fpsent *d, ai::aistate &b) { return false; }
         virtual bool aipursue(fpsent *d, ai::aistate &b) { return false; }
-	};
+    };
 
     extern clientmode *cmode;
     extern void setclientmode();
@@ -919,3 +926,4 @@ namespace server
 }
 
 #endif
+

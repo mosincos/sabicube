@@ -18,7 +18,9 @@ enum {FIELDCOMMIT, FIELDABORT, FIELDEDIT, FIELDSHOW, FIELDKEY};
 static int fieldmode = FIELDSHOW; 
 static bool fieldsactive = false;
 
+//////////////////////////////////////////////////////////////////////////////////////
 extern char *guioverlaytex, *guiskintex, *guislidertex;
+//////////////////////////////////////////////////////////////////////////////////////
 
 static bool hascursor;
 static float cursorx = 0.5f, cursory = 0.5f;
@@ -57,9 +59,11 @@ struct gui : g3d_gui
 
     static int ty, tx, tpos, *tcurrent, tcolor; //tracking tab size and position since uses different layout method...
 
-    void allowautotab(bool on)
+    bool allowautotab(bool on)
     {
+        bool oldval = shouldautotab;
         shouldautotab = on;
+        return oldval;
     }
 
     void autotab() 
@@ -126,7 +130,9 @@ struct gui : g3d_gui
                 y1 = cury - ((skiny[6]-skiny[1])-(skiny[3]-skiny[2]))*SKIN_SCALE-h,
                 y2 = cury;
             bool hit = tcurrent && windowhit==this && hitx>=x1 && hity>=y1 && hitx<x2 && hity<y2;
+//////////////////////////////////////////////////////////////////////////////////////
 //            if(hit && (!guiclicktab || mousebuttons&G3D_DOWN)) 
+//////////////////////////////////////////////////////////////////////////////////////
             if(hit && mousebuttons&G3D_DOWN) 
                 *tcurrent = tpos; //roll-over to switch tab
             
@@ -273,7 +279,12 @@ struct gui : g3d_gui
         }
     }
 
-    void mergehits(bool on) { shouldmergehits = on; }
+    bool mergehits(bool on) 
+    { 
+        bool oldval = shouldmergehits;
+        shouldmergehits = on; 
+        return oldval;
+    }
 
     bool ishit(int w, int h, int x = curx, int y = cury)
     {
@@ -315,7 +326,7 @@ struct gui : g3d_gui
                 glDisable(GL_TEXTURE_2D);
                 notextureshader->set();
                 glColor4f(0, 0, 0, 0.75f);
-                rect_(xi+SHADOW, yi+SHADOW, xs, ys, -1);
+                rect_(xi+SHADOW, yi+SHADOW, xs, ys);
                 glEnable(GL_TEXTURE_2D);
                 defaultshader->set();
             }
@@ -340,7 +351,7 @@ struct gui : g3d_gui
                     notextureshader->set();
                     glBlendFunc(GL_ZERO, GL_SRC_COLOR);
                     glColor3f(1, 0.5f, 0.5f);
-                    rect_(xi, yi, xs, ys, -1);
+                    rect_(xi, yi, xs, ys);
                     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                     glEnable(GL_TEXTURE_2D);
                     defaultshader->set();
@@ -353,7 +364,6 @@ struct gui : g3d_gui
 					overlaytex = textureload(tname, 3);
 				}
 //////////////////////////////////////////////////////////////////////////////////////
-
                 glColor3fv(light.v);
                 glBindTexture(GL_TEXTURE_2D, overlaytex->id);
                 rect_(xi, yi, xs, ys, 0);
@@ -376,7 +386,7 @@ struct gui : g3d_gui
                 glDisable(GL_TEXTURE_2D);
                 notextureshader->set();
                 glColor4f(0, 0, 0, 0.75f);
-                rect_(xi+SHADOW, yi+SHADOW, xs, ys, -1);
+                rect_(xi+SHADOW, yi+SHADOW, xs, ys);
                 glEnable(GL_TEXTURE_2D);
                 defaultshader->set();
             }
@@ -394,7 +404,7 @@ struct gui : g3d_gui
                 light.color = vec(1, 1, 1);
                 light.dir = vec(0, -1, 2).normalize();
                 vec center, radius;
-                m->boundbox(0, center, radius);
+                m->boundbox(center, radius);
                 float dist =  2.0f*max(radius.magnitude2(), 1.1f*radius.z),
                       yaw = fmod(lastmillis/10000.0f*360.0f, 360.0f);
                 vec o(-center.x, dist - center.y, -0.1f*dist - center.z);
@@ -413,7 +423,7 @@ struct gui : g3d_gui
                     notextureshader->set();
                     glBlendFunc(GL_ZERO, GL_SRC_COLOR);
                     glColor3f(1, 0.5f, 0.5f);
-                    rect_(xi, yi, xs, ys, -1);
+                    rect_(xi, yi, xs, ys);
                     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                     glEnable(GL_TEXTURE_2D);
                     defaultshader->set();
@@ -544,7 +554,7 @@ struct gui : g3d_gui
             glDisable(GL_BLEND);
             if(editing) glColor3f(1, 0, 0);
             else glColor3ub(color>>16, (color>>8)&0xFF, color&0xFF);
-            rect_(curx, cury, w, h, -1, true);
+            rect_(curx, cury, w, h, true);
             glEnable(GL_TEXTURE_2D);
             glEnable(GL_BLEND);
             defaultshader->set();
@@ -566,29 +576,28 @@ struct gui : g3d_gui
         return result;
     }
 
-    void rect_(float x, float y, float w, float h, int usetc = -1, bool lines = false) 
+    void rect_(float x, float y, float w, float h, bool lines = false)
     {
         glBegin(lines ? GL_LINE_LOOP : GL_TRIANGLE_STRIP);
-        static const GLfloat tc[4][2] = {{0, 0}, {1, 0}, {1, 1}, {0, 1}};
-        if(usetc>=0) glTexCoord2fv(tc[usetc]); 
         glVertex2f(x, y);
-        if(usetc>=0) glTexCoord2fv(tc[(usetc+1)%4]);
         glVertex2f(x + w, y);
-        if(lines)
-        {
-            if(usetc>=0) glTexCoord2fv(tc[(usetc+2)%4]);
-            glVertex2f(x + w, y + h);
-        }
-        if(usetc>=0) glTexCoord2fv(tc[(usetc+3)%4]);
+        if(lines) glVertex2f(x + w, y + h);
         glVertex2f(x, y + h);
-        if(!lines)
-        {
-            if(usetc>=0) glTexCoord2fv(tc[(usetc+2)%4]);
-            glVertex2f(x + w, y + h);
-        }
+        if(!lines) glVertex2f(x + w, y + h);
         glEnd();
         xtraverts += 4;
-        
+    }
+
+    void rect_(float x, float y, float w, float h, int usetc)
+    {
+        glBegin(GL_TRIANGLE_STRIP);
+        static const GLfloat tc[5][2] = {{0, 0}, {1, 0}, {1, 1}, {0, 1}, {0, 0}};
+        glTexCoord2fv(tc[usetc]); glVertex2f(x, y);
+        glTexCoord2fv(tc[usetc+1]); glVertex2f(x + w, y);
+        glTexCoord2fv(tc[usetc+3]); glVertex2f(x, y + h);
+        glTexCoord2fv(tc[usetc+2]); glVertex2f(x + w, y + h);
+        glEnd();
+        xtraverts += 4;
     }
 
     void text_(const char *text, int x, int y, int color, bool shadow, bool force = false) 
@@ -825,7 +834,7 @@ struct gui : g3d_gui
     static Texture *skintex, *overlaytex, *slidertex;
     static const int skinx[], skiny[];
     static const struct patch { ushort left, right, top, bottom; uchar flags; } patches[];
-	
+
     static void drawskin(int x, int y, int gapw, int gaph, int start, int n, int passes = 1, const vec &light = vec(1, 1, 1), float alpha = 0.80f)//int vleft, int vright, int vtop, int vbottom, int start, int n) 
     {
 //////////////////////////////////////////////////////////////////////////////////////
@@ -836,7 +845,7 @@ struct gui : g3d_gui
 			skintex = textureload(tname, 3);
 		}
 //////////////////////////////////////////////////////////////////////////////////////
-		glBindTexture(GL_TEXTURE_2D, skintex->id);
+        glBindTexture(GL_TEXTURE_2D, skintex->id);
         int gapx1 = INT_MAX, gapy1 = INT_MAX, gapx2 = INT_MAX, gapy2 = INT_MAX;
         float wscale = 1.0f/(SKIN_W*SKIN_SCALE), hscale = 1.0f/(SKIN_H*SKIN_SCALE);
         

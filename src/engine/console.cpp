@@ -2,8 +2,9 @@
 
 #include "engine.h"
 
+#define MAXCONLINES 1000
 struct cline { char *line; int type, outtime; };
-vector<cline> conlines;
+reversequeue<cline, MAXCONLINES> conlines;
 
 int commandmillis = -1;
 string commandbuf;
@@ -11,17 +12,17 @@ char *commandaction = NULL, *commandprompt = NULL;
 enum { CF_COMPLETE = 1<<0, CF_EXECUTE = 1<<1 };
 int commandflags = 0, commandpos = -1;
 
-VARFP(maxcon, 10, 200, 1000, { while(conlines.length() > maxcon) delete[] conlines.pop().line; });
+VARFP(maxcon, 10, 200, MAXCONLINES, { while(conlines.length() > maxcon) delete[] conlines.pop().line; });
 
 #define CONSTRLEN 512
 
 void conline(int type, const char *sf)        // add a line to the console buffer
 {
-    cline cl;
-    cl.line = conlines.length()>maxcon ? conlines.pop().line : newstring("", CONSTRLEN-1);   // constrain the buffer size
+    char *buf = conlines.length() >= maxcon ? conlines.remove().line : newstring("", CONSTRLEN-1);
+    cline &cl = conlines.add();
+    cl.line = buf;
     cl.type = type;
-    cl.outtime = totalmillis;                       // for how long to keep line on screen
-    conlines.insert(0, cl);
+    cl.outtime = totalmillis;                // for how long to keep line on screen
     copystring(cl.line, sf, CONSTRLEN);
 }
 
@@ -30,7 +31,6 @@ void conoutfv(int type, const char *fmt, va_list args)
     static char buf[CONSTRLEN];
     vformatstring(buf, fmt, args, sizeof(buf));
     conline(type, buf);
-    filtertext(buf, buf);
     logoutf("%s", buf);
 }
 
@@ -426,7 +426,7 @@ vector<releaseaction> releaseactions;
 
 const char *addreleaseaction(char *s)
 {
-    if(!keypressed) return NULL;
+    if(!keypressed) { delete[] s; return NULL; }
     releaseaction &ra = releaseactions.add();
     ra.key = keypressed;
     ra.action = s;
@@ -619,7 +619,7 @@ static inline bool sortbinds(keym *x, keym *y)
 
 void writebinds(stream *f)
 {
-    static const char *cmds[3] = { "bind", "specbind", "editbind" };
+    static const char * const cmds[3] = { "bind", "specbind", "editbind" };
     vector<keym *> binds;
     enumerate(keyms, keym, km, binds.add(&km));
     binds.sort(sortbinds);

@@ -212,4 +212,3 @@ namespace game
         m->damaged(damage, at, gun);
     }
 }
-

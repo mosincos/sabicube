@@ -59,7 +59,7 @@ void boxsgrid(int orient, vec o, vec s, int g)
     xtraverts += 2*int(xs+ys);
 }
 
-selinfo sel, lastsel;
+selinfo sel, lastsel, savedsel;
 
 int orient = 0;
 int gridsize = 8;
@@ -82,12 +82,16 @@ VARF(dragging, 0, 0, 1,
     sel.orient = orient;
 );
 
-VARF(moving, 0, 0, 1,
-    if(!moving) return;
-    vec v(cur.v); v.add(1);
-    moving = pointinsel(sel, v);
-    if(moving) havesel = false; // tell cursorupdate to create handle
-);
+int moving = 0;
+ICOMMAND(moving, "b", (int *n),
+{
+    if(*n >= 0)
+    {
+        if(!*n || (moving<=1 && !pointinsel(sel, cur.tovec().add(1)))) moving = 0;
+        else if(!moving) moving = 1;
+    }
+    intret(moving);
+});
 
 VARF(gridpower, 0, 3, 12,
 {
@@ -104,11 +108,14 @@ VARF(hmapedit, 0, 0, 1, horient = sel.orient);
 
 void forcenextundo() { lastsel.orient = -1; }
 
+extern void hmapcancel();
+
 void cubecancel()
 {
     havesel = false;
     moving = dragging = hmapedit = passthroughsel = 0;
     forcenextundo();
+    hmapcancel();
 }
 
 void cancelsel()
@@ -193,6 +200,11 @@ COMMAND(cancelsel, "");
 COMMAND(reorient, "");
 COMMAND(selextend, "");
 
+ICOMMAND(selmoved, "", (), { if(noedit(true)) return; intret(sel.o != savedsel.o ? 1 : 0); });
+ICOMMAND(selsave, "", (), { if(noedit(true)) return; savedsel = sel; });
+ICOMMAND(selrestore, "", (), { if(noedit(true)) return; sel = savedsel; });
+ICOMMAND(selswap, "", (), { if(noedit(true)) return; swap(sel, savedsel); });
+
 ///////// selection support /////////////
 
 cube &blockcube(int x, int y, int z, const block3 &b, int rgrid) // looks up a world cube, based on coordinates mapped by the block
@@ -217,9 +229,8 @@ ICOMMAND(havesel, "", (), intret(havesel ? selchildcount : 0));
 
 void countselchild(cube *c, const ivec &cor, int size)
 {
-    ivec ss(sel.s);
-    ss.mul(sel.grid);
-    loopoctabox(cor, size, sel.o, ss)
+    ivec ss = ivec(sel.s).mul(sel.grid);
+    loopoctaboxsize(cor, size, sel.o, ss)
     {
         ivec o(i, cor.x, cor.y, cor.z, size);
         if(c[i].children) countselchild(c[i].children, o, size/2);
@@ -262,23 +273,17 @@ void updateselection()
     sel.s.z = abs(lastcur.z-cur.z)/sel.grid+1;
 }
 
-void editmoveplane(const vec &o, const vec &ray, int d, float off, vec &handle, vec &dest, bool first)
+bool editmoveplane(const vec &o, const vec &ray, int d, float off, vec &handle, vec &dest, bool first)
 {
     plane pl(d, off);
     float dist = 0.0f;
+    if(!pl.rayintersect(player->o, ray, dist))
+        return false;
 
-    if(pl.rayintersect(player->o, ray, dist))
-    {
-        dest = ray;
-        dest.mul(dist);
-        dest.add(player->o);
-        if(first)
-        {
-            handle = dest;
-            handle.sub(o);
-        }
-        dest.sub(handle);
-    }
+    dest = vec(ray).mul(dist).add(player->o);
+    if(first) handle = vec(dest).sub(o);
+    dest.sub(handle);
+    return true;
 }
 
 inline bool isheightmap(int orient, int d, bool empty, cube *c);
@@ -301,19 +306,20 @@ void rendereditcursor()
 
     if(moving)
     {
-        ivec e;
-        static vec v, handle;
-        editmoveplane(sel.o.tovec(), camdir, od, sel.o[D[od]]+odc*sel.grid*sel.s[D[od]], handle, v, !havesel);
-        if(!havesel)
+        static vec dest, handle;
+        if(editmoveplane(sel.o.tovec(), camdir, od, sel.o[D[od]]+odc*sel.grid*sel.s[D[od]], handle, dest, moving==1))
         {
-            v.add(handle);
-            (e = handle).mask(~(sel.grid-1));
-            v.sub(handle = e.tovec());
-            havesel = true;
+            if(moving==1)
+            {
+                dest.add(handle);
+                handle = ivec(handle).mask(~(sel.grid-1)).tovec();
+                dest.sub(handle);
+                moving = 2;
+            }
+            ivec o = ivec(dest).mask(~(sel.grid-1));
+            sel.o[R[od]] = o[R[od]];
+            sel.o[C[od]] = o[C[od]];
         }
-        (e = v).mask(~(sel.grid-1));
-        sel.o[R[od]] = e[R[od]];
-        sel.o[C[od]] = e[C[od]];
     }
     else
     if(entmoving)
@@ -333,7 +339,7 @@ void rendereditcursor()
                        | (passthroughcube==1 ? RAY_PASS : 0), gridsize, entorient, ent);
 
         if((havesel || dragging) && !passthroughsel && !hmapedit)     // now try selecting the selection
-            if(rayrectintersect(sel.o.tovec(), vec(sel.s.tovec()).mul(sel.grid), player->o, camdir, sdist, orient))
+            if(rayboxintersect(sel.o.tovec(), vec(sel.s.tovec()).mul(sel.grid), player->o, camdir, sdist, orient))
             {   // and choose the nearest of the two
                 if(sdist < wdist)
                 {
@@ -368,7 +374,7 @@ void rendereditcursor()
             if(gridlookup && !dragging && !moving && !havesel && hmapedit!=1) gridsize = lusize;
             int mag = lusize / gridsize;
             normalizelookupcube(int(w.x), int(w.y), int(w.z));
-            if(sdist == 0 || sdist > wdist) rayrectintersect(lu.tovec(), vec(gridsize), player->o, camdir, t=0, orient); // just getting orient
+            if(sdist == 0 || sdist > wdist) rayboxintersect(lu.tovec(), vec(gridsize), player->o, camdir, t=0, orient); // just getting orient
             cur = lu;
             cor = vec(w).mul(2).div(gridsize);
             od = dimension(orient);
@@ -452,7 +458,7 @@ void rendereditcursor()
     }
 
     // selections
-    if(havesel)
+    if(havesel || moving)
     {
         d = dimension(sel.orient);
         glColor3ub(50,50,50);   // grid
@@ -492,9 +498,9 @@ void tryedit()
 
 static bool haschanged = false;
 
-void readychanges(block3 &b, cube *c, const ivec &cor, int size)
+void readychanges(const ivec &bbmin, const ivec &bbmax, cube *c, const ivec &cor, int size)
 {
-    loopoctabox(cor, size, b.o, b.s)
+    loopoctabox(cor, size, bbmin, bbmax)
     {
         ivec o(i, cor.x, cor.y, cor.z, size);
         if(c[i].ext)
@@ -517,7 +523,7 @@ void readychanges(block3 &b, cube *c, const ivec &cor, int size)
                 discardchildren(c[i], true);
                 brightencube(c[i]);
             }
-            else readychanges(b, c[i].children, o, size/2);
+            else readychanges(bbmin, bbmax, c[i].children, o, size/2);
         }
         else brightencube(c[i]);
     }
@@ -544,17 +550,7 @@ void commitchanges(bool force)
 void changed(const block3 &sel, bool commit = true)
 {
     if(sel.s.iszero()) return;
-    block3 b = sel;
-    loopi(3) b.s[i] *= b.grid;
-    b.grid = 1;
-    loopi(3)                    // the changed blocks are the selected cubes
-    {
-        b.o[i] -= 1;
-        b.s[i] += 2;
-        readychanges(b, worldroot, ivec(0, 0, 0), worldsize/2);
-        b.o[i] += 1;
-        b.s[i] -= 2;
-    }
+    readychanges(ivec(sel.o).sub(1), ivec(sel.s).mul(sel.grid).add(sel.o).add(1), worldroot, ivec(0, 0, 0), worldsize/2);
     haschanged = true;
 
     if(commit) commitchanges();
@@ -924,58 +920,58 @@ void freeeditinfo(editinfo *&e)
     e = NULL;
 }
 
-struct octabrushheader
+struct prefabheader
 {
     char magic[4];
     int version;
 };
 
-struct octabrush : editinfo
+struct prefab : editinfo
 {
     char *name;
 
-    octabrush() : name(NULL) {}
-    ~octabrush() { DELETEA(name); if(copy) freeblock(copy); }
+    prefab() : name(NULL) {}
+    ~prefab() { DELETEA(name); if(copy) freeblock(copy); }
 };
 
-static inline bool htcmp(const char *key, const octabrush &b) { return !strcmp(key, b.name); }
+static inline bool htcmp(const char *key, const prefab &b) { return !strcmp(key, b.name); }
 
-static hashset<octabrush> octabrushes;
+static hashset<prefab> prefabs;
 
-void delbrush(char *name)
+void delprefab(char *name)
 {
-    if(octabrushes.remove(name))
-        conoutf("deleted brush %s", name);
+    if(prefabs.remove(name))
+        conoutf("deleted prefab %s", name);
 }
-COMMAND(delbrush, "s");
+COMMAND(delprefab, "s");
 
-void savebrush(char *name)
+void saveprefab(char *name)
 {
     if(!name[0] || noedit(true) || (nompedit && multiplayer())) return;
-    octabrush *b = octabrushes.access(name);
+    prefab *b = prefabs.access(name);
     if(!b)
     {
-        b = &octabrushes[name];
+        b = &prefabs[name];
         b->name = newstring(name);
     }
     if(b->copy) freeblock(b->copy);
     protectsel(b->copy = blockcopy(block3(sel), sel.grid));
     changed(sel);
-    defformatstring(filename)(strpbrk(name, "/\\") ? "packages/%s.obr" : "packages/brush/%s.obr", name);
+    defformatstring(filename)(strpbrk(name, "/\\") ? "packages/%s.obr" : "packages/prefab/%s.obr", name);
     path(filename);
     stream *f = opengzfile(filename, "wb");
-    if(!f) { conoutf(CON_ERROR, "could not write brush to %s", filename); return; }
-    octabrushheader hdr;
+    if(!f) { conoutf(CON_ERROR, "could not write prefab to %s", filename); return; }
+    prefabheader hdr;
     memcpy(hdr.magic, "OEBR", 4);
     hdr.version = 0;
     lilswap(&hdr.version, 1);
     f->write(&hdr, sizeof(hdr));
     streambuf<uchar> s(f);
-    if(!packblock(*b->copy, s)) { delete f; conoutf(CON_ERROR, "could not pack brush %s", filename); return; }
+    if(!packblock(*b->copy, s)) { delete f; conoutf(CON_ERROR, "could not pack prefab %s", filename); return; }
     delete f;
-    conoutf("wrote brush file %s", filename);
+    conoutf("wrote prefab file %s", filename);
 }
-COMMAND(savebrush, "s");
+COMMAND(saveprefab, "s");
 
 void pasteblock(block3 &b, selinfo &sel, bool local)
 {
@@ -987,31 +983,31 @@ void pasteblock(block3 &b, selinfo &sel, bool local)
     sel.orient = o;
 }
 
-void pastebrush(char *name)
+void pasteprefab(char *name)
 {
     if(!name[0] || noedit() || (nompedit && multiplayer())) return;
-    octabrush *b = octabrushes.access(name);
+    prefab *b = prefabs.access(name);
     if(!b)
     {
-        defformatstring(filename)(strpbrk(name, "/\\") ? "packages/%s.obr" : "packages/brush/%s.obr", name);
+        defformatstring(filename)(strpbrk(name, "/\\") ? "packages/%s.obr" : "packages/prefab/%s.obr", name);
         path(filename);
         stream *f = opengzfile(filename, "rb");
-        if(!f) { conoutf(CON_ERROR, "could not read brush %s", filename); return; }
-        octabrushheader hdr;
-        if(f->read(&hdr, sizeof(hdr)) != sizeof(octabrushheader) || memcmp(hdr.magic, "OEBR", 4)) { delete f; conoutf(CON_ERROR, "brush %s has malformatted header", filename); return; }
+        if(!f) { conoutf(CON_ERROR, "could not read prefab %s", filename); return; }
+        prefabheader hdr;
+        if(f->read(&hdr, sizeof(hdr)) != sizeof(prefabheader) || memcmp(hdr.magic, "OEBR", 4)) { delete f; conoutf(CON_ERROR, "prefab %s has malformatted header", filename); return; }
         lilswap(&hdr.version, 1);
-        if(hdr.version != 0) { delete f; conoutf(CON_ERROR, "brush %s uses unsupported version", filename); return; }
+        if(hdr.version != 0) { delete f; conoutf(CON_ERROR, "prefab %s uses unsupported version", filename); return; }
         streambuf<uchar> s(f);
         block3 *copy = NULL;
-        if(!unpackblock(copy, s)) { delete f; conoutf(CON_ERROR, "could not unpack brush %s", filename); return; }
+        if(!unpackblock(copy, s)) { delete f; conoutf(CON_ERROR, "could not unpack prefab %s", filename); return; }
         delete f;
-        b = &octabrushes[name];
+        b = &prefabs[name];
         b->name = newstring(name);
         b->copy = copy;
     }
     pasteblock(*b->copy, sel, true);
 }
-COMMAND(pastebrush, "s");
+COMMAND(pasteprefab, "s");
 
 void mpcopy(editinfo *&e, selinfo &sel, bool local)
 {
@@ -1111,7 +1107,8 @@ vector<int> htextures;
 
 COMMAND(clearbrush, "");
 COMMAND(brushvert, "iii");
-ICOMMAND(hmapcancel, "", (), htextures.setsize(0); );
+void hmapcancel() { htextures.setsize(0); }
+COMMAND(hmapcancel, "");
 ICOMMAND(hmapselect, "", (),
     int t = lookupcube(cur.x, cur.y, cur.z).texture[orient];
     int i = htextures.find(t);
@@ -1121,21 +1118,12 @@ ICOMMAND(hmapselect, "", (),
         htextures.remove(i);
 );
 
-inline bool ishtexture(int t)
-{
-    loopv(htextures)
-        if(t == htextures[i])
-            return false;
-    return true;
-}
-
-VARP(bypassheightmapcheck, 0, 0, 1);    // temp
-
 inline bool isheightmap(int o, int d, bool empty, cube *c)
 {
     return havesel ||
            (empty && isempty(*c)) ||
-           ishtexture(c->texture[o]);
+           htextures.empty() ||
+           htextures.find(c->texture[o]) >= 0;
 }
 
 namespace hmap
@@ -1189,7 +1177,7 @@ namespace hmap
     {
         if(!(flags[x][y] & MAPPED))
           map[x][y] = v + (z*8);
-      flags[x][y] |= MAPPED;
+        flags[x][y] |= MAPPED;
     }
 
     void select(int x, int y, int z)
@@ -1285,7 +1273,7 @@ namespace hmap
         if(biasup)
             pullhmap(0, >, <, 1, 0, -);
         else
-            pullhmap(worldsize, <, >, 0, 8, +);
+            pullhmap(worldsize*8, <, >, 0, 8, +);
 
         cube **c  = cmap[x][y];
         int e[2][2];
@@ -1431,7 +1419,7 @@ namespace hmap
 }
 
 void edithmap(int dir, int mode) {
-    if((nompedit && multiplayer()) || !hmapsel || gridsize < 8) return;
+    if((nompedit && multiplayer()) || !hmapsel) return;
     hmap::run(dir, mode);
 }
 

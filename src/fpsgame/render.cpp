@@ -45,6 +45,8 @@ namespace game
             moveragdoll(d);
         }
     }
+
+//////////////////////////////////////////////////////////////////////////
     static const playermodelinfo playermodels[3] =
     {
 //		{ "ogro2", "ogro2/blue", "ogro2/red", "mrfixit/hudguns", NULL, "ogro2/quad", { "ogro2/armor/blue", "ogro2/armor/green", "ogro2/armor/yellow" }, "ogro", "ogro_blue", "ogro_red", true },
@@ -53,6 +55,7 @@ namespace game
 		// for the rpg-mode:
         { "playermodels/rpgfemale", "playermodels/rpgfemale/blue", "playermodels/rpgfemale/red", "playermodels/rpgfemale/hudguns", NULL, "playermodels/rpgfemale/horns", { "playermodels/rpgfemale/armor/blue", "playermodels/rpgfemale/armor/green", "playermodels/rpgfemale/armor/yellow" }, "rpgfemale", "rpgfemale_blue", "rpgfemale_red", true },
     };
+//////////////////////////////////////////////////////////////////////////
 
     int chooserandomplayermodel(int seed)
     {
@@ -140,7 +143,7 @@ namespace game
             delay = 1000;
         }
         modelattach a[5];
-        static const char *vweps[] = {"vwep/fist", "vwep/shotg", "vwep/chaing", "vwep/rocket", "vwep/rifle", "vwep/gl", "vwep/pistol"};
+        static const char * const vweps[] = {"vwep/fist", "vwep/shotg", "vwep/chaing", "vwep/rocket", "vwep/rifle", "vwep/gl", "vwep/pistol"};
         int ai = 0;
         if((!mdl.vwep || d->gunselect!=GUN_FIST) && d->gunselect<=GUN_PISTOL)
         {
@@ -282,7 +285,7 @@ namespace game
 
     void drawhudmodel(fpsent *d, int anim, float speed = 0, int base = 0)
     {
-        if(d->gunselect>GUN_SLIMEBALL) return;
+        if(d->gunselect>GUN_PISTOL) return;
 
         vec sway;
         vecfromyawpitch(d->yaw, 0, 0, 1, sway);
@@ -309,12 +312,14 @@ namespace game
         d->muzzle = vec(-1, -1, -1);
         a[0] = modelattach("tag_muzzle", &d->muzzle);
         dynent *interp = NULL;
+////////////////////////////////////////////////////////////////////////////
 //        if(d->gunselect==GUN_FIST && chainsawhudgun)
 //        {
 //            anim |= ANIM_LOOP;
 //            base = 0;
 //            interp = &guninterp;
 //        }
+////////////////////////////////////////////////////////////////////////////
         rendermodel(NULL, gunname, anim, sway, testhudgun ? 0 : d->yaw+90, testhudgun ? 0 : d->pitch, MDL_LIGHT|MDL_HUD, interp, a, base, (int)ceil(speed));
         if(d->muzzle.x >= 0) d->muzzle = calcavatarpos(d->muzzle, 12);
     }

@@ -2,6 +2,7 @@ VARP(gpuskel, 0, 1, 1);
 VARP(matskel, 0, 1, 1);
 
 VAR(maxskelanimdata, 1, 192, 0);
+VAR(testtags, 0, 0, 1);
 
 #define BONEMASK_NOT  0x8000
 #define BONEMASK_END  0xFFFF
@@ -98,7 +99,7 @@ struct skelmodel : animmodel
             else
             {
                 int total = 0;
-                loopk(4) total += (v.weights[k] = uchar(weights[k]*255));
+                loopk(4) total += (v.weights[k] = uchar(0.5f + weights[k]*255));
                 while(total > 255)
                 {
                     loopk(4) if(v.weights[k] > 0 && total > 255) { v.weights[k]--; total--; } 
@@ -211,7 +212,7 @@ struct skelmodel : animmodel
             mesh::calctangents(bumpverts, verts, verts, numverts, tris, numtris, areaweight);
         }
 
-        void calcbb(int frame, vec &bbmin, vec &bbmax, const matrix3x4 &m)
+        void calcbb(vec &bbmin, vec &bbmax, const matrix3x4 &m)
         {
             loopj(numverts)
             {
@@ -224,7 +225,7 @@ struct skelmodel : animmodel
             }
         }
 
-        void gentris(int frame, Texture *tex, vector<BIH::tri> *out, const matrix3x4 &m)
+        void gentris(Texture *tex, vector<BIH::tri> *out, const matrix3x4 &m)
         {
             loopj(numtris)
             {
@@ -602,6 +603,8 @@ struct skelmodel : animmodel
     {
         int bone, target, parent;
         float pitchmin, pitchmax, pitchscale, pitchangle, pitchtotal;
+
+        pitchcorrect() : parent(-1), pitchangle(0), pitchtotal(0) {}
     };
 
     struct skeleton
@@ -680,11 +683,21 @@ struct skelmodel : animmodel
 
         bool addtag(const char *name, int bone, const matrix3x4 &matrix)
         {
-            if(findtag(name) >= 0) return false;
-            tag &t = tags.add();
-            t.name = newstring(name);
-            t.bone = bone;
-            t.matrix = matrix;
+            int idx = findtag(name);
+            if(idx >= 0)
+            {
+                if(!testtags) return false;
+                tag &t = tags[idx];
+                t.bone = bone;
+                t.matrix = matrix;
+            }
+            else
+            {
+                tag &t = tags.add();
+                t.name = newstring(name);
+                t.bone = bone;
+                t.matrix = matrix;
+            }
             return true;
         }
 
@@ -1181,7 +1194,7 @@ struct skelmodel : animmodel
             loopv(antipodes) sc.bdata[antipodes[i].child].fixantipodal(sc.bdata[antipodes[i].parent]);
         }
 
-        void concattagtransform(part *p, int frame, int i, const matrix3x4 &m, matrix3x4 &n)
+        void concattagtransform(part *p, int i, const matrix3x4 &m, matrix3x4 &n)
         {
             matrix3x4 t;
             t.mul(bones[tags[i].bone].base, tags[i].matrix);
@@ -1433,6 +1446,7 @@ struct skelmodel : animmodel
             return skel->findtag(name);
         }
 
+        void *animkey() { return skel; }
         int totalframes() const { return max(skel->numframes, 1); }
 
         virtual skelanimspec *loadanim(const char *filename) { return NULL; }
@@ -1625,9 +1639,9 @@ struct skelmodel : animmodel
             }
         }
 
-        void concattagtransform(part *p, int frame, int i, const matrix3x4 &m, matrix3x4 &n)
+        void concattagtransform(part *p, int i, const matrix3x4 &m, matrix3x4 &n)
         {
-            skel->concattagtransform(p, frame, i, m, n);
+            skel->concattagtransform(p, i, m, n);
         }
 
         int addblendcombo(const blendcombo &c)

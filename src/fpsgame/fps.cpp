@@ -23,7 +23,7 @@ namespace game
         addmsg(N_TAUNT, "rc", player1);
     }
     COMMAND(taunt, "");
-	
+
 /////////////////////////////////////////////////////////////////////// exp and lvl
     void setplayerexp(int *arg)
     {
@@ -495,7 +495,7 @@ namespace game
 //    COMMAND(setdefaultskin, "");	
 	
 ///////////////////////////////////////////////////////////////////////
-
+	
     ICOMMAND(getfollow, "", (),
     {
         fpsent *f = followingplayer();
@@ -1088,10 +1088,12 @@ namespace game
         if(d->type==ENT_INANIMATE) return;
         if     (waterlevel>0) { if(material!=MAT_LAVA) playsound(S_SPLASH1, d==player1 ? NULL : &d->o); }
         else if(waterlevel<0) playsound(material==MAT_LAVA ? S_BURN : S_SPLASH2, d==player1 ? NULL : &d->o);
+///////////////////////////////////////////////////////////////////////////////////////
 //		if     (floorlevel>0) { if(d==player1 || d->type!=ENT_PLAYER || ((fpsent *)d)->ai) msgsound(S_JUMP, d); }
 //		else if(floorlevel<0) { if(d==player1 || d->type!=ENT_PLAYER || ((fpsent *)d)->ai) msgsound(S_LAND, d); }
 		if     (floorlevel>0) { if(d==player1) msgsound(S_JUMP, d); }
 		else if(floorlevel<0) { if(d==player1) msgsound(S_LAND, d); }
+///////////////////////////////////////////////////////////////////////////////////////
     }
 
     void dynentcollide(physent *d, physent *o, const vec &dir)
@@ -1194,8 +1196,8 @@ namespace game
     }
     ICOMMAND(kill, "", (), suicide(player1));
 
-	bool needminimap() { return m_ctf || m_protect || m_hold || m_capture || m_collect; }
-    
+    bool needminimap() { return m_ctf || m_protect || m_hold || m_capture || m_collect; }
+
     void drawicon(int icon, float x, float y, float sz)
     {
         settexture("packages/hud/items.png");
@@ -1669,7 +1671,7 @@ namespace game
     {
         glPushMatrix();
         glScalef(2, 2, 1);
-
+///////////////////////////////////////////////////////////////////////////////////
 //      draw_textf("%d", (HICON_X + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->state==CS_DEAD ? 0 : d->health);
         if(d->state!=CS_DEAD)
         {
@@ -1706,11 +1708,13 @@ namespace game
 			drawlevelup();
         }
     }
-
+///////////////////////////////////////////////////////////////////////////////////
+    
     void gameplayhud(int w, int h)
     {
         glPushMatrix();
         glScalef(h/1800.0f, h/1800.0f, 1);
+
         if(player1->state==CS_SPECTATOR)
         {
             int pw, ph, tw, th, fw, fh;
@@ -1721,7 +1725,16 @@ namespace game
             text_bounds(f ? colorname(f) : " ", fw, fh);
             fh = max(fh, ph);
             draw_text("SPECTATOR", w*1800/h - tw - pw, 1650 - th - fh);
-            if(f) draw_text(colorname(f), w*1800/h - fw - pw, 1650 - fh);
+            if(f) 
+            {
+                int color = f->state!=CS_DEAD ? 0xFFFFFF : 0x606060;
+                if(f->privilege)
+                {
+                    color = f->privilege>=PRIV_ADMIN ? 0xFF8000 : 0x40FF80;
+                    if(f->state==CS_DEAD) color = (color>>1)&0x7F7F7F;
+                }
+                draw_text(colorname(f), w*1800/h - fw - pw, 1650 - fh, (color>>16)&0xFF, (color>>8)&0xFF, color&0xFF);
+            }
         }
 
         fpsent *d = hudplayer();
@@ -1820,8 +1833,8 @@ namespace game
 
     bool serverinfostartcolumn(g3d_gui *g, int i)
     {
-        static const char *names[] =  { "ping ", "players ", "mode ", "map ", "time ", "master ", "host ", "port ", "description " };
-        static const float struts[] = { 7,       7,          12.5f,   14,      7,      8,         14,      7,       24.5f };
+        static const char * const names[] = { "ping ", "players ", "mode ", "map ", "time ", "master ", "host ", "port ", "description " };
+        static const float struts[] =       { 7,       7,          12.5f,   14,      7,      8,         14,      7,       24.5f };
         if(size_t(i) >= sizeof(names)/sizeof(names[0])) return false;
         g->pushlist();
         g->text(names[i], 0xFFFF80, !i ? " " : NULL);

@@ -149,7 +149,6 @@ namespace game
         bouncer() : bounces(0), roll(0), variant(0)
         {
             type = ENT_BOUNCE;
-            collidetype = COLLIDE_AABB;
         }
     };
 
@@ -173,7 +172,7 @@ namespace game
 
         switch(type)
         {
-            case BNC_GRENADE: bnc.collidetype = COLLIDE_ELLIPSE; break;
+            case BNC_GRENADE: bnc.collidetype = COLLIDE_ELLIPSE_PRECISE; break;
             case BNC_DEBRIS: case BNC_BARRELDEBRIS: bnc.variant = rnd(4); break;
             case BNC_GIBS: bnc.variant = rnd(3); break;
         }
@@ -420,10 +419,11 @@ namespace game
                 spawnbouncer(debrisorigin, debrisvel, owner, gun==GUN_BARREL ? BNC_BARRELDEBRIS : BNC_DEBRIS, &light);
         }
         if(!local) return;
-        loopi(numdynents())
+        int numdyn = numdynents();
+        loopi(numdyn)
         {
             dynent *o = iterdynents(i);
-            if(o==safe) continue;
+            if(o->o.reject(v, o->radius + guns[gun].exprad) || o==safe) continue;
             radialeffect(o, v, damage, owner, gun);
         }
     }
@@ -502,20 +502,20 @@ namespace game
             p.offsetmillis = max(p.offsetmillis-time, 0);
             int qdam = guns[p.gun].damage*(p.owner->quadmillis ? 4 : 1);
             if(p.owner->type==ENT_AI) qdam /= MONSTERDAMAGEFACTOR;
-            vec v;
-            float dist = p.to.dist(p.o, v);
-            float dtime = dist*1000/p.speed;
-            if(time > dtime) dtime = time;
-            v.mul(time/dtime);
-            v.add(p.o);
+            vec dv;
+            float dist = p.to.dist(p.o, dv); 
+            dv.mul(time/max(dist*1000/p.speed, float(time)));
+            vec v = vec(p.o).add(dv);
             bool exploded = false;
             hits.setsize(0);
             if(p.local)
             {
+                vec halfdv = vec(dv).mul(0.5f), bo = vec(p.o).add(halfdv);
+                float br = max(fabs(halfdv.x), fabs(halfdv.y)) + 1;
                 loopj(numdynents())
                 {
                     dynent *o = iterdynents(j);
-                    if(p.owner==o || o->o.reject(v, 10.0f)) continue;
+                    if(p.owner==o || o->o.reject(bo, o->radius + br)) continue;
                     if(projdamage(o, p, v, qdam)) { exploded = true; break; }
                 }
             }
@@ -569,7 +569,9 @@ namespace game
         switch(gun)
         {
             case GUN_FIST:
+///////////////////////////////////////////////////////////////////////
 //                if(d->type==ENT_PLAYER && chainsawhudgun) sound = S_CHAINSAW_ATTACK;
+///////////////////////////////////////////////////////////////////////
                 break;
 
             case GUN_SG:
@@ -637,11 +639,13 @@ namespace game
         if(d->idlesound >= 0) d->stopidlesound();
         switch(sound)
         {
+///////////////////////////////////////////////////////////////////////
 //            case S_CHAINSAW_ATTACK:
 //                if(d->attacksound >= 0) looped = true;
 //                d->attacksound = sound;
 //                d->attackchan = playsound(sound, d==hudplayer() ? NULL : &d->o, NULL, 0, -1, 100, d->attackchan);
 //                break;
+///////////////////////////////////////////////////////////////////////
             default:
                 playsound(sound, d==hudplayer() ? NULL : &d->o);
                 break;
@@ -945,11 +949,11 @@ namespace game
         if(d->clientnum >= 0 && d->state == CS_ALIVE) switch(d->gunselect)
         {
             case GUN_FIST:
-//                if(chainsawhudgun && d->attacksound < 0)
-//                {
-//                    sound = S_CHAINSAW_IDLE;
-//                    radius = 50;
-//                }
+                if(chainsawhudgun && d->attacksound < 0)
+                {
+                    sound = S_CHAINSAW_IDLE;
+                    radius = 50;
+                }
                 break;
         }
         if(d->idlesound != sound)

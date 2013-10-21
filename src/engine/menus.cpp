@@ -228,9 +228,17 @@ void guistayopen(uint *contents)
 void guinoautotab(uint *contents)
 {
     if(!cgui) return;
-    cgui->allowautotab(false);
+    bool oldval = cgui->allowautotab(false);
     execute(contents);
-    cgui->allowautotab(true);
+    cgui->allowautotab(oldval);
+}
+
+void guimerge(uint *contents)
+{
+    if(!cgui) return;
+    bool oldval = cgui->mergehits(true);
+    execute(contents);
+    cgui->mergehits(oldval);
 }
 
 //@DOC name and icon are optional
@@ -244,10 +252,6 @@ void guibutton(char *name, char *action, char *icon)
         updatelater.add().schedule(action[0] ? action : name);
         if(shouldclearmenu) clearlater = true;
     }
-//    else if(ret&G3D_RMB)
-//    {
-//        conoutf("%s", name);
-//    }
     else if(ret&G3D_ROLLOVER)
     {
         alias("guirollovername", name);
@@ -578,6 +582,7 @@ COMMAND(hidegui, "s");
 COMMAND(guionclear, "s");
 COMMAND(guistayopen, "e");
 COMMAND(guinoautotab, "e");
+COMMAND(guimerge, "e");
 
 COMMAND(guilist, "e");
 COMMAND(guialign, "ie");

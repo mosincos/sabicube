@@ -19,7 +19,9 @@ namespace entities
             case TELEDEST:
             case RESPAWNPOINT:
             case BOX:
+//////////////////////////////////////////////////////////////////////////////////////
             case XBOX:
+//////////////////////////////////////////////////////////////////////////////////////
             case BARREL:
             case PLATFORM:
             case ELEVATOR:
@@ -29,7 +31,9 @@ namespace entities
         if(ver <= 31) switch(e.type)
         {
             case BOX:
+//////////////////////////////////////////////////////////////////////////////////////
             case XBOX:
+//////////////////////////////////////////////////////////////////////////////////////
             case BARREL:
             case PLATFORM:
             case ELEVATOR:
@@ -63,8 +67,9 @@ namespace entities
 
     const char *entmdlname(int type)
     {
-        static const char *entmdlnames[] =
+        static const char * const entmdlnames[] =
         {
+//////////////////////////////////////////////////////////////////////////////////////
             NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
             "ammo/shells", "ammo/bullets", "ammo/rockets", "ammo/rrounds", "ammo/grenades", "ammo/cartridges",
             "org/health", "org/boost", "org/armor/green", "org/armor/yellow", "org/quad", "mapmodels/teleporter",
@@ -75,6 +80,7 @@ namespace entities
             NULL, NULL,
             NULL, NULL,
             NULL
+//////////////////////////////////////////////////////////////////////////////////////
         };
         return entmdlnames[type];
     }
@@ -463,25 +469,6 @@ namespace entities
         }
     }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    void disappeartrigger()
-    {
-        loopv(ents)
-        {
-            fpsentity &e = *(fpsentity *)ents[i];
-			if(e.lasttrigger)
-			{
-				e.triggerstate = TRIGGER_DISAPPEARED;
-				setuptriggerflags(e);
-			}
-        }
-    }
-	COMMAND(disappeartrigger, "");
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    
     void resettriggers()
     {
         loopv(ents)
@@ -505,7 +492,7 @@ namespace entities
                 if(newstate == TRIGGER_RESETTING && checktriggertype(e.attr3, TRIG_COLLIDE) && overlapsdynent(e.o, 20)) continue;
                 e.triggerstate = newstate;
                 e.lasttrigger = lastmillis;
-//                if(checktriggertype(e.attr3, TRIG_RUMBLE)) playsound(S_RUMBLE, &e.o);
+                if(checktriggertype(e.attr3, TRIG_RUMBLE)) playsound(S_RUMBLE, &e.o);
             }
         }
     }
@@ -521,10 +508,10 @@ namespace entities
     void doleveltrigger(int trigger, int state)
     {
         defformatstring(aliasname)("level_trigger_%d", trigger);
+        if(identexists(aliasname))
         {
             triggerstate = state;
             execute(aliasname);
-//			conoutf(CON_GAMEINFO, "trigger %d triggered", triggerstate);
         }
     }
 
@@ -540,8 +527,9 @@ namespace entities
             {
                 case TRIGGERING:
                 case TRIGGER_RESETTING:
-                    if(lastmillis-e.lasttrigger>=500)
+//////////////////////////////////////////////////////////////////////////////////////
 //                    if(lastmillis-e.lasttrigger>=1000)
+                    if(lastmillis-e.lasttrigger>=500)
                     {
                         if(e.attr4)
                         {
@@ -582,8 +570,8 @@ namespace entities
                         if(e.lasttrigger) break;
                     }
                     else if(checktriggertype(e.attr3, TRIG_AUTO_RESET))
-                    {	
-                        if(lastmillis-e.lasttrigger<100) break;
+                    {
+                        if(lastmillis-e.lasttrigger<6000) break;
                     }
                     else if(checktriggertype(e.attr3, TRIG_MANY))
                     {
@@ -596,6 +584,7 @@ namespace entities
                     e.lasttrigger = lastmillis;
                     setuptriggerflags(e);
 //                    if(checktriggertype(e.attr3, TRIG_RUMBLE)) playsound(S_RUMBLE, &e.o);
+//////////////////////////////////////////////////////////////////////////////////////
                     if(checktriggertype(e.attr3, TRIG_ENDSP)) endsp(false);
                     if(e.attr4) doleveltrigger(e.attr4, 0);
                     break;
@@ -621,7 +610,9 @@ namespace entities
         {
             case FLAG:
             case BOX:
+//////////////////////////////////////////////////////////////////////////////////////
             case XBOX:
+//////////////////////////////////////////////////////////////////////////////////////
             case BARREL:
             case PLATFORM:
             case ELEVATOR:
@@ -658,7 +649,9 @@ namespace entities
             case TELEDEST:
             case RESPAWNPOINT:
             case BOX:
+//////////////////////////////////////////////////////////////////////////////////////
             case XBOX:
+//////////////////////////////////////////////////////////////////////////////////////
             case BARREL:
             case PLATFORM:
             case ELEVATOR:
@@ -682,7 +675,7 @@ namespace entities
     const char *entnameinfo(entity &e) { return ""; }
     const char *entname(int i)
     {
-        static const char *entnames[] =
+        static const char * const entnames[] =
         {
             "none?", "light", "mapmodel", "playerstart", "envmap", "particles", "sound", "spotlight",
             "shells", "bullets", "rockets", "riflerounds", "grenades", "cartridges",
@@ -690,7 +683,10 @@ namespace entities
             "teleport", "teledest",
             "monster", "carrot", "jumppad",
             "base", "respawnpoint",
+//////////////////////////////////////////////////////////////////////////////////////
+//            "box", "barrel",
             "box", "xbox", "barrel",
+//////////////////////////////////////////////////////////////////////////////////////
             "platform", "elevator",
             "flag",
             "", "", "", "",
