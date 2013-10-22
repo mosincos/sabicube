@@ -19,7 +19,85 @@ namespace game
 
     ICOMMAND(getweapon, "", (), intret(player1->gunselect));
 
-    void gunselect(int gun, fpsent *d)
+///////////////////////////////////////////////////////////////////////////// GUNS
+    void getpistolammo(int *arg)
+    {
+		player1->ammo[GUN_PISTOL] = player1->ammo[GUN_PISTOL] + arg[0];
+    }
+    COMMAND(getpistolammo, "i");
+    void getshotgunammo(int *arg)
+    {
+        player1->ammo[GUN_SG] = player1->ammo[GUN_SG] + arg[0];
+    }
+    COMMAND(getshotgunammo, "i");
+    void getrifleammo(int *arg)
+    {
+        player1->ammo[GUN_RIFLE] = player1->ammo[GUN_RIFLE] + arg[0];
+    }
+    COMMAND(getrifleammo, "i");
+    void getglammo(int *arg)
+    {
+        player1->ammo[GUN_GL] = player1->ammo[GUN_GL] + arg[0];
+    }
+    COMMAND(getglammo, "i");
+    void getchaingunammo(int *arg)
+    {
+        player1->ammo[GUN_CG] = player1->ammo[GUN_CG] + arg[0];
+    }
+    COMMAND(getchaingunammo, "i");
+    void getrlammo(int *arg)
+    {
+        player1->ammo[GUN_RL] = player1->ammo[GUN_RL] + arg[0];
+    }
+    COMMAND(getrlammo, "i");
+    void getswordammo(int *arg)
+    {
+        player1->ammo[GUN_SWORD] = player1->ammo[GUN_SWORD] + arg[0];
+    }
+    COMMAND(getswordammo, "i");
+    void getcrowbarammo(int *arg)
+    {
+        player1->ammo[GUN_CROWBAR] = player1->ammo[GUN_CROWBAR] + arg[0];
+    }
+    COMMAND(getcrowbarammo, "i");
+    void getbowammo(int *arg)
+    {
+        player1->ammo[GUN_BOW] = player1->ammo[GUN_BOW] + arg[0];
+    }
+    COMMAND(getbowammo, "i");
+	
+    ICOMMAND(getfiststat, "", (), intret(player1->ammo[GUN_FIST]));
+    ICOMMAND(getpistolstat, "", (), intret(player1->ammo[GUN_PISTOL]));
+    ICOMMAND(getshotgunstat, "", (), intret(player1->ammo[GUN_SG]));
+    ICOMMAND(getriflestat, "", (), intret(player1->ammo[GUN_RIFLE]));
+    ICOMMAND(getglstat, "", (), intret(player1->ammo[GUN_GL]));
+    ICOMMAND(getchaingunstat, "", (), intret(player1->ammo[GUN_CG]));
+    ICOMMAND(getrlstat, "", (), intret(player1->ammo[GUN_RL]));
+    ICOMMAND(getswordstat, "", (), intret(player1->ammo[GUN_SWORD]));
+    ICOMMAND(getcrowbarstat, "", (), intret(player1->ammo[GUN_CROWBAR]));
+    ICOMMAND(getbowstat, "", (), intret(player1->ammo[GUN_BOW]));
+
+	void testfire()
+	{
+		player1->gunselect = GUN_FIREBALL;
+		player1->ammo[GUN_FIREBALL] = player1->mana;
+	}
+	COMMAND(testfire, "");
+	void testice()
+	{
+		player1->gunselect = GUN_ICEBALL;
+		player1->ammo[GUN_ICEBALL] = player1->mana;
+	}
+	COMMAND(testice, "");
+	void testslime()
+	{
+		player1->gunselect = GUN_SLIMEBALL;
+		player1->ammo[GUN_SLIMEBALL] = player1->mana;
+	}
+	COMMAND(testslime, "");
+////////////////////////////////////////////////////////////////////////////
+
+	void gunselect(int gun, fpsent *d)
     {
         if(gun!=d->gunselect)
         {
@@ -46,7 +124,9 @@ namespace game
 
     int getweapon(const char *name)
     {
-        const char *abbrevs[] = { "FI", "SG", "CG", "RL", "RI", "GL", "PI" };
+////////////////////////////////////////////////////////////////////////////
+        const char *abbrevs[] = { "FI", "SG", "CG", "RL", "RI", "GL", "PI", "FB", "IB", "SB", "BI", "BA", "SW", "CB", "BW" };
+////////////////////////////////////////////////////////////////////////////
         if(isdigit(name[0])) return parseint(name);
         else loopi(sizeof(abbrevs)/sizeof(abbrevs[0])) if(!strcasecmp(abbrevs[i], name)) return i;
         return -1;
@@ -55,7 +135,9 @@ namespace game
     void setweapon(const char *name, bool force = false)
     {
         int gun = getweapon(name);
-        if(player1->state!=CS_ALIVE || gun<GUN_FIST || gun>GUN_PISTOL) return;
+////////////////////////////////////////////////////////////////////////////
+        if(player1->state!=CS_ALIVE || gun<GUN_FIST || gun>GUN_BOW) return;
+////////////////////////////////////////////////////////////////////////////
         if(force || player1->ammo[gun]) gunselect(gun, player1);
         else playsound(S_NOAMMO);
     }
@@ -95,6 +177,15 @@ namespace game
         else if(s!=GUN_RIFLE  && d->ammo[GUN_RIFLE])  s = GUN_RIFLE;
         else if(s!=GUN_GL     && d->ammo[GUN_GL])     s = GUN_GL;
         else if(s!=GUN_PISTOL && d->ammo[GUN_PISTOL]) s = GUN_PISTOL;
+////////////////////////////////////////////////////////////////////////////
+        else if(s!=GUN_FIREBALL && d->ammo[GUN_FIREBALL]) s = GUN_FIREBALL;
+        else if(s!=GUN_ICEBALL && d->ammo[GUN_ICEBALL]) s = GUN_ICEBALL;
+        else if(s!=GUN_SLIMEBALL && d->ammo[GUN_SLIMEBALL]) s = GUN_SLIMEBALL;
+
+		else if(s!=GUN_SWORD && d->ammo[GUN_SWORD]) s = GUN_SWORD;
+		else if(s!=GUN_CROWBAR && d->ammo[GUN_CROWBAR]) s = GUN_CROWBAR;
+		else if(s!=GUN_BOW && d->ammo[GUN_BOW]) s = GUN_BOW;
+////////////////////////////////////////////////////////////////////////////
         else                                          s = GUN_FIST;
 
         gunselect(s, d);
@@ -109,7 +200,7 @@ namespace game
             if(name[0])
             {
                 int gun = getweapon(name);
-                if(gun >= GUN_FIST && gun <= GUN_PISTOL && gun != player1->gunselect && player1->ammo[gun]) { gunselect(gun, player1); return; }
+                if(gun >= GUN_FIST && gun <= GUN_BOW && gun != player1->gunselect && player1->ammo[gun]) { gunselect(gun, player1); return; }
             } else { weaponswitch(player1); return; }
         }
         playsound(S_NOAMMO);
@@ -632,6 +723,20 @@ namespace game
                 if(!local) adddecal(DECAL_BULLET, to, vec(from).sub(to).normalize(), 3.0f);
                 if(muzzlelight) adddynlight(hudgunorigin(gun, d->o, to, d), 25, vec(0.5f, 0.375f, 0.25f), 75, 75, DL_FLASH, 0, vec(0, 0, 0), d);
                 break;
+///////////////////////////////////////////////////////////////////////
+            case GUN_SWORD:
+                break;
+            case GUN_CROWBAR:
+                break;
+            case GUN_BOW:
+                particle_splash(PART_SPARK, 200, 250, to, 0xB49B4B, 0.24f);
+                particle_trail(PART_SMOKE, 500, hudgunorigin(gun, from, to, d), to, 0x404040, 0.6f, 20);
+                if(muzzleflash && d->muzzle.x >= 0)
+                    particle_flare(d->muzzle, d->muzzle, 150, PART_MUZZLE_FLASH3, 0xFFFFFF, 1.25f, d);
+                if(!local) adddecal(DECAL_BULLET, to, vec(from).sub(to).normalize(), 3.0f);
+                if(muzzlelight) adddynlight(hudgunorigin(gun, d->o, to, d), 25, vec(0.5f, 0.375f, 0.25f), 75, 75, DL_FLASH, 0, vec(0, 0, 0), d);
+                break;
+///////////////////////////////////////////////////////////////////////
         }
 
         bool looped = false;
@@ -758,7 +863,7 @@ namespace game
         d->lastaction = lastmillis;
         d->lastattackgun = d->gunselect;
 /////////////////////////////////////////////////////////////////////////
-        if(!d->ammo[d->gunselect])
+        if((d->gunselect <= GUN_FIREBALL) && (!d->ammo[d->gunselect]))
         {
             if(d==player1)
             {
@@ -773,25 +878,29 @@ namespace game
 		if((d->gunselect) && (d->gunselect <= GUN_FIREBALL)) d->ammo[d->gunselect]--;
 		if(d==player1)
 		{
-			if((d->gunselect >= GUN_FIREBALL) && (d->mana >= 64))
+			if((d->gunselect >= GUN_FIREBALL) && (d->gunselect <= GUN_SLIMEBALL))
 			{
-				d->mana = d->mana - 64;
-				d->ammo[GUN_FIREBALL] = d->mana;
-				d->ammo[GUN_ICEBALL] = d->mana;
-				d->ammo[GUN_SLIMEBALL] = d->mana;
-			}
-			else if(d->mana <= 63)
-			{
-				d->ammo[GUN_FIREBALL] = d->mana;
-				d->ammo[GUN_ICEBALL] = d->mana;
-				d->ammo[GUN_SLIMEBALL] = d->mana;
-				if(d==player1)
+				if(d->mana >= 64)
 				{
-					msgsound(S_NOAMMO, d);
-					d->gunwait = 600;
+					d->mana = d->mana - 64;
+					d->ammo[GUN_FIREBALL] = d->mana;
+					d->ammo[GUN_ICEBALL] = d->mana;
+					d->ammo[GUN_SLIMEBALL] = d->mana;
 				}
-				return;
+				else if(d->mana <= 63)
+				{
+					d->ammo[GUN_FIREBALL] = d->mana;
+					d->ammo[GUN_ICEBALL] = d->mana;
+					d->ammo[GUN_SLIMEBALL] = d->mana;
+					if(d==player1)
+					{
+						msgsound(S_NOAMMO, d);
+						d->gunwait = 600;
+					}
+					return;
+				}
 			}
+//			if(d->gunselect >= GUN_BOW) return;
 		}
 /////////////////////////////////////////////////////////////////////////
         vec from = d->o;

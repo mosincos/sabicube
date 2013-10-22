@@ -205,64 +205,6 @@ namespace game
         player1->zoom = 0;
     }
     COMMAND(waxof, "");
-///////////////////////////////////////////////////////////////////////////// GUNS
-    void getpistolammo(int *arg)
-    {
-		player1->ammo[GUN_PISTOL] = player1->ammo[GUN_PISTOL] + arg[0];
-    }
-    COMMAND(getpistolammo, "i");
-    void getshotgunammo(int *arg)
-    {
-        player1->ammo[GUN_SG] = player1->ammo[GUN_SG] + arg[0];
-    }
-    COMMAND(getshotgunammo, "i");
-    void getrifleammo(int *arg)
-    {
-        player1->ammo[GUN_RIFLE] = player1->ammo[GUN_RIFLE] + arg[0];
-    }
-    COMMAND(getrifleammo, "i");
-    void getglammo(int *arg)
-    {
-        player1->ammo[GUN_GL] = player1->ammo[GUN_GL] + arg[0];
-    }
-    COMMAND(getglammo, "i");
-    void getchaingunammo(int *arg)
-    {
-        player1->ammo[GUN_CG] = player1->ammo[GUN_CG] + arg[0];
-    }
-    COMMAND(getchaingunammo, "i");
-    void getrlammo(int *arg)
-    {
-        player1->ammo[GUN_RL] = player1->ammo[GUN_RL] + arg[0];
-    }
-    COMMAND(getrlammo, "i");
-
-    ICOMMAND(getpistolstat, "", (), intret(player1->ammo[GUN_PISTOL]));
-    ICOMMAND(getshotgunstat, "", (), intret(player1->ammo[GUN_SG]));
-    ICOMMAND(getriflestat, "", (), intret(player1->ammo[GUN_RIFLE]));
-    ICOMMAND(getglstat, "", (), intret(player1->ammo[GUN_GL]));
-    ICOMMAND(getchaingunstat, "", (), intret(player1->ammo[GUN_CG]));
-    ICOMMAND(getrlstat, "", (), intret(player1->ammo[GUN_RL]));
-
-	void testfire()
-	{
-		player1->gunselect = GUN_FIREBALL;
-		player1->ammo[GUN_FIREBALL] = player1->mana;
-	}
-	COMMAND(testfire, "");
-	void testice()
-	{
-		player1->gunselect = GUN_ICEBALL;
-		player1->ammo[GUN_ICEBALL] = player1->mana;
-	}
-	COMMAND(testice, "");
-	void testslime()
-	{
-		player1->gunselect = GUN_SLIMEBALL;
-		player1->ammo[GUN_SLIMEBALL] = player1->mana;
-	}
-	COMMAND(testslime, "");
-	
 //////////////////////////////////////////////////////////////////////////// inventory
 
 	void inventoryoverwrite(int &x, int *arg, int &y)

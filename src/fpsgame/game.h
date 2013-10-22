@@ -67,8 +67,9 @@ struct fpsentity : extentity
     
     fpsentity() : triggerstate(TRIGGER_RESET), lasttrigger(0) {} 
 };
-
-enum { GUN_FIST = 0, GUN_SG, GUN_CG, GUN_RL, GUN_RIFLE, GUN_GL, GUN_PISTOL, GUN_FIREBALL, GUN_ICEBALL, GUN_SLIMEBALL, GUN_BITE, GUN_BARREL, NUMGUNS };
+/////////////////////////////////////////////////////////////////////////////////////////
+enum { GUN_FIST = 0, GUN_SG, GUN_CG, GUN_RL, GUN_RIFLE, GUN_GL, GUN_PISTOL, GUN_FIREBALL, GUN_ICEBALL, GUN_SLIMEBALL, GUN_BITE, GUN_BARREL, GUN_SWORD, GUN_CROWBAR, GUN_BOW, NUMGUNS };
+/////////////////////////////////////////////////////////////////////////////////////////
 enum { A_BLUE, A_GREEN, A_YELLOW };     // armour types... take 20/40/60 % off
 enum { M_NONE = 0, M_SEARCH, M_HOME, M_ATTACKING, M_PAIN, M_SLEEP, M_AIMING, M_SMALLTALK };  // monster states
 
@@ -364,7 +365,10 @@ static const struct guninfo { int sound, attackdelay, damage, spread, projspeed,
     { S_ICEBALL,   600,  40,   0, 120,  1, 1024,  1,  80, 40,    0, "iceball",         "iceball",     PART_FIREBALL2 },
     { S_SLIMEBALL, 600,  30,   0, 640,  1, 1024,  1,  80, 40,    0, "slimeball",       "slimeball",     PART_FIREBALL3 },
     { S_PIGR1,     250,  50,   0,   0,  1,   12,  1,  80,  0,    0, "bite",            NULL,     0 },
-    { -1,            0, 120,   0,   0,  0,    0,  1,  80, 40,    0, "barrel",          NULL,     0 }
+    { -1,            0, 120,   0,   0,  0,    0,  1,  80, 40,    0, "barrel",          NULL,     0 },
+    { S_PUNCH1,    250,  50,   0,   0,  0,   14,  1,  80,  0,    0, "sword",           "sword",  0 },
+    { S_PUNCH1,    250,  50,   0,   0,  0,   14,  1,  80,  0,    0, "crowbar",         "crowbar",   0 },
+    { S_RIFLE,    1500, 100,   0,   0, 30, 2048,  1,  80,  0,    0, "bow",             "bow",    0 }
 };
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -447,7 +451,7 @@ struct fpsstate
         armour = 0;
         armourtype = A_BLUE;
         quadmillis = 0;
-        gunselect = GUN_PISTOL;
+        gunselect = GUN_FIST;
         gunwait = 0;
         loopi(NUMGUNS) ammo[i] = 0;
         ammo[GUN_FIST] = 1;
@@ -510,6 +514,8 @@ struct fpsstate
                 armour = 25;
             }
 			gunselect = GUN_FIST;
+//			ammo[GUN_SWORD] = 1;
+//			ammo[GUN_CROWBAR] = 1;
 		}
 /////////////////////////////////////////////////////////////////////
         else
