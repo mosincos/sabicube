@@ -1,0 +1,88 @@
+modding notes:
+**************
+SabiCube is build exclusivly using open-source tools, most of them available with a few clicks on most linux-distros, atm. I use KUbuntu 64-bit with kx-studio repositories enabled (for my music-production).
+
+As for the engine, I did some digging and found that the existing engines either lacked certain components, or was to complex for my entrylevel. Cube2 collect-edition was the one that came closest to what I wanted, and then I just started reading the code, trying to figure it out as I hacked away.
+I've made a lot of small Py-GTK programs, and in my early days I did some Pascal, so I did have some minor knowledge of programming when I started.
+
+There are several layers to modding, each requiring it's own skill-set, and we can't all do everything equaly good, I certanly can't, but I try anyway :-)
+
+
+Coding (making changes to the source-code and scripting):
+********************************************************
+All programming is done in KDevelop or Kate, but any basic text-editor will do, as long as you have dependencies and compiler-tools installed.
+
+install dependencies and compiler-tools on a debian system:
+sudo apt-get install autoconf libtool libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev build-essentials
+
+To compile SabiCube, cd into the source-dir (src), and run the make command, followed by make install:
+make && make install
+this might take a while (2-5 min.), depending on your specifications.
+
+Some examples of what I have added (mostly in fps.cpp, monster.cpp, game.h and entities.cpp):
+	player inventory (example in packges/base/escape/inventory.cfg)
+	two new kinds of items, pickups(food, weapons and other loot) and executable(switches and other interfaces)
+	crosshair changes when hovering over items
+	Clicking E while hovering over an item, will either pickup or activate the item, depending on type
+	picking up items are controled by a cfg-file, containing weight, value and other propertys
+	new stat strength - encumberance when carrying too much, disables running
+	Destructable crates with random amount loot (scriptable)
+	Monster that blows up when killed (mech)
+	new stat energy and energyregeneration
+	health/energy-bar
+	basic skill-tree
+	Killing monsters and solving quests gives expirience
+
+There are a lot of bennefits to using the terminal. and by executing SabiCube with:
+./sabicube_unix
+you'll be able to see if there are any problems with your scripts/settings.
+
+Fetch latest version of SabiCube on github into current dir:
+git clone https://github.com/sandsound/sabicube.git .
+
+Find and Remove backupfiles:
+find -name "*.BAK" -exec rm -rf {} \;
+
+Search for a text string recursively with -r option:
+grep -r "barrel" ./*
+
+If you want to make your own scripts, take a look at the pakages/base folder.
+Every map have a .cfg and a .ogz file (some also have a .jpg for preview).
+the mapname.cfg can contain links to other scripts, textures and models.
+A more detailed explanation of scripting, can be found here: https://github.com/sandsound/sabicube/wiki
+
+
+Modeling, animation, textures and such:
+***************************************
+To get MD5-export working, I downloaded Blender 2.63 and der-ton's MD5-exporter from katsbits.com.
+MisfitModel3D is a great tool for obj and md3/md2 format, and I use Gimp for 2D-stuff like textures.
+
+MD5 export from Blender: select action, select mesh then armature in objectmode.
+
+Blender weights: Select the armature, go into pose mode then select the mesh and go into weight paint mode
+
+InsaneBump is a great tool for textures http://registry.gimp.org/node/28117
+On Linux you just download the file, rename the extension to .py, make it executable and place it in your gimp-plugins folder
+
+make list of all jpg's in current folder:
+ls *.jpg > package.cfg
+
+convert folder with bmp into jpg. (add " && rm *.bmp" to remove source):
+mogrify -format jpg *.bmp
+
+When writing/creating your own mapname.cfg, use the folowing guideline:
+texture 0 "path_to_texture" x y z q (x=rotate y=offset? z=offset? q=size)
+
+
+In-game terminal one-liners(t/):
+****************************
+
+recording a movie in SabiCube:
+/movie YourFileName
+
+saving your map:
+/savemap YourMapName
+
+recalculate light:
+/calclight
+ 
