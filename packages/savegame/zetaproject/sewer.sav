@@ -10,7 +10,7 @@ inventoryoverwrite 4 0
 inventoryoverwrite 5 0
 inventoryoverwrite 6 0
 inventoryoverwrite 7 0
-inventoryoverwrite 8 1
+inventoryoverwrite 8 0
 inventoryoverwrite 9 0
 inventoryoverwrite 10 0
 inventoryoverwrite 11 0
@@ -84,13 +84,13 @@ inventoryoverwrite 78 0
 inventoryoverwrite 79 0
 inventoryoverwrite 80 1
 inventoryoverwrite 81 0
-inventoryoverwrite 82 0
+inventoryoverwrite 82 5
 inventoryoverwrite 83 0
 inventoryoverwrite 84 0
 inventoryoverwrite 85 0
 inventoryoverwrite 86 0
-inventoryoverwrite 87 20
-inventoryoverwrite 88 3
+inventoryoverwrite 87 0
+inventoryoverwrite 88 5
 inventoryoverwrite 89 0
 inventoryoverwrite 90 0
 inventoryoverwrite 91 0
@@ -103,10 +103,10 @@ inventoryoverwrite 97 0
 inventoryoverwrite 98 0
 inventoryoverwrite 99 0
 logvar = 6
-setenergyregen 0.200000
-setplayerexp 165
-setplayerlvl 1
+setenergyregen 0.100000
+setplayerexp 0
+setplayerlvl 0
 setmaxcarryweight 120
 setmaxhealth 100
-sethealth 75
+sethealth 100
 setlockpicking 0

@@ -161,10 +161,11 @@ namespace game
 	COMMAND(writegameprogress, "is");
 	
 //////////////////////////////////////////////////////////////////////////// save/load game
-	void savegame(int *arg, char *curmapname)
+	void savegame(int *arg, char *curmapname, char *gamename)
 	{
 		string gamecfgname;
-		formatstring(gamecfgname)("packages/savegame/%s.sav", curmapname);
+//		formatstring(gamecfgname)("packages/savegame/%s.sav", curmapname);
+		formatstring(gamecfgname)("packages/savegame/%s/%s.sav", gamename, curmapname);
 		stream *f = openutf8file((gamecfgname), "w");
 //		check for existing file ? should give a warning if file exist
 //		if(!f) return;
@@ -193,7 +194,7 @@ namespace game
 		f->printf("setlockpicking %d\n", player1->lockpicking);
 		delete f;
 	}
-	COMMAND(savegame, "is"); // gameprogress - curmapname
+	COMMAND(savegame, "iss"); // gameprogress - curmapname
 ///////////////////////////////////////////////////////////////////////////// Zoom
     void waxon()
     {
