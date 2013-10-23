@@ -41,10 +41,10 @@ enum                            // static entity types
     JUMPPAD,                    // attr1 = zpush, attr2 = ypush, attr3 = xpush
     BASE,
     RESPAWNPOINT,
-//////////////////////////////////////////////////////////////////
 	BOX,                        // attr1 = angle, attr2 = idx, attr3 = weight
 //////////////////////////////////////////////////////////////////
 	XBOX,                       // attr1 = angle, attr2 = idx, attr3 = weight
+//////////////////////////////////////////////////////////////////
     BARREL,                     // attr1 = angle, attr2 = idx, attr3 = weight, attr4 = health
     PLATFORM,                   // attr1 = angle, attr2 = idx, attr3 = tag, attr4 = speed
     ELEVATOR,                   // attr1 = angle, attr2 = idx, attr3 = tag, attr4 = speed
@@ -69,9 +69,9 @@ struct fpsentity : extentity
 };
 /////////////////////////////////////////////////////////////////////////////////////////
 enum { GUN_FIST = 0, GUN_SG, GUN_CG, GUN_RL, GUN_RIFLE, GUN_GL, GUN_PISTOL, GUN_FIREBALL, GUN_ICEBALL, GUN_SLIMEBALL, GUN_BITE, GUN_BARREL, GUN_SWORD, GUN_CROWBAR, GUN_BOW, NUMGUNS };
-/////////////////////////////////////////////////////////////////////////////////////////
 enum { A_BLUE, A_GREEN, A_YELLOW };     // armour types... take 20/40/60 % off
 enum { M_NONE = 0, M_SEARCH, M_HOME, M_ATTACKING, M_PAIN, M_SLEEP, M_AIMING, M_SMALLTALK };  // monster states
+/////////////////////////////////////////////////////////////////////////////////////////
 
 enum
 {
@@ -610,7 +610,7 @@ struct fpsent : dynent, fpsstate
 		maxmana = 512.0f;
 		lockpicking = 0;
 		alchemy = 0;
-		hotkey1 = 80;
+		hotkey1 = 0;
 		hotkey2 = 0;
 		hotkey3 = 0;
 		hotkey4 = 0;
