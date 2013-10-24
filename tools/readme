@@ -1,10 +1,17 @@
 This folder contain the folowing:
 
 guiskin_map.png
+by: Tim Thomas CC-BY-SA 3.0
 for making your own menus
 
 InsaneBump.py
+found here. http://opengameart.org/forumtopic/someone-willig-to-update-insane-bump-python-gimp-plugin
 Gimp plugin for creating bumpmaps for your textures
 
 io_export_md5-263.zip
+Script by keless, ported to 2.63 by motorsep http://www.kot-in-action.com/
 md5 export for Blender 2.63
+
+playerhands
+by Sandie Sandgreen CC-BY-SA 3.0
+made with Makehuman, Blender and Gimp
