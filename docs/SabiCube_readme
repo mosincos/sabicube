@@ -1,14 +1,35 @@
 SabiCube 1.1 alpha
 
 A single-player total conversion of Cube2-Sauerbraten with focus on adding rpg/adventure elements.
-This package includes first chapter of the game ZetaProject, a test-map to display the new features, and houndreds of open-source models and textures game-ready.
 The goal is to make gamebuilding as fun as playing a game, with intuitive menus and guides to help anyone make their own open-source rpg/adventure game, without prior knowledge of programming or 3D-modeling.
-This is a work in progress so editor-workflow might change in future releases as we add features to the engine, but maps from the original sauerbraten (or compatible engines) will be able to load with minor adjustment.
-SabiCube is tested on 64-bit (Kubuntu) and 32-bit (KXStudio), and we have provided a binary for both, so it should work, if you are lucky, If not... please follow the installguide found here : https://github.com/sandsound/sabicube/wiki#installing
+
+The 1.1 release will focus on implmenting classic rpg-style weapons, it includes the game Age Of Reason and as always... a test-map for the new features. Some additions to SabiCube 1.1 might temporarely break support for the game ZetaProject, but it shold still be playable, and if you find a bug, please let me know.
+
+SabiCube is tested on 64-bit (Kubuntu 13.10) and 32-bit (Linux Mint 15 Xfce), and installing should be fairly simple, just extract the zip-file and place the sabicube-folder in your home-dir. If you havent played games on your computer, you might need to install some dependencies, the easyist way to get them all, is to just install Sauerbraten from your repository. To start the game you just execute sabicube_unix. If you have problems, just follow this guide: https://github.com/sandsound/sabicube/wiki#installing
 
 
-Some of the major changes we have made (* = changes since 1.0):
+Changelog 1.1:
+**************
+added tools-folder, md5-export and InsaneBump
+player-mana for spells
+playerskill manaregeneration
+basic alchemy inspired by morrowind (scripting not complete)
+playerskill alchemy allow player to make better potions
+new hudguns sword, fist, bow, fireball, frostball and slimeball
+new hud with 10 slots, tied to hotkeys
+all inventory-items and weapons can be placed and used in the new hud
+new npcs and monsters
+notifier when player have gathered enough experience for a level
+dynamic switching of gui-skin
+new start background
+npcs with random wander-mode
+npcs defend themself or others if they are close enough to see an attack
+New game added: Age Of Reason
+lots of bugfixes, and lots of interesting new bugs
 
+
+Changelog 1.0:
+**************
 main-menu and gui re-arranged to fit SabiCube options
 basic inventory and inventory-items, works without any scripting
 large collection of open-source map-models/textures available
@@ -33,32 +54,36 @@ lockpicking
 shopping
 savegames (autosave)
 
-* mana
-* playerskill manaregeneration
-* basic alchemy inspired by morrowind (scripting not complete)
-* playerskill alchemy allow player to make better potions
-* new hudguns sword and magic
-* new hud with 10 slots, tied to hotkeys
-* all inventory-items can be placed and used in the new hud
-* new npcs and monsters
-* notifier when player have gathered enough experience for a level
-* lots of bugfixes, and lots of interesting new bugs
-* dynamic switching of gui-skin
-* new start background
+
+TODO:
+*****
+savegames with playerposition and trigger/monster-states
+hudguns and animations in general need improvement
+Automating game-building (game menu)
+npc-dialog creation kit
+make usb-image with lglive, SabiCube, Blender (incl. md5-export) and misc. tools
+Lua-scripting ?
+game manual - tutorial map?
+player/weapon-customization
+complete the contributers list
 
 
 You can follow the development on ModDb: http://www.moddb.com/mods/sabicube where the latest "stable" release is available for download, and you can download the development version of SabiCube on GitHub: https://github.com/sandsound/sabicube
 
+
 Contributers:
+*************
+SabiCube is build by Sandie Sandgreen with some help from Bill Sørensen.
+Everything I make is GPL. You should have received a copy of the license, if not, you can view it online here: http://www.gnu.org/licenses/gpl.html I have done my best to make sure that textures and models in SabiCube doesn't infringe on any copyright, but in the case that any does, please let me know, and I'll remove them.
 
-SabiCube is build mainny by Sandie Sandgreen with some help from Bill Sørensen.
-
-original sauerbraten:
-Wouter "Aardappel" van Oortmerssen
-Lee "eihrul" Salzman 
+The original Cube 2 Sauerbraten is licensed under MIT, and created by:
+by Wouter "Aardappel" van Oortmerssen
+Lee "eihrul" Salzman
 Mike "Gilt" Dysart
 Robert "baby-rabbit" Pointon
-Quinton "Quin" Reeves
+John "geartrooper" Siar
+Quinton "Quin" Reeves and others
+www.sauerbraten.org
 
 Models and textures:
 Markus "makkE" Bekel
