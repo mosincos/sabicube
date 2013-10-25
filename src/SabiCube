@@ -1,0 +1,15 @@
+These are the files I have made changes to:
+
+engine/
+	3dgui.cpp
+	main.cpp
+	
+fpsgame/
+	entities.cpp
+	fps.cpp
+	game.h
+	monster.cpp
+	movable.cpp
+	render.cpp
+	weapon.cpp
+	
