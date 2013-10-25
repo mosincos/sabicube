@@ -1,4 +1,4 @@
-SabiCube 1.1 alpha
+SabiCube 1.2
 
 A single-player total conversion of Cube2-Sauerbraten with focus on adding rpg/adventure elements.
 The goal is to make gamebuilding as fun as playing a game, with intuitive menus and guides to help anyone make their own open-source rpg/adventure game, without prior knowledge of programming or 3D-modeling.
@@ -78,7 +78,7 @@ SabiCube is build by Sandie Sandgreen with some help from Bill Sørensen.
 Everything I make is GPL. You should have received a copy of the license, if not, you can view it online here: http://www.gnu.org/licenses/gpl.html I have done my best to make sure that textures and models in SabiCube doesn't infringe on any copyright, but in the case that any does, please let me know, and I'll remove them.
 
 The original Cube 2 Sauerbraten is licensed under MIT, and created by:
-by Wouter "Aardappel" van Oortmerssen
+Wouter "Aardappel" van Oortmerssen
 Lee "eihrul" Salzman
 Mike "Gilt" Dysart
 Robert "baby-rabbit" Pointon
