@@ -35,21 +35,6 @@ alchemyalias2 = [
 	]
 ]
 
-healitems = [1 4 8 13 14 15 16 17 18 19 20 21 22 23 27 31 36 38 39 40 41 42 43 44 48 50 61]
-alchemyalias3 = [
-	heal1 = (listfind f $healitems [strcmp $f $ingredient1])
-	heal2 = (listfind f $healitems [strcmp $f $ingredient2])
-	if (!= ($heal1) -1) [
-		if (!= ($heal2) -1) [
-			showgui alsuccess
-		] [
-			showgui alfailure
-		]
-	] [
-		showgui alfailure
-	]
-]
-
 newgui alchemy [
 	guistayopen [
 		guitext "Alchemy script" 0
@@ -63,18 +48,15 @@ newgui alchemy [
 		]
 		guitext "" 0
 		guibutton "Create" [
-			if ((>= ($ingredient1) 1) && (>= ($ingredient2) 0)) [
+			if ((!= ($ingredient1) 0) && (!= ($ingredient2) 0)) [
 				ingw1 = (concat ("itemweight" ($ingredient1)))
 				inventorywrite ($ingredient1) -1 ($ingw1)
 				ingw2 = (concat ("itemweight" ($ingredient2)))
 				inventorywrite ($ingredient2) -1 ($ingw2)
-				alchemyalias3
+				inventorywrite 31 1 1
+				showgui alsuccess
 			] [
-				ingw1 = (concat ("itemweight" ($ingredient1)))
-				inventorywrite ($ingredient1) -1 ($ingw1)
-				ingw2 = (concat ("itemweight" ($ingredient2)))
-				inventorywrite ($ingredient2) -1 ($ingw2)
-				showgui alerror
+				showgui alfailure
 			]
 		] 0
 		guitext "" 0
@@ -83,16 +65,9 @@ newgui alchemy [
 	]
 ] "Alchemy"
 
-newgui alerror [
-	guitext "Error... sorry" 0
-	guibar
-	guimodelpreview (mapmodelname 0) "inventory" [ingredient1 = 0; ingredient2 = 0; showgui alchemy] 4 1
-]
-
 newgui alsuccess [
-	guitext "You made a health-potion" 0
-	guibar
-	guimodelpreview (mapmodelname 58) "inventory" [ingredient1 = 0; ingredient2 = 0; showgui alchemy] 4 1
+	guitext "You made a pizza" 0
+	guimodelpreview (mapmodelname 31) "inventory" [ingredient1 = 0; ingredient2 = 0; showgui alchemy] 4 1
 ] "Success"
 
 newgui alfailure [

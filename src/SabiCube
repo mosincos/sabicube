@@ -1,15 +1,15 @@
 So far I have only made changes to these files:
 
 engine/
-	3dgui.cpp
-	main.cpp
+	3dgui.cpp		// skin gui.
+	main.cpp		// write backupfile. skins.
 	
 fpsgame/
-	entities.cpp
-	fps.cpp
-	game.h
-	monster.cpp
-	movable.cpp
-	render.cpp
-	weapon.cpp
+	entities.cpp	// xbox. trig-dist. time.
+	fps.cpp			// inventory. stats. hud. zoom. savegame.
+	game.h			// -"-
+	monster.cpp		// npc. wodden crate.
+	movable.cpp		// xbox.
+	render.cpp		// playermodels. hudguns.
+	weapon.cpp		// disable chainsaw. mana. aor-weapons.
 	
