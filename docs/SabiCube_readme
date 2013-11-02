@@ -3,9 +3,16 @@ SabiCube 1.2
 A single-player total conversion of Cube2-Sauerbraten with focus on adding rpg/adventure elements.
 The goal is to make gamebuilding as fun as playing a game, with intuitive menus and guides to help anyone make their own open-source rpg/adventure game, without prior knowledge of programming or 3D-modeling.
 
-The 1.1 release will focus on implmenting classic rpg-style weapons, it includes the game Age Of Reason and as always... a test-map for the new features. Some additions to SabiCube 1.1 might temporarely break support for the game ZetaProject, but it shold still be playable, and if you find a bug, please let me know.
+The 1.2 release will focus on automating the gamebuilding-process, and add several new features like npc-persuation, updated alchemy-script, and an initial test of the "npc-dialog-creation-kit".
+
+Some additions to SabiCube 1.2 might temporarely break support for existing games, and if you find a bug, please leave a message on moddb.
 
 SabiCube is tested on 64-bit (Kubuntu 13.10) and 32-bit (Linux Mint 15 Xfce), and installing should be fairly simple, just extract the zip-file and place the sabicube-folder in your home-dir. If you havent played games on your computer, you might need to install some dependencies, the easyist way to get them all, is to just install Sauerbraten from your repository. To start the game you just execute sabicube_unix. If you have problems, just follow this guide: https://github.com/sandsound/sabicube/wiki#installing
+
+Changelog 1.2:
+**************
+alchemy, making health-potions
+git update-script
 
 
 Changelog 1.1:
