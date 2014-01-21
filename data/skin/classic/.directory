@@ -1,9 +1,5 @@
 [Dolphin]
 AdditionalInfo=Details_Size,Details_Date,CustomizedDetails
-PreviewsShown=true
-Timestamp=2013,3,25,16,16,28
+Timestamp=2013,11,10,4,39,37
 Version=3
 ViewMode=1
-
-[Settings]
-HiddenFilesShown=true

@@ -1,12 +1,30 @@
 **********************************************************************
-! This document is a copy of the SabiCube online wiki - 24 oct. 2013 !
+! This document is a copy of the SabiCube online wiki - 2 nov. 2013  !
 ! To get the latest version of this document, please visit:          !
 ! https://github.com/sandsound/sabicube/wiki                         !
 **********************************************************************
 
 SabiCube is a single-player total conversion of Cube2-Sauerbraten with focus on adding rpg/adventure elements. This package includes the first three levels of the game ZetaProject, and a test-map for the new features. The goal is to make the gamebuilding process as fun as playing a game, with intuitive menus and guides to help anyone make their own open-source rpg/adventure game, without prior knowledge of programming or 3D-modeling.
 
-This is a work in progress so editor-workflow might change in future releases as we add features to the engine, but maps from the original sauerbraten (or compatible engines) will be able to load with minor adjustment, and we have no plans to change the map-format. SabiCube is tested on 64-bit (Kubuntu) and 32-bit (KXStudio), and compiling should be fairly simple, just follow the installguide below. To get the latest version of this document, or SabiCube, please visit http://github.com/sandsound/sabicube
+Quick-start
+Editing
+Scripting
+Hotkeys
+Edit Hotkeys
+Pickup items
+Weapons
+barrel
+platform
+Executabale items
+Monsters
+Wooden-crate
+triggers and doors
+Transferring weapons
+Savegames
+Installing
+Gameplay
+License
+
 Quick-start:
 
     place the sabecube folder in your home-dir
@@ -39,7 +57,7 @@ TAB: playermenu and inventory
 1-0: hud-items
 F12: Take screenshot
 
-    In SabiCube 1.1a you can place items in the hud by clicking preview-image in the inventory.
+    Since SabiCube 1.1 you can place items in the hud by clicking preview-image in the inventory.
 
 Edit Hotkeys:
 
@@ -48,7 +66,7 @@ F2 : Textures menu
 F3 : Main editing menu
 F3 : Mapmodels menu
 For a full list of available editing hotkeys, use the keys/scroll-tab in the main editing menu (F3).
-pickup-able items: mapmodels 0 - 79
+Pickup items:
 
 mapitems are numbered from 0 and up, where 0 (default) is a spinning question-mark, 1 is the next mapmodel in the list, in this case a brawndo-plant (I had to call it something).
 To place a Brawndo-plant on your map, you first enter edit mode (F1) click where you want it to appear, open the edit menu (F3) and select consumables/brawndo, this will get you a brawndo-plant that player can pick up. Every item player picks up, will be available in the inventory, eatable items can be eaten when clicked and weapons can be equipped (if you have ammo for it).
@@ -68,16 +86,16 @@ item_pickup_4 [
 ]
 
 If you just want to use the existing inventory-items, you don't have to script pickup-able items
-Weapons: mapmodels 80-99
+Weapons:
 
 Weapons are no longer being picked up autocratically, the players mouse have to be hovering over them and clicking them like any other pickup-able item. Default weapon (crowbar) is the replacement of the original fist from Sauerbraten and will be equipped whenever a map is loaded. placing a weapon or ammo is just like a normal pickup-able item (BOX). You can't equip a weapon without having the appropriate ammo.
-barrel: mapmodel 100
+barrel:
 
 Enter edit mode (F1) click where you want it to appear, open the edit menu (F3) and select Explodable barrel. Once you have placed it, you can click it, and then use your scroll-wheel to select any model from the mapmodel-list, if you want an explodable gas-canister or fuel-truck.
-platform: mapmodel 101
+platform:
 
 Enter edit mode (F1) click where you want it to appear, open the edit menu (F3) and select Platform.
-Interacting with executabale items: mapmodels 102 - ?
+Executabale items:
 
 Keypads npc's and other items that shouldn't be picked up when a player activates them, are defined the same way as pickup-able items.
 So if you want a npc, you first enter edit mode (F1) click where you want your npc to appear, open the edit menu (F3) and select npc. Scripting an executable item, is very similar to a pickup-item:
@@ -152,6 +170,8 @@ triggers and doors:
 Can be controlled by a executabale item or by proximity. To place a proximity trigger, you just place a trigger/door and choose "auto-close" (or "once"). This will place a door that opens autocratically when the player approach it. To use a switch or other model to control the trigger/door, follow the guide "Adding executabale items". A closed door with tag 3, can be opened with "trigger 3 1", and closed again with "trigger 3 0".
 Transferring weapons:
 
+! NOTE ! since SabiCube 1.1, ammo should be transferred using the savegame command.
+
 At the moment, ammo is not automatic transferred, but if you update the inventory with the current ammo, you can reassign it when the next map is loaded. Have a look at the way ZetaProject use triggers to transfer ammo from map to map:
 
 level_trigger_4 = [ // exit first map
@@ -176,11 +196,11 @@ level_trigger_13 = [ // enter second map
 
 Savegames:
 
-Since version 1.0 was released, SabiCube have started implementing savegames, this is done using the savegame command. The savegame command have two arguments:
+Since version 1.1 was released, SabiCube have implemented automated savegames, this is done using the savegame command. The savegame command have three arguments:
 
-savegame int string
+savegame int string string
 
-Where int is the current journal status and string is the mapname. The command loops through player-inventory and saves it along with character-stats in a file called mapname.sav
+Where int is the current journal status, the first string is the mapname and the last string is the gamename. The command loops through player-inventory and saves it along with character-stats in a file called mapname.sav
 
 In the ZetaProject game-menu (located in packages/data/menus.cfg), you can see how to loop through your savegames, and how to present them as a list (I have simplified it for clarity):
 
@@ -193,8 +213,8 @@ newgui zetaproject [
         guilist [
             guitext "Savegames:" 0
             savegames = ""
-            // looping through all .sav-files in packages/savegame/
-            loopfiles cursavegame "packages/savegame" "sav" [
+            // looping through all .sav-files in packages/savegame/zetaproject
+            loopfiles cursavegame "packages/savegame/zetaproject" "sav" [
                 // do we have more than zero savegames?
                 if (< (indexof $cursavegame) 0) [
                     // add savegame to list
@@ -212,14 +232,14 @@ newgui zetaproject [
 The savegames does not currently support player-position and trigger/monster-states, but are still very usefull when traveling from map to map, all you have to do is add it to your exit-trigger like this:
 
 level_trigger_4 = [ // exit trigger
-    savegame 14 mapname
+    savegame 2 mapname gamename
     map mapname
 ]
 
 Once the new map is loaded you can then update inventory:
 
 level_trigger_13 = [
-    exec packages/savegame/mapname.sav
+    exec packages/savegame/zetaproject/mapname.sav
 ]
 
 Installing:
@@ -278,4 +298,3 @@ Robert "baby-rabbit" Pointon
 John "geartrooper" Siar
 Quinton "Quin" Reeves and others
 www.sauerbraten.org
- 
