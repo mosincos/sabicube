@@ -580,6 +580,7 @@ struct fpsent : dynent, fpsstate
 	int hotkey8;
 	int hotkey9;
 	int hotkey0;
+	int npcdisposition;
 ///////////////////////////////////////////////////////////////////////////
     int lastpickup, lastpickupmillis, lastbase, lastrepammo, flagpickup, tokens;
     vec lastcollect;
@@ -620,6 +621,7 @@ struct fpsent : dynent, fpsstate
 		hotkey8 = 0;
 		hotkey9 = 0;
 		hotkey0 = 0;
+		npcdisposition = 0;
 		respawn();
     }
 /////////////////////////////////////////////////////////////////////////

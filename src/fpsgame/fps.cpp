@@ -430,13 +430,31 @@ namespace game
     }
     COMMAND(getarmour, "i");
     ICOMMAND(getarmourstat, "", (), intret(player1->armour));
-///////////////////////////////////////////////////////////////////////
-//    void setdefaultskin()
-//    {
-//		guiskintex == "guiskin.png";
-//    }
-//    COMMAND(setdefaultskin, "");	
-	
+/////////////////////////////////////////////////////////////////////// BRIBE-NPC
+	void bribenpc(int *arg)
+	{
+		if(player1->state!=CS_ALIVE) return;
+		if(player1->inventory[3] >= 10)
+		{
+			player1->inventory[3] -= 10;
+			player1->npcdisposition = (arg[0] + ((rand() % 10) - (rand() % 5)));
+			if(player1->npcdisposition < 0)
+			{
+				player1->npcdisposition = 0;
+			}
+			if(player1->npcdisposition > 100)
+			{
+				player1->npcdisposition = 100;
+			}
+		}
+		else
+		{
+			player1->npcdisposition = arg[0];
+			conoutf(CON_GAMEINFO, "\f2You dont have enough money!");
+		}
+	}
+    COMMAND(bribenpc, "i");
+	ICOMMAND(getnpcdisp, "", (), intret(player1->npcdisposition));
 ///////////////////////////////////////////////////////////////////////
 	
     ICOMMAND(getfollow, "", (),

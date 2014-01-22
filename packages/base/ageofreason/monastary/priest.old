@@ -4,6 +4,96 @@ priestansw = 0
 priestques = 0
 priestdisp = 25
 
+bribemacro = [
+	x = (+ ($priestdisp) (- (rnd 10) (rnd 5)))
+	if (> ($x) 0) [
+		if (< ($x) 100) [
+			priestdisp = $x
+		]
+	]
+]
+
+tauntmacro = [
+	if (< ($priestdisp) 25) [
+		echo "Your taunt is ignored"
+	]
+	if (> ($priestdisp) 25) [
+		if (> ($priestdisp) 75) [
+			x = (- ($priestdisp) (rnd 5))
+			priestdisp = $x
+		]
+		if (> ($priestdisp) 50) [
+			x = (- ($priestdisp) (rnd 10))
+			priestdisp = $x
+		]
+		if (< ($priestdisp) 50) [
+			x = (- ($priestdisp) (rnd 15))
+			priestdisp = $x
+		]
+	]
+]
+
+charmmacro = [
+	if (< ($priestdisp) 25) [
+		echo "Your charm is ignored"
+	]
+	if (> ($priestdisp) 25) [
+		if (> ($priestdisp) 75) [
+			x = (+ ($priestdisp) (rnd 15))
+			priestdisp = $x
+		]
+		if (> ($priestdisp) 50) [
+			x = (+ ($priestdisp) (rnd 10))
+			priestdisp = $x
+		]
+		if (< ($priestdisp) 50) [
+			x = (+ ($priestdisp) (rnd 5))
+			priestdisp = $x
+		]
+	]
+]
+
+newgui persuasion [
+	guistayopen [
+		guilist [
+			guilist [
+				guilist [
+					guitext "disposition: " 0
+					guitext $priestdisp 0
+					if (< ($priestdisp) 25) [
+						guitext " " "sm1"
+					]
+					if (>= ($priestdisp) 25) [
+						if (< ($priestdisp) 50) [
+							guitext " " "sm2"
+						]
+					]
+					if (>= ($priestdisp) 50) [
+						if (< ($priestdisp) 75) [
+							guitext " " "sm3"
+						]
+					]
+					if (>= ($priestdisp) 75) [
+						guitext " " "sm4"
+					]
+				]
+				guibar
+				guibutton "Bribe 10" [bribenpc ; inventorywrite 3 -10 0] 0
+//				guibutton "Bribe 10" [bribemacro; inventorywrite 3 -10 0] 0
+//				guibutton "Bribe 100" [bribemacro; inventorywrite 3 -100 0] 0
+//				guibutton "Bribe 1000" [bribemacro; inventorywrite 3 -1000 0] 0
+				guibar
+				guibutton "Taunt" [tauntmacro; inventorywrite 3 -10 0] 0
+				guibar
+				guibutton "Charm" [charmmacro; inventorywrite 3 -10 0] 0
+				guibar
+				guitext " " 0
+				guibutton "Back" [showgui priestsayhi] 0
+			]
+		]
+	]
+] "Persuasion"
+
 newgui priestsayhi [
 	guistayopen [
 		guilist [
@@ -66,7 +156,7 @@ newgui priestsayhi [
 			guibar
 			guitextbox " " 1 20
 			guilist [
-				guibutton "Bribe" [bribenpc $priestdisp; priestdisp = (getnpcdisp)] 0
+				guibutton "Persuade" [showgui persuasion] 0
 				guibutton "Trade" [showgui shop] 0
 				guibar
 				guibutton "Work" [priestansw = 1; if (< ($priestques) 1) [priestques = 1]] 0
