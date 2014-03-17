@@ -16,3 +16,5 @@ awesund/Rifle.wav and free/shotgun.wav were modified by Darthvim.
 
 The "ctf" ones are borrowed from AssaultCube, with
 permission from Makke to reuse in Sauerbraten.
+
+rave = http://www.freesound.org/people/stair/sounds/183441/

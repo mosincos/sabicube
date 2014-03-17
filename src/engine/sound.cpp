@@ -331,6 +331,7 @@ void stopmapsounds()
         freechannel(i);
     }
 }
+//COMMAND(stopmapsounds, "");
 
 void clearmapsounds()
 {
