@@ -421,6 +421,11 @@ void renderprogress(float bar, const char *text, GLuint tex, bool background)   
     defaultshader->set();
     glColor3f(1, 1, 1);
 
+//////////////////////
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//////////////////////
+	
     float fh = 0.075f*min(w, h), fw = fh*10,
           fx = renderedframe ? w - fw - fh/4 : 0.5f*(w - fw), 
           fy = renderedframe ? fh/4 : h - fh*1.5f,
@@ -434,8 +439,8 @@ void renderprogress(float bar, const char *text, GLuint tex, bool background)   
     glTexCoord2f(fu2, fv2); glVertex2f(fx+fw, fy+fh);
     glEnd();
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//	glEnable(GL_BLEND);
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     float bw = fw*(511 - 2*17)/511.0f, bh = fh*20/52.0f,
           bx = fx + fw*17/511.0f, by = fy + fh*16/52.0f,
