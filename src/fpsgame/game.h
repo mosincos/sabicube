@@ -557,6 +557,7 @@ struct fpsent : dynent, fpsstate
     int lasttaunt;
 ///////////////////////////////////////////////////////////////////////////
     int lastspeedrun;
+    int lastburn;
     float energy;
 	float energyregen;
 	float mana;

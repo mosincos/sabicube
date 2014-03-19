@@ -150,12 +150,10 @@ namespace game
 		string gamecfgname;
 		formatstring(gamecfgname)("packages/savegame/%s.cfg", gamename);
 		stream *f = openutf8file((gamecfgname), "w");
-	//	if(!f) return;
 		f->printf("// automaticly generated\n");
 		f->printf("// do not modify\n");
 		f->printf("// gamename %s\n", gamename);
 		f->printf("gameprogress = %d\n", arg[0]);
-//		f->printf("inventorywrite 1 %d\n", intret(player1->inventory[1]));
 		delete f;
 	}
 	COMMAND(writegameprogress, "is");
@@ -164,17 +162,11 @@ namespace game
 	void savegame(int *arg, char *curmapname, char *gamename)
 	{
 		string gamecfgname;
-//		formatstring(gamecfgname)("packages/savegame/%s.sav", curmapname);
 		formatstring(gamecfgname)("packages/savegame/%s/%s.sav", gamename, curmapname);
 		stream *f = openutf8file((gamecfgname), "w");
-//		check for existing file ? should give a warning if file exist
-//		if(!f) return;
 		f->printf("// automaticly generated\n");
 		f->printf("// do not modify\n");
 		f->printf("// gamename %s\n", curmapname);
-//		below added in scripting instead
-//		f->printf("mode -3;map %s\n", curmapname);
-		f->printf("gameprogress = %d\n", arg[0]);
 		string inventorystring;
 		int itemamount;
 		for(int x=0;x<100;x=x+1)
@@ -184,7 +176,17 @@ namespace game
 			f->printf("%s ", inventorystring);
 			f->printf("%d\n", itemamount);
 		}
-		f->printf("logvar = %d\n", arg[0]);
+		f->printf("lognum = %d\n", arg[0]);
+//////// this part needs fixing for obvious reasons ////////////////////////////
+//////// for now it only sets all logvars to 0 /////////////////////////////////
+		string logstring;
+		for(int x=0;x<arg[0];x=x+1)
+		{
+			formatstring(logstring)("logvar%d", x);
+			f->printf("logvar%d = ", x);
+			f->printf("0\n");
+		}
+
 		f->printf("setenergyregen %f\n", player1->energyregen);
 		f->printf("setplayerexp %d\n", player1->playerexperience);
 		f->printf("setplayerlvl %d\n", player1->playerlevel);
@@ -194,7 +196,8 @@ namespace game
 		f->printf("setlockpicking %d\n", player1->lockpicking);
 		delete f;
 	}
-	COMMAND(savegame, "iss"); // gameprogress - curmapname
+	COMMAND(savegame, "iss"); // lognum / curmapname / gamename
+
 ///////////////////////////////////////////////////////////////////////////// Zoom
     void waxon()
     {
@@ -1157,6 +1160,26 @@ namespace game
     }
     ICOMMAND(kill, "", (), suicide(player1));
 
+///////////////////////////////////////////////////////////////////////////////////////
+    void burning(physent *d)
+    {
+        if(d==player1 || (d->type==ENT_PLAYER && ((fpsent *)d)->ai))
+        {
+			if(d->state!=CS_ALIVE) return;
+			float burndamage = (lastmillis/100 - player1->lastburn/100);
+//			conoutf(CON_ERROR, "burn %d %d %f", lastmillis, player1->lastburn, burndamage);
+			player1->lastburn = lastmillis;
+			player1->health = player1->health - burndamage;
+			if(player1->health <= 0) 
+			{
+				suicide(player1);
+			}
+        }
+        else if(d->type==ENT_AI) suicidemonster((monster *)d);
+        else if(d->type==ENT_INANIMATE) suicidemovable((movable *)d);
+    }
+///////////////////////////////////////////////////////////////////////////////////////
+	
     bool needminimap() { return m_ctf || m_protect || m_hold || m_capture || m_collect; }
 
     void drawicon(int icon, float x, float y, float sz)

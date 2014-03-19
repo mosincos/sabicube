@@ -3,9 +3,10 @@ So far I have made changes to these files:
 engine/
 	3dgui.cpp		// skin gui.
 	main.cpp		// write backupfile. skins.
+	physics.cpp		// lava damage over time.
 	
 fpsgame/
-	entities.cpp	// xbox. trig-dist. time.
+	entities.cpp	// box. xbox. trig-dist. time.
 	fps.cpp			// inventory. stats. hud. zoom. savegame.
 	game.h			// -"-
 	monster.cpp		// npc. wodden crate.
@@ -13,3 +14,5 @@ fpsgame/
 	render.cpp		// playermodels. hudguns.
 	weapon.cpp		// disable chainsaw. mana. aor-weapons.
 	
+shared/
+	igame.h			// lava damage (burning).

@@ -1651,7 +1651,7 @@ void modifygravity(physent *pl, bool water, int curtime)
 
 bool moveplayer(physent *pl, int moveres, bool local, int curtime)
 {
-    int material = lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (3*pl->aboveeye - pl->eyeheight)/4));
+	int material = lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (3*pl->aboveeye - pl->eyeheight)/4));
     bool water = isliquid(material&MATF_VOLUME);
     bool floating = pl->type==ENT_PLAYER && (pl->state==CS_EDITING || pl->state==CS_SPECTATOR);
     float secs = curtime/1000.f;
@@ -1701,17 +1701,20 @@ bool moveplayer(physent *pl, int moveres, bool local, int curtime)
 
     // play sounds on water transitions
 
-    if(pl->inwater && !water)
-    {
-        material = lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (pl->aboveeye - pl->eyeheight)/2));
-        water = isliquid(material&MATF_VOLUME);
-    }
-    if(!pl->inwater && water) game::physicstrigger(pl, local, 0, -1, material&MATF_VOLUME);
-    else if(pl->inwater && !water) game::physicstrigger(pl, local, 0, 1, pl->inwater);
-    pl->inwater = water ? material&MATF_VOLUME : MAT_AIR;
+/////////////////////////////////////////////////////////////////////////////////////////////
+	if(pl->inwater && !water)
+	{
+		material = lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (pl->aboveeye - pl->eyeheight)/2));
+		water = isliquid(material&MATF_VOLUME);
+	}
+	if(!pl->inwater && water) game::physicstrigger(pl, local, 0, -1, material&MATF_VOLUME);
+	else if(pl->inwater && !water) game::physicstrigger(pl, local, 0, 1, pl->inwater);
+	pl->inwater = water ? material&MATF_VOLUME : MAT_AIR;
 
-    if(pl->state==CS_ALIVE && (pl->o.z < 0 || material&MAT_DEATH)) game::suicide(pl);
-
+//	if(pl->state==CS_ALIVE && (pl->o.z < 0 || material&MAT_DEATH)) game::suicide(pl);
+	if(pl->state==CS_ALIVE && (pl->o.z < 0)) game::suicide(pl);
+	if(pl->state==CS_ALIVE && (material&MAT_DEATH)) game::burning(pl);
+/////////////////////////////////////////////////////////////////////////////////////////////
     return true;
 }
 

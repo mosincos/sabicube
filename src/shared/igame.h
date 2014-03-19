@@ -60,6 +60,9 @@ namespace game
     extern const char *getmapinfo();
     extern void resetgamestate();
     extern void suicide(physent *d);
+///////////////////////////////////////////////////////////////////////////////////////
+    extern void burning(physent *d);
+///////////////////////////////////////////////////////////////////////////////////////
     extern void newmap(int size);
     extern void startmap(const char *name);
     extern void preload();

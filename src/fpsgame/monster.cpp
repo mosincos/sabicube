@@ -34,9 +34,9 @@ namespace game
         { GUN_BITE,       5, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "boneman",         "monster/boneman",     NULL },
         { GUN_BITE,       8, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "bonesword",       "monster/bonesword",   NULL },
         { NULL,           0,  10, 3, 0,   100, 400, 1, 10, 256, NULL,    S_PIGGR2,  "planks",     "monster/planks",      NULL },
-        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "femalenpc",       "playermodels/female",     NULL },
+        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "femalenpc",       "npc/female",     NULL },
         { GUN_BITE,       6, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "clippy",          "monster/clippy",      NULL },
-        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "malenpc",         "playermodels/male",     NULL },
+        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "malenpc",         "npc/watch",     NULL },
         { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "ingrid",         "npc/ingrid",     NULL },
     };
 
