@@ -368,7 +368,7 @@ static const struct guninfo { int sound, attackdelay, damage, spread, projspeed,
     { -1,            0, 120,   0,   0,  0,    0,  1,  80, 40,    0, "barrel",          NULL,     0 },
     { S_PUNCH1,    250,  50,   0,   0,  0,   14,  1,  80,  0,    0, "sword",           "sword",  0 },
     { S_PUNCH1,    250,  50,   0,   0,  0,   14,  1,  80,  0,    0, "crowbar",         "crowbar",   0 },
-    { S_RIFLE,    1500, 100,   0,   0, 30, 2048,  1,  80,  0,    0, "bow",             "bow",    0 }
+    { S_FLAGFAIL,  1500, 100,  0,   0, 30, 2048,  1,  80,  0,    0, "bow",             "bow",    0 }
 };
 ////////////////////////////////////////////////////////////////////////////////////
 
