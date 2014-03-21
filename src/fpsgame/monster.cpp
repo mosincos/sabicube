@@ -8,7 +8,7 @@ namespace game
     static vector<int> teleports;
 
     static const int TOTMFREQ = 14;
-    static const int NUMMONSTERTYPES = 19;
+    static const int NUMMONSTERTYPES = 20;
 
     struct monstertype      // see docs for how these values modify behaviour
     {
@@ -38,6 +38,7 @@ namespace game
         { GUN_BITE,       6, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "clippy",          "monster/clippy",      NULL },
         { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "malenpc",         "npc/watch",     NULL },
         { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "ingrid",         "npc/ingrid",     NULL },
+        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "chubby",         "npc/chubby",     NULL },
     };
 
     VAR(skill, 1, 3, 10);
@@ -119,8 +120,8 @@ namespace game
 
         void monsteraction(int curtime)           // main AI thinking routine, called every frame for every monster
         {
-//////////////////////////////////////////////////////////////////////////////////// if not box
-            if(mtype!=10 && mtype!=14 && mtype!=15 && mtype!=17 && mtype!=18)
+//////////////////////////////////////////////////////////////////////////////////// if not box or npc
+            if(mtype!=10 && mtype!=14 && mtype!=15 && mtype!=17 && mtype!=18 && mtype!=19)
 			{
 ////////////////////////////////////////////////////////////////////////////////////
 				if(enemy->state==CS_DEAD) { enemy = player1; anger = 0; }
@@ -243,7 +244,7 @@ namespace game
 				}
 			}
 //******************************************
-            if(mtype==15 || mtype==17 || mtype==18) // NPC
+            if(mtype==15 || mtype==17 || mtype==18 || mtype==19) // NPC
 			{
 				if(enemy->state==CS_DEAD) { enemy = player1; anger = 0; }
 				normalize_yaw(targetyaw);
@@ -303,6 +304,10 @@ namespace game
 							if(mtype==18) // ingrid voice
 							{
 								playsound(S_FLAGPICKUP, &o);
+							}
+							if(mtype==19) // male voice - Chubby
+							{
+								playsound(S_FLAGDROP, &o);
 							}
 							transition(M_SMALLTALK, 1, 100, 200);
 						}

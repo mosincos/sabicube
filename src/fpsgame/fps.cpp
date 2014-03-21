@@ -177,7 +177,7 @@ namespace game
 			f->printf("%d\n", itemamount);
 		}
 		f->printf("lognum = %d\n", arg[0]);
-//////// this part needs fixing for obvious reasons ////////////////////////////
+//////// this part below needs fixing for obvious reasons //////////////////////
 //////// for now it only sets all logvars to 0 /////////////////////////////////
 		string logstring;
 		for(int x=0;x<arg[0];x=x+1)
@@ -1532,7 +1532,7 @@ namespace game
 /////////////////////////////////////
     void drawsniperscope()
     {
-		if((player1->inventory[76]==1) && (player1->zoom==1))
+		if((player1->inventory[81]>=1) && (player1->zoom==1))
 		{
 //			float x = SCR_W, y = SCR_H;
 			settexture("packages/hud/scope.png");
