@@ -143,6 +143,12 @@ namespace game
     }
     COMMAND(sethotkey9,  "i");
     ICOMMAND(gethotkey9, "", (), intret(player1->hotkey9));
+    void sethotkey0(int *arg)
+    {
+		player1->hotkey0 = arg[0];
+    }
+    COMMAND(sethotkey0,  "i");
+    ICOMMAND(gethotkey0, "", (), intret(player1->hotkey0));
 	
 //////////////////////////////////////////////////////////////////////////// * OLD * save/load game
 	void writegameprogress(int *arg, char *gamename)
@@ -1346,10 +1352,10 @@ namespace game
 			formatstring(xkey1)("packages/hud/%d.png", player1->hotkey1);
 			settexture(xkey1);
 			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(600.0f, 1640.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(756.0f, 1640.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(600.0f, 1790.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(756.0f, 1790.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,		y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+160,	y);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(x,		y+160);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(x+160,	y+160);
 			glEnd();
 		}
 		else
@@ -1364,11 +1370,12 @@ namespace game
 			string xkey2;
 			formatstring(xkey2)("packages/hud/%d.png", player1->hotkey2);
 			settexture(xkey2);
+			x = x+180;
 			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(786.0f, 1640.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(950.0f, 1640.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(786.0f, 1790.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(950.0f, 1790.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,		y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+160,	y);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(x,		y+160);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(x+160,	y+160);
 			glEnd();
 		}
 		else
@@ -1383,11 +1390,12 @@ namespace game
 			string xkey3;
 			formatstring(xkey3)("packages/hud/%d.png", player1->hotkey3);
 			settexture(xkey3);
+			x = x+360;
 			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(970.0f, 1640.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(1100.0f, 1640.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(970.0f, 1790.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(1100.0f, 1790.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,		y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+160,	y);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(x,		y+160);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(x+160,	y+160);
 			glEnd();
 		}
 		else
@@ -1402,11 +1410,12 @@ namespace game
 			string xkey4;
 			formatstring(xkey4)("packages/hud/%d.png", player1->hotkey4);
 			settexture(xkey4);
+			x = x+540;
 			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(1170.0f, 1640.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(1300.0f, 1640.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(1170.0f, 1790.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(1300.0f, 1790.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,		y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+160,	y);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(x,		y+160);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(x+160,	y+160);
 			glEnd();
 		}
 		else
@@ -1421,11 +1430,12 @@ namespace game
 			string xkey5;
 			formatstring(xkey5)("packages/hud/%d.png", player1->hotkey5);
 			settexture(xkey5);
+			x = x+720;
 			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(1370.0f, 1640.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(1500.0f, 1640.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(1370.0f, 1790.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(1500.0f, 1790.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,		y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+160,	y);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(x,		y+160);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(x+160,	y+160);
 			glEnd();
 		}
 		else
@@ -1440,11 +1450,12 @@ namespace game
 			string xkey6;
 			formatstring(xkey6)("packages/hud/%d.png", player1->hotkey6);
 			settexture(xkey6);
+			x = x+900;
 			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(1570.0f, 1640.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(1700.0f, 1640.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(1570.0f, 1790.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(1700.0f, 1790.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,		y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+160,	y);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(x,		y+160);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(x+160,	y+160);
 			glEnd();
 		}
 		else
@@ -1459,11 +1470,12 @@ namespace game
 			string xkey7;
 			formatstring(xkey7)("packages/hud/%d.png", player1->hotkey7);
 			settexture(xkey7);
+			x = x+1080;
 			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(1770.0f, 1640.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(1900.0f, 1640.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(1770.0f, 1790.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(1900.0f, 1790.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,		y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+160,	y);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(x,		y+160);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(x+160,	y+160);
 			glEnd();
 		}
 		else
@@ -1478,11 +1490,12 @@ namespace game
 			string xkey8;
 			formatstring(xkey8)("packages/hud/%d.png", player1->hotkey8);
 			settexture(xkey8);
+			x = x+1260;
 			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(1970.0f, 1640.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(2100.0f, 1640.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(1970.0f, 1790.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(2100.0f, 1790.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,		y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+160,	y);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(x,		y+160);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(x+160,	y+160);
 			glEnd();
 		}
 		else
@@ -1497,11 +1510,12 @@ namespace game
 			string xkey9;
 			formatstring(xkey9)("packages/hud/%d.png", player1->hotkey9);
 			settexture(xkey9);
+			x = x+1440;
 			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(2170.0f, 1640.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(2300.0f, 1640.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(2170.0f, 1790.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(2300.0f, 1790.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,		y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+160,	y);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(x,		y+160);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(x+160,	y+160);
 			glEnd();
 		}
 		else
@@ -1516,11 +1530,12 @@ namespace game
 			string xkey0;
 			formatstring(xkey0)("packages/hud/%d.png", player1->hotkey0);
 			settexture(xkey0);
+			x = x+1620;
 			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(2370.0f, 1640.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(2500.0f, 1640.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(2370.0f, 1790.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(2500.0f, 1790.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(x,		y);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(x+160,	y);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(x,		y+160);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(x+160,	y+160);
 			glEnd();
 		}
 		else
@@ -1532,7 +1547,7 @@ namespace game
 /////////////////////////////////////
     void drawsniperscope()
     {
-		if((player1->inventory[81]>=1) && (player1->zoom==1))
+		if((player1->gunselect==GUN_RIFLE) && (player1->zoom==1))
 		{
 //			float x = SCR_W, y = SCR_H;
 			settexture("packages/hud/scope.png");

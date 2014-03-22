@@ -342,9 +342,21 @@ namespace game
 			drawhudmodel(d, ANIM_GUN_SHOOT|ANIM_SETSPEED, rtime/17.0f, d->lastaction);
         }
         else
-        {
-			drawhudmodel(d, ANIM_GUN_IDLE|ANIM_LOOP);
-        }
+////////////////////////////////////////////////////////////////////////////
+//		{
+//			drawhudmodel(d, ANIM_GUN_IDLE|ANIM_LOOP);
+//		}
+		{
+			if(player1->zoom==1)
+			{
+				drawhudmodel(d, ANIM_TAUNT);
+			}
+			else
+			{
+				drawhudmodel(d, ANIM_GUN_IDLE|ANIM_LOOP);
+			}
+		}
+////////////////////////////////////////////////////////////////////////////
     }
 
     void renderavatar()

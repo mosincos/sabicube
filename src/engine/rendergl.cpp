@@ -882,6 +882,7 @@ void disablezoom()
     zoommillis = totalmillis;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 void computezoom()
 {
     if(!zoom) { curfov = fov; curavatarfov = avatarfov; return; }
@@ -907,6 +908,7 @@ void computezoom()
         curavatarfov = oldavatarfov*t + newavatarfov*(1 - t);
     }
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 FVARP(zoomsens, 1e-3f, 1, 1000);
 FVARP(zoomaccel, 0, 0, 1000);
