@@ -47,13 +47,11 @@ namespace game
     }
 
 //////////////////////////////////////////////////////////////////////////
-    static const playermodelinfo playermodels[3] =
+    static const playermodelinfo playermodels[2] =
     {
 //		{ "ogro2", "ogro2/blue", "ogro2/red", "mrfixit/hudguns", NULL, "ogro2/quad", { "ogro2/armor/blue", "ogro2/armor/green", "ogro2/armor/yellow" }, "ogro", "ogro_blue", "ogro_red", true },
         { "playermodels/male", "playermodels/male/blue", "playermodels/male/red", "playermodels/male/hudguns", NULL, "playermodels/male/horns", { "playermodels/male/armor/blue", "playermodels/male/armor/green", "playermodels/male/armor/yellow" }, "male", "male_blue", "male_red", true },
         { "playermodels/female", "playermodels/female/blue", "playermodels/female/red", "playermodels/female/hudguns", NULL, "playermodels/female/horns", { "playermodels/female/armor/blue", "playermodels/female/armor/green", "playermodels/female/armor/yellow" }, "female", "female_blue", "female_red", true },
-		// for the rpg-mode:
-        { "playermodels/rpgfemale", "playermodels/rpgfemale/blue", "playermodels/rpgfemale/red", "playermodels/rpgfemale/hudguns", NULL, "playermodels/rpgfemale/horns", { "playermodels/rpgfemale/armor/blue", "playermodels/rpgfemale/armor/green", "playermodels/rpgfemale/armor/yellow" }, "rpgfemale", "rpgfemale_blue", "rpgfemale_red", true },
     };
 //////////////////////////////////////////////////////////////////////////
 
