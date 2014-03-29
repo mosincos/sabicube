@@ -12,13 +12,17 @@ SabiCube is tested on 64-bit (Kubuntu 13.10) and 32-bit (Linux Mint 15 Xfce), an
 Changelog 1.2:
 **************
 alchemy, making health-potions
-git update-script
+update-script (a work in progress)
 weapon aim/zoom
 mw-like menus
 bribe-function for npc-disposition
 hotkey2-0 icon placement fix
 updated ZetaProject, new quests and maps
 lava burn instead of instant kill
+melee combat takes energy, cant strike when exausted
+added arena to sabitest-map
+new npc animations for Ingrid and Chubby
+
 
 Changelog 1.1:
 **************
@@ -111,6 +115,9 @@ Geartrooper
 TeamXbow
 TiZeta
 killyoverdrive
+paramecij
+dg - http://www.davegh.com
+gor - Gregor Koch
 
 sounds:
 ERH

@@ -817,42 +817,51 @@ namespace game
         target.sub(from).mul(min(1.0f, dist)).add(from);
     }
 
+/////////////////////////////////////////////////////////////////////////
     void raydamage(vec &from, vec &to, fpsent *d)
     {
-        int qdam = guns[d->gunselect].damage;
-        if(d->quadmillis) qdam *= 4;
-        if(d->type==ENT_AI) qdam /= MONSTERDAMAGEFACTOR;
-        dynent *o;
-        float dist;
-        if(guns[d->gunselect].rays > 1)
-        {
-            dynent *hits[MAXRAYS];
-            int maxrays = guns[d->gunselect].rays;
-            loopi(maxrays) 
-            {
-                if((hits[i] = intersectclosest(from, rays[i], d, dist))) shorten(from, rays[i], dist);
-                else adddecal(DECAL_BULLET, rays[i], vec(from).sub(rays[i]).normalize(), 2.0f);
-            }
-            loopi(maxrays) if(hits[i])
-            {
-                o = hits[i];
-                hits[i] = NULL;
-                int numhits = 1;
-                for(int j = i+1; j < maxrays; j++) if(hits[j] == o)
-                {
-                    hits[j] = NULL;
-                    numhits++;
-                }
-                hitpush(numhits*qdam, o, d, from, to, d->gunselect, numhits);
-            }
-        }
-        else if((o = intersectclosest(from, to, d, dist)))
-        {
-            shorten(from, to, dist);
-            hitpush(qdam, o, d, from, to, d->gunselect, 1);
-        }
-        else if(d->gunselect!=GUN_FIST && d->gunselect!=GUN_BITE) adddecal(DECAL_BULLET, to, vec(from).sub(to).normalize(), d->gunselect==GUN_RIFLE ? 3.0f : 2.0f);
+		if((d==player1) && (d->energy < 32) && ((d->gunselect == GUN_FIST) || (d->gunselect >= GUN_SWORD)))
+		{
+			return;
+		}
+		else
+		{
+			int qdam = guns[d->gunselect].damage;
+			if(d->quadmillis) qdam *= 4;
+			if(d->type==ENT_AI) qdam /= MONSTERDAMAGEFACTOR;
+			dynent *o;
+			float dist;
+			if(guns[d->gunselect].rays > 1)
+			{
+				dynent *hits[MAXRAYS];
+				int maxrays = guns[d->gunselect].rays;
+				loopi(maxrays) 
+				{
+					if((hits[i] = intersectclosest(from, rays[i], d, dist))) shorten(from, rays[i], dist);
+					else adddecal(DECAL_BULLET, rays[i], vec(from).sub(rays[i]).normalize(), 2.0f);
+				}
+				loopi(maxrays) if(hits[i])
+				{
+					o = hits[i];
+					hits[i] = NULL;
+					int numhits = 1;
+					for(int j = i+1; j < maxrays; j++) if(hits[j] == o)
+					{
+						hits[j] = NULL;
+						numhits++;
+					}
+					hitpush(numhits*qdam, o, d, from, to, d->gunselect, numhits);
+				}
+			}
+			else if((o = intersectclosest(from, to, d, dist)))
+			{
+				shorten(from, to, dist);
+				hitpush(qdam, o, d, from, to, d->gunselect, 1);
+			}
+			else if(d->gunselect!=GUN_FIST && d->gunselect!=GUN_BITE) adddecal(DECAL_BULLET, to, vec(from).sub(to).normalize(), d->gunselect==GUN_RIFLE ? 3.0f : 2.0f);
+		}
     }
+/////////////////////////////////////////////////////////////////////////
 
     void shoot(fpsent *d, const vec &targ)
     {
@@ -883,15 +892,11 @@ namespace game
 				if(d->mana >= 64)
 				{
 					d->mana = d->mana - 64;
-					d->ammo[GUN_FIREBALL] = d->mana;
-					d->ammo[GUN_ICEBALL] = d->mana;
-					d->ammo[GUN_SLIMEBALL] = d->mana;
+					d->ammo[d->gunselect] = d->mana;
 				}
 				else if(d->mana <= 63)
 				{
-					d->ammo[GUN_FIREBALL] = d->mana;
-					d->ammo[GUN_ICEBALL] = d->mana;
-					d->ammo[GUN_SLIMEBALL] = d->mana;
+					d->ammo[d->gunselect] = d->mana;
 					if(d==player1)
 					{
 						msgsound(S_NOAMMO, d);
@@ -900,7 +905,24 @@ namespace game
 					return;
 				}
 			}
-//			if(d->gunselect >= GUN_BOW) return;
+			if((d->gunselect == GUN_FIST) || (d->gunselect <= GUN_SWORD))
+			{
+				if(d->energy >= 32)
+				{
+					d->energy = d->energy - 30;
+					d->ammo[d->gunselect] = d->energy;
+				}
+				else if(d->energy <= 31)
+				{
+					d->ammo[d->gunselect] = d->energy;
+					if(d==player1)
+					{
+						msgsound(S_JUMP, d);
+						d->gunwait = 600;
+					}
+					return;
+				}
+			}
 		}
 /////////////////////////////////////////////////////////////////////////
         vec from = d->o;

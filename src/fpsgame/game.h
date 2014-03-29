@@ -173,6 +173,12 @@ static const char * const mastermodecolors[] = { "",       "\f0",    "\f2",     
 static const char * const mastermodeicons[] =  { "server", "server", "serverlock", "serverlock", "serverpriv", "serverpriv" };
 
 // hardcoded sounds, defined in sounds.cfg
+// S_ITEMSPAWN=pickup
+// S_RUMBLE=metalgate
+// S_PIGGR2=crate_smash
+// S_FLAGPICKUP=female_hmmquestion
+// S_FLAGDROP=male_what
+// S_FLAGFAIL=bow
 enum
 {
     S_JUMP = 0, S_LAND, S_RIFLE, S_PUNCH1, S_SG, S_CG,
