@@ -820,7 +820,7 @@ namespace game
 /////////////////////////////////////////////////////////////////////////
     void raydamage(vec &from, vec &to, fpsent *d)
     {
-		if((d==player1) && (d->energy < 32) && ((d->gunselect == GUN_FIST) || (d->gunselect >= GUN_SWORD)))
+		if((d==player1) && (d->energy < 32) && ((d->gunselect == GUN_FIST) || (d->gunselect == GUN_SWORD) || (d->gunselect == GUN_CROWBAR)))
 		{
 			return;
 		}
@@ -905,7 +905,7 @@ namespace game
 					return;
 				}
 			}
-			if((d->gunselect == GUN_FIST) || (d->gunselect <= GUN_SWORD))
+			if((d->gunselect == GUN_FIST) || (d->gunselect == GUN_SWORD) || (d->gunselect == GUN_CROWBAR))
 			{
 				if(d->energy >= 32)
 				{
