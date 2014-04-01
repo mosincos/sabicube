@@ -8,7 +8,7 @@ namespace game
     static vector<int> teleports;
 
     static const int TOTMFREQ = 14;
-    static const int NUMMONSTERTYPES = 20;
+    static const int NUMMONSTERTYPES = 21;
 
     struct monstertype      // see docs for how these values modify behaviour
     {
@@ -19,26 +19,27 @@ namespace game
 
     static const monstertype monstertypes[NUMMONSTERTYPES] =
     {
-        { GUN_FIREBALL,  15, 100, 3, 0,   100, 800, 1, 10,  90, S_PAINO, S_DIE1,   "an ogro",     "monster/ogro",       "monster/ogro/vwep"},
-        { GUN_CG,        18,  70, 2, 70,   10, 400, 2, 10,  50, S_PAINR, S_DEATHR, "a rhino",     "monster/rhino",      NULL},
+        { GUN_FIREBALL,  15, 100, 3, 0,   100, 800, 1, 10,  90, S_PAINO, S_DIE1,   "an ogro", "monster/ogro",       "monster/ogro/vwep"},
+        { GUN_CG,        18,  70, 2, 70,   10, 400, 2, 10,  50, S_PAINR, S_DEATHR, "a rhino", "monster/rhino",      NULL},
         { GUN_SG,        13, 120, 1, 100, 300, 400, 4, 14, 115, S_PAINE, S_DEATHE, "ratamahatta", "monster/rat",        "monster/rat/vwep"},
-        { GUN_RIFLE,     14, 200, 1, 80,  400, 300, 4, 18, 145, S_PAINS, S_DEATHS, "a slith",     "monster/slith",      "monster/slith/vwep"},
-        { GUN_RL,        12, 500, 1, 0,   200, 200, 6, 24, 210, S_PAINB, S_DEATHB, "bauul",       "monster/bauul",      "monster/bauul/vwep"},
-        { GUN_BITE,      24,  50, 3, 0,   100, 400, 1, 15,  75, NULL,    NULL,	   "Monkey",   "monster/monkey",   NULL},
-        { GUN_FIREBALL,  11, 250, 1, 0,    10, 400, 6, 18, 160, NULL,    NULL,     "Mek 2",       "monster/mek2",        NULL},
-        { GUN_SLIMEBALL, 15, 100, 1, 0,   200, 400, 2, 10,  60, S_PAIND, S_DEATHD, "a goblin",    "monster/goblin",     "monster/goblin/vwep"},
-        { GUN_ICEBALL,   22,  50, 1, 0,   200, 400, 1, 10,  40, S_PAIND, S_DEATHD, "a spider",    "monster/spider",      NULL },
-        { GUN_RIFLE,     14, 200, 1, 80,  400, 300, 4, 10, 145, S_PAINS, S_DEATHS, "soldier",     "monster/soldier",    "monster/soldier/vwep"},
-        { NULL,           0,  10, 3, 0,   100, 400, 1, 15, 256, NULL,    S_PIGGR2, "a box",       "monster/box",         NULL },
-        { GUN_BITE,      22,  50, 1, 0,   200, 400, 1, 10,  40, S_PAIND, S_DEATHD, "a rat",       "monster/animals/rat", NULL },
-        { GUN_BITE,       5, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "boneman",         "monster/boneman",     NULL },
-        { GUN_BITE,       8, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "bonesword",       "monster/bonesword",   NULL },
-        { NULL,           0,  10, 3, 0,   100, 400, 1, 10, 256, NULL,    S_PIGGR2,  "planks",     "monster/planks",      NULL },
-        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "femalenpc",       "npc/female",     NULL },
-        { GUN_BITE,       6, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "clippy",          "monster/clippy",      NULL },
-        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "malenpc",         "npc/watch",     NULL },
-        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "ingrid",         "npc/ingrid",     NULL },
-        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "chubby",         "npc/chubby",     NULL },
+        { GUN_RIFLE,     14, 200, 1, 80,  400, 300, 4, 18, 145, S_PAINS, S_DEATHS, "a slith", "monster/slith",      "monster/slith/vwep"},
+        { GUN_RL,        12, 500, 1, 0,   200, 200, 6, 24, 210, S_PAINB, S_DEATHB, "bauul", "monster/bauul",      "monster/bauul/vwep"},
+        { GUN_BITE,      24,  50, 3, 0,   100, 400, 1, 15,  75, NULL,    NULL,	   "Monkey", "monster/monkey",   NULL},
+        { GUN_FIREBALL,  11, 250, 1, 0,    10, 400, 6, 18, 160, NULL,    NULL,     "Mek 2", "monster/mek2",        NULL},
+        { GUN_SLIMEBALL, 15, 100, 1, 0,   200, 400, 2, 10,  60, S_PAIND, S_DEATHD, "a goblin", "monster/goblin",     "monster/goblin/vwep"},
+        { GUN_ICEBALL,   22,  50, 1, 0,   200, 400, 1, 10,  40, S_PAIND, S_DEATHD, "a spider", "monster/spider",      NULL },
+        { GUN_RIFLE,     14, 200, 1, 80,  400, 300, 4, 10, 145, S_PAINS, S_DEATHS, "soldier", "monster/soldier",    "monster/soldier/vwep"},
+        { NULL,           0,  10, 3, 0,   100, 400, 1, 15, 256, NULL,    S_PIGGR2, "a box", "monster/box",         NULL },
+        { GUN_BITE,      22,  50, 1, 0,   200, 400, 1, 10,  40, S_PAIND, S_DEATHD, "a rat", "monster/animals/rat", NULL },
+        { GUN_BITE,       5, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "boneman", "monster/boneman",     NULL },
+        { GUN_BITE,       8, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "bonesword", "monster/bonesword",   NULL },
+        { NULL,           0,  10, 3, 0,   100, 400, 1, 10, 256, NULL,    S_PIGGR2,  "planks", "monster/planks",      NULL },
+        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "femalenpc", "npc/female",      NULL },
+        { GUN_BITE,       6, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "clippy", "monster/clippy",      NULL },
+        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "malenpc", "npc/watch",         NULL },
+        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "ingrid", "npc/ingrid",         NULL },
+        { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "chubby", "npc/chubby",         NULL },
+        { GUN_RIFLE,     14, 200, 1, 80,  400, 300, 4, 10, 145, S_PAINS, S_DEATHS, "ogro2", "monster/ogro2",    NULL },
     };
 
     VAR(skill, 1, 3, 10);
