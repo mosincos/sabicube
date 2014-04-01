@@ -182,16 +182,16 @@ namespace game
 			f->printf("%s ", inventorystring);
 			f->printf("%d\n", itemamount);
 		}
-		f->printf("lognum = %d\n", arg[0]);
+//		f->printf("lognum = %d\n", arg[0]);
 //////// this part below needs fixing for obvious reasons //////////////////////
 //////// for now it only sets all logvars to 0 /////////////////////////////////
-		string logstring;
-		for(int x=0;x<arg[0];x=x+1)
-		{
-			formatstring(logstring)("logvar%d", x);
-			f->printf("logvar%d = ", x);
-			f->printf("0\n");
-		}
+//		string logstring;
+//		for(int x=0;x<arg[0];x=x+1)
+//		{
+//			formatstring(logstring)("logvar%d", x);
+//			f->printf("logvar%d = ", x);
+//			f->printf("0\n");
+//		}
 
 		f->printf("setenergyregen %f\n", player1->energyregen);
 		f->printf("setplayerexp %d\n", player1->playerexperience);
