@@ -39,7 +39,7 @@ namespace game
         { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "malenpc", "npc/watch",         NULL },
         { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "ingrid", "npc/ingrid",         NULL },
         { GUN_BITE,       2, 150, 1, 0,   200, 400, 1, 10,  40, NULL,    NULL, "chubby", "npc/chubby",         NULL },
-        { GUN_RIFLE,     14, 200, 1, 80,  400, 300, 4, 10, 145, S_PAINS, S_DEATHS, "ogro2", "monster/ogro2",    NULL },
+        { GUN_RIFLE,     14, 200, 1, 80,  400, 300, 4, 10, 145, S_PAINS, S_DEATHS, "sgtross", "monster/sgtross",    NULL },
     };
 
     VAR(skill, 1, 3, 10);

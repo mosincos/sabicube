@@ -1668,20 +1668,21 @@ namespace game
 
     void drawhudicons(fpsent *d)
     {
-        glPushMatrix();
-        glScalef(2, 2, 1);
+//		glPushMatrix();
+//		glScalef(2, 2, 1);
 ///////////////////////////////////////////////////////////////////////////////////
-//      draw_textf("%d", (HICON_X + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->state==CS_DEAD ? 0 : d->health);
-        if(d->state!=CS_DEAD)
-        {
-//            if(d->armour) draw_textf("%d", (HICON_X + HICON_STEP + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->armour);
-//            draw_textf("%d", (HICON_X + 2*HICON_STEP + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->ammo[d->gunselect]);
-			draw_textf("%d", 1200, 800, d->ammo[d->gunselect]);
-        }
+//		draw_textf("%d", (HICON_X + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->state==CS_DEAD ? 0 : d->health);
+//		if(d->state!=CS_DEAD)
+//		{
+//			if(d->armour) draw_textf("%d", (HICON_X + HICON_STEP + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->armour);
+//			draw_textf("%d", (HICON_X + 2*HICON_STEP + HICON_SIZE + HICON_SPACE)/2, HICON_TEXTY/2, d->ammo[d->gunselect]);
+//			draw_textf("%d", 1200, 800, d->ammo[d->gunselect]);
+//		}
 
-        glPopMatrix();
+//		glPopMatrix();
 
-//      drawicon(HICON_HEALTH, HICON_X, HICON_Y);
+//		drawicon(HICON_HEALTH, HICON_X, HICON_Y);
+		
         if(d->state!=CS_DEAD)			
         {		
 //          if(d->armour) drawicon(HICON_BLUE_ARMOUR+d->armourtype, HICON_X + HICON_STEP, HICON_Y);
