@@ -7,7 +7,7 @@ to help anyone make their own open-source rpg/adventure game, without prior know
 
 The 1.2 release will focus on implmenting classic rpg-style weapons, it includes a very early beta of the game Age Of Reason and as always... a test-map for the new features. Some additions to SabiCube 1.2 might temporarely break support for the game ZetaProject, but it shold still be playable, and if you find a bug, please let me know.
 
-SabiCube is tested on 64-bit (Kubuntu 13.10) and 32-bit (Linux Mint 15 Xfce), and installing should be fairly simple, just follow this guide: https://github.com/sandsound/sabicube/wiki#installing (there are currently only binarys for Linux).
+SabiCube is tested on 64-bit (Kubuntu 14.04) and 32-bit (Linux Mint 15 Xfce), and installing should be fairly simple, just follow this guide: https://github.com/sandsound/sabicube/wiki#installing (there are currently only binarys for Linux).
 
 To get the latest version of this document or SabiCube, please visit:
 http://github.com/sandsound/sabicube or follow us on http://www.moddb.com/mods/sabicube
